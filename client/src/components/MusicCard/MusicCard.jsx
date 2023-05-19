@@ -3,29 +3,53 @@ import Card from "react-bootstrap/Card";
 import { Col, Row } from "react-bootstrap";
 import { Rating } from 'react-simple-star-rating'
 import { useState } from "react";
+import axios from "axios";
 
-const MusicCard = ({ track }) => {
-    const [rating, setRating] = useState(0)
+function MusicCard ({ track }) {
+    const [rating, setRating] = useState(-1)
     const [isHovering, setIsHovering] = useState(false)
-
-    const handleRating = (hover) => {
-        console.log(hover)
-        setRating(rating)
+    
+    async function handleRating (rate) {
+        setRating(rate)
+        console.log(rating)
+        await rateTrack()
     }
 
-    const onPointerEnter = () => {
+    function onPointerEnter () {
         setIsHovering(true)
     }
-    const onPointerLeave = () => {
+    function onPointerLeave () {
         setIsHovering(false)
+    }
+
+    async function rateTrack() {
+        try {
+            const response = await axios.post(
+                "http://localhost:5000/audio/rate-track",
+                {
+                    token: localStorage.getItem("token"),
+                    rating: rating,
+                    trackTitle: track.title,
+                    trackArtist: track.artist
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
 
     return (
-        <Card style={{ width: "30rem" }}>
+        <Card className="p-3 m-3" style={{ width: "30rem" }}>
             <Row>
                 <Col>
-                    <Card.Img variant="top" src={track.image} />
+                    <Card.Img src={track.image} />
                 </Col>
                 <Col>
                     <h5>{track.title}</h5>
@@ -43,6 +67,7 @@ const MusicCard = ({ track }) => {
                 <Col>
                     <Rating
                         onClick={handleRating}
+                        initialValue={rating}
                         transition
                         allowHover={false}
                         fillColor={isHovering ? 'red' : 'orange'}
