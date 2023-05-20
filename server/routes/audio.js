@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { upload, uploadAudioFile } = require('../controllers/audioController')
+const audioController = require('../controllers/audioController')
 
-router.post('/upload/:title', upload.single('audioFile'), uploadAudioFile)
+router.post('/upload/:title', audioController.upload.single('audioFile'), audioController.uploadAudioFile)
+router.post('/rate-track', audioController.rateTrack)
 
 module.exports = router

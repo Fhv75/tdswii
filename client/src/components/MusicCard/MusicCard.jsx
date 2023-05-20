@@ -2,16 +2,20 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import { Col, Row } from "react-bootstrap";
 import { Rating } from 'react-simple-star-rating'
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 function MusicCard ({ track }) {
-    const [rating, setRating] = useState(-1)
+    const rating = useRef(0)
     const [isHovering, setIsHovering] = useState(false)
     
+    useEffect(() => {
+        rating.current = track.rating
+    }, [track.rating])
+
     async function handleRating (rate) {
-        setRating(rate)
-        console.log(rating)
+        rating.current = rate
+        console.log(rating.current)
         await rateTrack()
     }
 
@@ -28,7 +32,7 @@ function MusicCard ({ track }) {
                 "http://localhost:5000/audio/rate-track",
                 {
                     token: localStorage.getItem("token"),
-                    rating: rating,
+                    rating: rating.current,
                     trackTitle: track.title,
                     trackArtist: track.artist
                 },
@@ -67,7 +71,7 @@ function MusicCard ({ track }) {
                 <Col>
                     <Rating
                         onClick={handleRating}
-                        initialValue={rating}
+                        initialValue={track.rating}
                         transition
                         allowHover={false}
                         fillColor={isHovering ? 'red' : 'orange'}
@@ -75,6 +79,7 @@ function MusicCard ({ track }) {
                         disableFillHover={true}
                         onPointerEnter={onPointerEnter}
                         onPointerLeave={onPointerLeave}
+                        readonly={localStorage.getItem("token") ? false : true}
                     />
                 </Col >
             </Row >
