@@ -4,6 +4,9 @@ import { Col, Row } from "react-bootstrap";
 import { Rating } from 'react-simple-star-rating'
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import MusicPlayer from "../MusicPlayer/MusicPlayer";
+
+// TODO: Style music controls
 
 function MusicCard ({ track }) {
     const rating = useRef(0)
@@ -62,6 +65,8 @@ function MusicCard ({ track }) {
                     <audio controls>
                         <source src={track.preview_url} type="audio/mpeg" />
                     </audio>
+
+                    <MusicPlayer />
                 </Col>
             </Row>
             <Row>

@@ -9,7 +9,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { useNavigate } from "react-router-dom";
 import MusicCard from "../../components/MusicCard/MusicCard";
 
-function NavScrollFeed() {
+function Feed() {
   const navigate = useNavigate();
 
   function navigateToProfile() {
@@ -115,4 +115,4 @@ function NavScrollFeed() {
   );
 }
 
-export default NavScrollFeed;
+export default Feed;
