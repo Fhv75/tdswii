@@ -66,7 +66,7 @@ function MusicCard ({ track }) {
                         <source src={track.preview_url} type="audio/mpeg" />
                     </audio>
 
-                    <MusicPlayer />
+                    <MusicPlayer trackPath={track.preview_url}/>
                 </Col>
             </Row>
             <Row>
