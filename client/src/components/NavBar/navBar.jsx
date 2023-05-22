@@ -19,7 +19,7 @@ function NavBar() {
   return (
     <Navbar bg="light" expand="lg">
       <Container fluid>
-        <Navbar.Brand as={Link} to="/pages/Feed.jsx">
+        <Navbar.Brand as={Link} to="/">
             <Image
               src="/images/logomelorit.png"
               alt="Melorit Logo"
@@ -47,22 +47,22 @@ function NavBar() {
           >
             <div>
               <NavDropdown align="end" title="Link" id="navbarScrollingDropdown">
-                <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action4">
+                <NavDropdown.Item href="">Action</NavDropdown.Item>
+                <NavDropdown.Item href="">
                   Another action
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#action5">
+                <NavDropdown.Item href="">
                   <Button onClick={() => navigate("/login")} variant="link">
                     Ir a Login
                   </Button>
                 </NavDropdown.Item>
-                <NavDropdown.Item href="#action6">
+                <NavDropdown.Item href="">
                   <Button onClick={() => navigate("/register")} variant="link">
                     Ir a Registro
                   </Button>
                 </NavDropdown.Item>
-                <NavDropdown.Item href="#action7">
+                <NavDropdown.Item href="">
                   <Button
                     onClick={() => navigate("/password-recovery")}
                     variant="link"
@@ -70,7 +70,7 @@ function NavBar() {
                     Ir a Recuperación de Contraseña
                   </Button>
                 </NavDropdown.Item>
-                <NavDropdown.Item href="#action8">
+                <NavDropdown.Item href="">
                   <Button
                     onClick={() => navigate("/contact-Form")}
                     variant="link"
@@ -78,7 +78,7 @@ function NavBar() {
                     Contacto
                   </Button>
                 </NavDropdown.Item>
-                <NavDropdown.Item href="#action9">
+                <NavDropdown.Item href="">
                   {localStorage.getItem("token") && (
                     <Button onClick={navigateToProfile} variant="link">
                       Ir a perfil
