@@ -11,6 +11,7 @@ import AnonymousProtectedRoute from './routing/AnonymousProtectedRoute'
 import AuthenticationProtectedRoute from './routing/AuthenticationProtectedRoute'
 import CompleteProfile from './components/CompleteProfile'
 import Contact from './Pages/Contact/Contact';
+import UploadAudioFile from './Pages/UploadAudio/UploadAudioFile'
 
 
 const routes = [
@@ -62,6 +63,10 @@ const routes = [
     {
         path: '/contact-Form',
         component: <Contact/>
+    },
+    {
+        path: '/upload',
+        component: <UploadAudioFile/>
     }
 ]
 
