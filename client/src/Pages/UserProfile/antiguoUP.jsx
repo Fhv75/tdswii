@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useState} from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import UploadAudioFile from '../../components/UploadAudioFile'
+import UploadAudioFile from '../UploadAudio/UploadAudioFile'
 
 import axios from 'axios'
 
