@@ -1,10 +1,14 @@
 import React from 'react';
 import './userProfile.css';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
+import NavBar from '../../components/NavBar/NavBar';
+import axios from 'axios'
+
 
 export default function EditButton() {
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: '#9de2ff' }}>
+      <NavBar />
       <MDBContainer className="py-5 h-100">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="9" xl="7">
@@ -18,8 +22,8 @@ export default function EditButton() {
                   </MDBBtn>
                 </div>
                 <div className="ms-3" style={{ marginTop: '130px' }}>
-                  <MDBTypography tag="h5">Andy Horwitz</MDBTypography>
-                  <MDBCardText>New York</MDBCardText>
+                  <MDBTypography tag="h5">Alexis Canorwitz</MDBTypography>
+                  <MDBCardText>High Hopicio City</MDBCardText>
                 </div>
               </div>
               <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
