@@ -9,6 +9,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+
 function NavBar() {
   const navigate = useNavigate();
 
@@ -20,17 +21,15 @@ function NavBar() {
     <Navbar bg="light" expand="lg">
       <Container fluid>
         <Navbar.Brand as={Link} to="/">
-            <Image
-              src="/images/logomelorit.png"
-              alt="Melorit Logo"
-              width="30"
-              height="30"
-            />
-        
+          <Image
+            src="/images/logomelorit.png"
+            alt="Melorit Logo"
+            width="30"
+            height="30"
+          />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
-          
           <Form className="d-flex ms-auto align-items-center">
             <Form.Control
               type="search"
@@ -46,10 +45,16 @@ function NavBar() {
             navbarScroll
           >
             <div>
-              <NavDropdown align="end" title="Link" id="navbarScrollingDropdown">
-                <NavDropdown.Item href="">Action</NavDropdown.Item>
+              <NavDropdown
+                align="end"
+                title="Link"
+                id="navbarScrollingDropdown"
+              >
+                
                 <NavDropdown.Item href="">
-                  Another action
+                  <Button onClick={() => navigate("/upload")} variant="link">
+                    Cargar
+                  </Button>
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="">
