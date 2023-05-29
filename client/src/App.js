@@ -10,8 +10,8 @@ import Router from './router/index'
 import AnonymousProtectedRoute from './routing/AnonymousProtectedRoute'
 import AuthenticationProtectedRoute from './routing/AuthenticationProtectedRoute'
 import CompleteProfile from './components/CompleteProfile'
-import Contact from './Pages/Contact/Contact';
-
+import Contact from './Pages/Contact/Contact'
+import MusicCard from './components/MusicCard/MusicCard';
 
 const routes = [
     { 
@@ -62,6 +62,11 @@ const routes = [
     {
         path: '/contact-Form',
         component: <Contact/>
+    },
+
+    {
+        path: '/MusicCard',
+        component: <MusicCard/>
     }
 ]
 
