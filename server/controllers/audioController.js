@@ -8,13 +8,13 @@ const jwt = require("jsonwebtoken")
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, "../public/userUploads"))
+        cb(null, path.join(__dirname, "../public/userUploads/audio"))
     },
     filename: function (req, file, cb) {
         const ext = path.extname(file.originalname)
-        const title = req.params.title
+        const trackData = req.params.trackData
 
-        cb(null, `${title + '-' + Date.now()}${ext}`)
+        cb(null, `${trackData}${ext}`)
     }
 })  
 
@@ -31,7 +31,8 @@ async function uploadAudioFile (req, res) {
 
         const newAudioFile = await AudioFile.create({ 
             titulo: titulo,  
-            id_user_cargas: userMail
+            id_user_cargas: userMail,
+            nombre_archivo: titulo + "-" + userMail
         })
 
         await newAudioFile.setTags(tags)

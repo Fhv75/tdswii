@@ -34,7 +34,7 @@ function UploadAudioFile () {
         formData.append('tags', JSON.stringify(tagsArray))
         try {
             const response = await axios.post(
-                `http://localhost:5000/audio/upload/${fileData.titulo}`,
+                `http://localhost:5000/audio/upload/${fileData.titulo}-${localStorage.getItem('username')}`,
                 formData,
                 { headers: { 'x-access-token': localStorage.getItem('token') } }
             )
