@@ -2,12 +2,8 @@ const AudioFile = require("../models/AudioFile")
 const multer = require("multer")
 const path = require("path")
 const jwt = require("jsonwebtoken")
-// SDKJFHASDJKLFHSLDAKFHSDJKLFHLKASDJHFLJKSDHFLJKADHJFLKDSHLJKFJDAS
 
-// DX
-// XD
 
-// me borraron mi comentario :8
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(__dirname, "../public/userUploads"))
@@ -21,6 +17,29 @@ const storage = multer.diskStorage({
 })  
 
 const upload = multer({ storage: storage })
+
+
+
+async function obtenerPistaAudio (req, res){
+    try {
+         const pistaId = req.params.id;
+         const pistaDeAudio = await AudioFile.findByPk(pistaId);
+         if (pistaDeAudio) {
+            res.status(200).json(pistaDeAudio);
+            } else {
+            res.status(404).json({ error: "Pista de audio no encontrada" });
+            }
+        }    
+    catch (error) {
+            console.error("Error al obtener la pista de audio:", error);
+            res.status(500).json({ error: "Error del servidor" });
+            }
+            }
+            
+            module.exports = {
+            obtenerPistaAudio,
+            };
+
 
 async function uploadAudioFile (req, res) {
     try {
@@ -53,4 +72,5 @@ async function uploadAudioFile (req, res) {
 module.exports = {
     upload,
     uploadAudioFile,
+    obtenerPistaAudio,
 }
