@@ -28,7 +28,8 @@ async function uploadAudioFile (req, res) {
 
         const newAudioFile = await AudioFile.create({ 
             titulo: titulo,  
-            id_user_cargas: userMail
+            id_user_cargas: userMail,
+            nombre_archivo: titulo + "-" + userMail
         })
 
         await newAudioFile.setTags(tags)
