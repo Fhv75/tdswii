@@ -50,8 +50,25 @@ async function uploadAudioFile (req, res) {
         })
     }
 }
+async function getUserTracks(req, res){
+    try{
+        const token = req.body.token
+        const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
+        const userMail = decoded.id
+        const tracks = await AudioFile.findAll({where: {id_user_cargas:userMail}}) 
+        res.status(201).json(tracks)
+    }
+    catch(error){
+        console.error("Error al obtener pistas")
+        res.status(400).json({
+            error: error.name,
+            message: error.message
+        })
+    }
+}
 
 module.exports = {
     upload,
     uploadAudioFile,
+    getUserTracks
 }

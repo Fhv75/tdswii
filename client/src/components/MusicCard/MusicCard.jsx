@@ -1,8 +1,7 @@
 import React from 'react'
 import { Card, Container, Row, Col } from 'react-bootstrap'
 
-
-function MusicCard () {
+function MusicCard ({track}) {
 
     return (
         <Card style={{ width: '40rem' }} >
@@ -15,8 +14,8 @@ function MusicCard () {
                             </Card>
                         </Col>
                         <Col md={6}>
-                            <h4>Artista</h4>
-                            <h6>Titulo</h6>
+                            <h4>{track.artista}</h4>
+                            <h6>{track.titulo}</h6>
                             <audio controls>
                                 <source src="./music.mp3"/>
                             </audio> 
@@ -26,7 +25,7 @@ function MusicCard () {
                         <Col md={6}>
                             <Card style={{marginTop: '15px' }}>                 
                                 <Card.Text>
-                                    Etiquetas:
+                                    Etiquetas: {track.etiquetas}
                                 </Card.Text>
                             </Card>
                         </Col>
