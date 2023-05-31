@@ -36,7 +36,7 @@ function Feed () {
         (track)=>{
           const trackData = {
             titulo: track.titulo,
-            artista: track.id_user_cargas,
+            artista: track.User.username,
             etiquetas: "etiquetas"
           }
           return(

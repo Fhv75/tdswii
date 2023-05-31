@@ -14,8 +14,8 @@ function MusicCard ({track}) {
                             </Card>
                         </Col>
                         <Col md={6}>
-                            <h4>{track.artista}</h4>
-                            <h6>{track.titulo}</h6>
+                            <h4>{track.titulo}</h4>
+                            <h6>{track.artista}</h6>
                             <audio controls>
                                 <source src="./music.mp3"/>
                             </audio> 

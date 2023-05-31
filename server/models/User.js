@@ -42,4 +42,8 @@ const User = sequelize.define('User', {
     timestamps: false
 })
 
+User.associate = (models) => {
+    User.hasMany(models.AudioFile, { through: 'AudioFileTags', as: 'tags', foreignKey: 'id_user_cargas' });
+};
+
 module.exports = User

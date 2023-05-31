@@ -1,7 +1,11 @@
 const AudioFile = require("../models/AudioFile")
+const User = require("../models/User")
+const Tag = require("../models/Tag")
+const AudioFileTags = require("../models/AudioFileTags")
 const multer = require("multer")
 const path = require("path")
 const jwt = require("jsonwebtoken")
+
 // SDKJFHASDJKLFHSLDAKFHSDJKLFHLKASDJHFLJKSDHFLJKADHJFLKDSHLJKFJDAS
 
 // DX
@@ -55,11 +59,22 @@ async function getUserTracks(req, res){
         const token = req.body.token
         const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
         const userMail = decoded.id
-        const tracks = await AudioFile.findAll({where: {id_user_cargas:userMail}}) 
+        const tracks = await AudioFile.findAll(
+            {
+                include: { model: User, required: true, attributes: ['username']},
+                where: 
+                {
+                    id_user_cargas:userMail
+                }
+            }
+        ) 
+
         res.status(201).json(tracks)
     }
     catch(error){
         console.error("Error al obtener pistas")
+        console.error(error.name)
+        console.error(error.message)
         res.status(400).json({
             error: error.name,
             message: error.message
@@ -67,6 +82,9 @@ async function getUserTracks(req, res){
     }
 }
 
+async function getTracksTags(tracks) {
+    // For 
+}
 module.exports = {
     upload,
     uploadAudioFile,
