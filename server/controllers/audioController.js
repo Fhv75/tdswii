@@ -1,5 +1,8 @@
 const AudioFile = require("../models/AudioFile")
 const TrackUserRating = require("../models/TrackUserRating")
+const User = require("../models/User")
+const Tag = require("../models/Tag")
+const AudioFileTags = require("../models/AudioFileTags")
 const multer = require("multer")
 const path = require("path")
 const jwt = require("jsonwebtoken")
@@ -74,10 +77,61 @@ async function uploadAudioFile (req, res) {
         })
     }
 }
+async function getUserTracks(req, res){
+    try{
+        const token = req.body.token
+        const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
+        const userMail = decoded.id
+        const tracks = await AudioFile.findAll(
+            {
+                include: { model: User, required: true, attributes: ['username']},
+                where: 
+                {
+                    id_user_cargas:userMail
+                }
+            }
+        )
+        res.status(201).json(tracks)
+    }
+    catch(error){
+        console.error("Error al obtener pistas")
+        console.error(error.name)
+        console.error(error.message)
+        res.status(400).json({
+            error: error.name,
+            message: error.message
+        })
+    }
+}
+// Utilizar esta función dentro de useEffect() en
+// MusicCard.jsx para obtener las etiquetas de la pista
+async function getTrackTags(req, res) {
+    try {
+        const trackId = req.body.trackId
+        
+        const tags = await AudioFileTags.findAll({
+            include: { model: Tag, required: true, attributes: ['TAG']},
+            where: {
+                id_pista: trackId
+            }
+        })
+        res.status(200).json(tags)
+    }
+    catch (error) {
+        console.error("Error al obtener etiquetas de pista")
+        console.error(error.name)
+        console.error(error.message)
+        res.status(400).json({
+            error: error.name,
+            message: error.message
+        })
+    }
+}
 
 module.exports = {
     upload,
     uploadAudioFile,
-    obtenerPistaAudio,
     getStatistics,
+    getUserTracks,
+    getTrackTags
 }

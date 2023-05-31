@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize')
 const sequelize = require('../db')
+const AudioFile = require('../models/AudioFile')
 
 const Tag = sequelize.define('Tag', {
     id: {

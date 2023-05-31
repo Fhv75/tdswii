@@ -1,43 +1,34 @@
-import "./userProfile.css";
-import {
-  MDBCol,
-  MDBContainer,
-  MDBRow,
-  MDBCard,
-  MDBCardText,
-  MDBCardBody,
-  MDBCardImage,
-  MDBBtn,
-  MDBTypography,
-} from "mdb-react-ui-kit";
-import NavBar from "../../components/NavBar/NavBar";
-import MusicPlayerCard from "../../components/MusicPlayerCard";
-import React, { useState, useEffect } from "react";
+import React from 'react';
+import './userProfile.css';
+import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
+import MusicCard from "../../components/MusicCard/MusicCard";
 import axios from "axios";
+import { useState, useEffect } from "react";
 
-export default function UserProfile() {
-  
-  const [playCount, setPlayCount] = useState(0);
-  const [trackData, setTrackData] = useState(null);
+export default function EditButton() {
+
+  const [tracksData, setTracksData] = useState([])
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/audio/getAudio/");
-        setTrackData(response.data);
-      } catch (error) {
-        console.error(
-          "Error al obtener los datos de la pista de audio:",
-          error
-        );
+      async function getTracks (){
+        axios.defaults.headers.post["Access-Control-Allow-Origin"] = true
+        try{
+          const response = await axios.post(
+            'http://localhost:5000/audio/getUserTracks',
+            { 
+                token : localStorage.getItem("token")
+            }, 
+          )  
+          console.log(response.data)
+          setTracksData(response.data)
+        }
+        catch(error){
+          console.log(error)
+        }
       }
-    };
 
-    fetchData();
-    
-  }, []);
-  const handleButtonClick = () => {
-    setPlayCount(prevCount => prevCount + 1);
-  };
+      getTracks()
+  }, [])
 
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: "#9de2ff" }}>
@@ -109,28 +100,25 @@ export default function UserProfile() {
                   </div>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-4">
-                  <MDBCardText className="lead fw-normal mb-0">
-                    TOP TRACKS
-                  </MDBCardText>
-                  <MDBCardText className="mb-0">
-                    <a href="#!" className="text-muted">
-                      Show all
-                    </a>
-                  </MDBCardText>
+                  <MDBCardText className="lead fw-normal mb-0">Mis Pistas</MDBCardText>
+                  <MDBCardText className="mb-0"><a href="#!" className="text-muted">Show all</a></MDBCardText>
                 </div>
-                <div>
-                  <div>
-                    {trackData && <p>Song Name: {trackData.trackName}</p>}
-                  </div>
-                  <MDBBtn                    
-                    color="dark"                
-                    onClick={handleButtonClick}
-                  >
-                    PlayCount
-                  </MDBBtn>
-                  <MusicPlayerCard
-                  />
-                </div>
+                <MDBRow>
+                  {
+                    tracksData &&
+                    tracksData.map(
+                      (track)=>{
+                        const trackData = {
+                          id: track.id,
+                          titulo: track.titulo,
+                          artista: track.User.username
+                        }
+                        return(
+                          <MusicCard track={trackData} />
+                        )
+                      }
+                  )}
+                </MDBRow>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
