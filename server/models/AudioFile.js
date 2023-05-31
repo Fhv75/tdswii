@@ -35,10 +35,10 @@ const AudioFile = sequelize.define('AudioFile', {
     tableName: "pista_musica",
 })
 
-AudioFile.associate = (models) => {
-    AudioFile.belongsToMany(models.Tag, { through: 'AudioFileTags', as: 'tags' });
-    AudioFile.belongsToMany(models.User, { through: 'TrackUserRating', as: 'rating', foreignKey: 'user-rating' });
-};
+AudioFile.belongsToMany(Tag, { through: 'AudioFileTags', as: 'tags', foreignKey: 'id_pista' });
+AudioFile.belongsToMany(User, { through: 'TrackUserRating', as: 'rating', foreignKey: 'id_pista' });
+AudioFile.belongsTo(User, { as: 'uploader', foreignKey: 'id_user_cargas' })
+
 
 AudioFile.prototype.setTags = async function (tags) {
 
