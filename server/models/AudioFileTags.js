@@ -21,10 +21,6 @@ const AudioFileTags = sequelize.define('AudioFileTags', {
     tableName: "pista_etiqueta",
     timestamps: false
 })
-
-AudioFileTags.associate = (models) => {
-    AudioFileTags.belongsTo(models.Tag, {foreingKey: 'id_etiqueta'})
-}
-
+AudioFileTags.belongsTo(Tag, {foreignKey: 'id_etiqueta'})
 
 module.exports = AudioFileTags

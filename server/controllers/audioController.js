@@ -92,7 +92,6 @@ async function getTrackTags(req, res) {
                 id_pista: trackId
             }
         })
-        
         res.status(200).json(tags)
     }
     catch (error) {

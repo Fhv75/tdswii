@@ -50,7 +50,7 @@ function MusicCard ({track}) {
                         <Col md={6}>
                             <Card style={{marginTop: '15px' }}>                 
                                 <Card.Text>
-                                    Etiquetas: {track.etiquetas}
+                                    Etiquetas: {tags.map((tag) => tag.Tag.TAG).join(', ')}
                                 </Card.Text>
                             </Card>
                         </Col>
