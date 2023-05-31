@@ -12,7 +12,7 @@ import AuthenticationProtectedRoute from './routing/AuthenticationProtectedRoute
 import CompleteProfile from './components/CompleteProfile'
 import Contact from './Pages/Contact/Contact';
 import UploadAudioFile from './Pages/UploadAudio/UploadAudioFile'
-
+import MusicCard from './components/MusicCard/MusicCard'
 
 const routes = [
     { 
@@ -63,6 +63,10 @@ const routes = [
     {
         path: '/contact-Form',
         component: <Contact/>
+    },
+    {
+        path: '/MusicCard',
+        component: <MusicCard/> 
     },
     {
         path: '/upload',

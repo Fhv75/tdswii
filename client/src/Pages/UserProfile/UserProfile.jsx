@@ -1,8 +1,35 @@
 import React from 'react';
 import './userProfile.css';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
+import MusicCard from "../../components/MusicCard/MusicCard";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 export default function EditButton() {
+
+  const [tracksData, setTracksData] = useState([])
+
+  useEffect(() => {
+      async function getTracks (){
+        axios.defaults.headers.post["Access-Control-Allow-Origin"] = true
+        try{
+          const response = await axios.post(
+            'http://localhost:5000/audio/getUserTracks',
+            { 
+                token : localStorage.getItem("token")
+            }, 
+          )  
+          console.log(response.data)
+          setTracksData(response.data)
+        }
+        catch(error){
+          console.log(error)
+        }
+      }
+
+      getTracks()
+  }, [])
+
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: '#9de2ff' }}>
       <MDBContainer className="py-5 h-100">
@@ -48,28 +75,24 @@ export default function EditButton() {
                   </div>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-4">
-                  <MDBCardText className="lead fw-normal mb-0">Recent photos</MDBCardText>
+                  <MDBCardText className="lead fw-normal mb-0">Mis Pistas</MDBCardText>
                   <MDBCardText className="mb-0"><a href="#!" className="text-muted">Show all</a></MDBCardText>
                 </div>
                 <MDBRow>
-                  <MDBCol className="mb-2">
-                    <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
-                      alt="image 1" className="w-100 rounded-3" />
-                  </MDBCol>
-                  <MDBCol className="mb-2">
-                    <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
-                      alt="image 1" className="w-100 rounded-3" />
-                  </MDBCol>
-                </MDBRow>
-                <MDBRow className="g-2">
-                  <MDBCol className="mb-2">
-                    <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(108).webp"
-                      alt="image 1" className="w-100 rounded-3" />
-                  </MDBCol>
-                  <MDBCol className="mb-2">
-                    <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(114).webp"
-                      alt="image 1" className="w-100 rounded-3" />
-                  </MDBCol>
+                  {
+                    tracksData &&
+                    tracksData.map(
+                      (track)=>{
+                        const trackData = {
+                          id: track.id,
+                          titulo: track.titulo,
+                          artista: track.User.username
+                        }
+                        return(
+                          <MusicCard track={trackData} />
+                        )
+                      }
+                  )}
                 </MDBRow>
               </MDBCardBody>
             </MDBCard>
