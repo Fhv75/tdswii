@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize')
 const sequelize = require('../db')
 
-const TrackUserRating = sequelize.define('AudioFile', {
+const TrackUserRating = sequelize.define('TrackUserRating', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
