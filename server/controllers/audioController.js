@@ -67,8 +67,7 @@ async function getUserTracks(req, res){
                     id_user_cargas:userMail
                 }
             }
-        ) 
-
+        )
         res.status(201).json(tracks)
     }
     catch(error){
@@ -81,12 +80,35 @@ async function getUserTracks(req, res){
         })
     }
 }
-
-async function getTracksTags(tracks) {
-    // For 
+// Utilizar esta función dentro de useEffect() en
+// MusicCard.jsx para obtener las etiquetas de la pista
+async function getTrackTags(req, res) {
+    try {
+        const trackId = req.body.trackId
+        
+        const tags = await AudioFileTags.findAll({
+            include: { model: Tag, required: true, attributes: ['TAG']},
+            where: {
+                id_pista: trackId
+            }
+        })
+        
+        res.status(200).json(tags)
+    }
+    catch (error) {
+        console.error("Error al obtener etiquetas de pista")
+        console.error(error.name)
+        console.error(error.message)
+        res.status(400).json({
+            error: error.name,
+            message: error.message
+        })
+    }
 }
+
 module.exports = {
     upload,
     uploadAudioFile,
-    getUserTracks
+    getUserTracks,
+    getTrackTags
 }

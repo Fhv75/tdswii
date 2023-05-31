@@ -1,7 +1,8 @@
 const { DataTypes } = require('sequelize')
 const sequelize = require('../db')
+const Tag = require('../models/Tag')
 
-const AudioFileTags = sequelize.define('AudioFileTag', {
+const AudioFileTags = sequelize.define('AudioFileTags', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -20,5 +21,10 @@ const AudioFileTags = sequelize.define('AudioFileTag', {
     tableName: "pista_etiqueta",
     timestamps: false
 })
+
+AudioFileTags.associate = (models) => {
+    AudioFileTags.belongsTo(models.Tag, {foreingKey: 'id_etiqueta'})
+}
+
 
 module.exports = AudioFileTags

@@ -35,9 +35,9 @@ function Feed () {
       tracksData.map(
         (track)=>{
           const trackData = {
+            id: track.id,
             titulo: track.titulo,
-            artista: track.User.username,
-            etiquetas: "etiquetas"
+            artista: track.User.username
           }
           return(
             <MusicCard track={trackData} />
