@@ -1,17 +1,40 @@
 import React from 'react';
+import { Card, Container, Row, Col } from 'react-bootstrap'
 
-const MusicPlayerCard = ({ trackName, artist, rating, playCount, comments }) => {
-  return (
-    <div className="music-player-card">
-      <h2>{trackName}</h2>
-      <h3>By {artist}</h3>
-      <div className="statistics">
-        <p>Rating: {rating}</p>
-        <p>Play Count: {playCount}</p>
-        <p>Comments: {comments?.length}</p>
-      </div>
-    </div>
-  );
-};
+function MusicPlayerCard ({track, rating}) {
 
-export default MusicPlayerCard;
+    return (
+        <Card style={{ width: '35rem' }} >
+            <Card.Body >
+                <Container>
+                    <Row >
+                        <Col md={6}>
+                            <Card>                 
+                                <Card.Img src="/images/logomelorit.png" alt="Melorit Logo" />
+                            </Card>
+                        </Col>
+                        <Col md={6}>
+                            <h4>Titulo</h4>
+                            <h6>Artista</h6>
+                            <audio controls>
+                                <source src="./music.mp3"/>
+                            </audio> 
+                            <p>Rating: {rating}</p> 
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}>
+                            <Card style={{marginTop: '20px' }}>                 
+                                <Card.Text>
+                                    Etiquetas:
+                                </Card.Text>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            </Card.Body>
+        </Card>
+      );
+}
+
+export default MusicPlayerCard

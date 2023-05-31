@@ -16,7 +16,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function UserProfile() {
-
+  
+  const [playCount, setPlayCount] = useState(0);
   const [trackData, setTrackData] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +33,11 @@ export default function UserProfile() {
     };
 
     fetchData();
+    
   }, []);
+  const handleButtonClick = () => {
+    setPlayCount(prevCount => prevCount + 1);
+  };
 
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: "#9de2ff" }}>
@@ -56,13 +61,7 @@ export default function UserProfile() {
                     fluid
                     style={{ width: "150px", zIndex: "1" }}
                   />
-                  <MDBBtn
-                    outline
-                    color="dark"
-                    style={{ height: "36px", overflow: "visible" }}
-                  >
-                    Edit profile
-                  </MDBBtn>
+                  
                 </div>
                 <div className="ms-3" style={{ marginTop: "130px" }}>
                   <MDBTypography tag="h5">Alexis Canorwitz</MDBTypography>
@@ -123,12 +122,13 @@ export default function UserProfile() {
                   <div>
                     {trackData && <p>Song Name: {trackData.trackName}</p>}
                   </div>
+                  <MDBBtn                    
+                    color="dark"                
+                    onClick={handleButtonClick}
+                  >
+                    PlayCount
+                  </MDBBtn>
                   <MusicPlayerCard
-                    trackName={trackData?.trackName}
-                    artist={trackData?.artist}
-                    rating={trackData?.rating}
-                    playCount={trackData?.playCount}
-                    comments={trackData?.comments}
                   />
                 </div>
               </MDBCardBody>

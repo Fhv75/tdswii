@@ -1,4 +1,5 @@
 const AudioFile = require("../models/AudioFile")
+const TrackUserRating = require("../models/TrackUserRating")
 const multer = require("multer")
 const path = require("path")
 const jwt = require("jsonwebtoken")
@@ -35,11 +36,16 @@ async function obtenerPistaAudio (req, res){
             }
             }
             
-            module.exports = {
-            obtenerPistaAudio,
-            };
-
-
+    async function getStatistics(req, res) {
+        try {
+            const ratings = await TrackUserRating.findAll();
+            res.status(200).json(ratings);
+            
+        } catch (error) {
+                console.error('Error', error);
+        }
+        
+    }
 async function uploadAudioFile (req, res) {
     try {
         const titulo = req.body.titulo
@@ -73,4 +79,5 @@ module.exports = {
     upload,
     uploadAudioFile,
     obtenerPistaAudio,
+    getStatistics,
 }
