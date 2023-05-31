@@ -22,7 +22,15 @@ const AudioFile = sequelize.define('AudioFile', {
     id_user_cargas: {
         type: DataTypes.STRING(100),
         allowNull: false
-    }
+    },
+    imagen_pista: {
+        type: DataTypes.STRING(200),
+        allowNull: true
+    },
+    nombre_archivo: {
+        type: DataTypes.STRING(200),
+        allowNull: false
+    },
 }, { 
     // Trabaja en la tabla "pista_musica"
     tableName: "pista_musica",
