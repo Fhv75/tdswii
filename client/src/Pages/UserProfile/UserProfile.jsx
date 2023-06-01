@@ -4,9 +4,11 @@ import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCar
 import MusicCard from "../../components/MusicCard/MusicCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom'
 
 export default function EditButton() {
 
+  const { username } = useParams()
   const [tracksData, setTracksData] = useState([])
 
   useEffect(() => {
@@ -16,11 +18,11 @@ export default function EditButton() {
           const response = await axios.post(
             'http://localhost:5000/audio/getUserTracks',
             { 
-                token : localStorage.getItem("token")
+                username : username
             }, 
           )  
           console.log(response.data)
-          setTracksData(response.data)
+          setTracksData(response.data.AudioFiles)
         }
         catch(error){
           console.log(error)
@@ -86,10 +88,10 @@ export default function EditButton() {
                         const trackData = {
                           id: track.id,
                           titulo: track.titulo,
-                          artista: track.User.username
+                          artista: track.username
                         }
                         return(
-                          <MusicCard track={trackData} />
+                          <MusicCard key={track.id} track={trackData} />
                         )
                       }
                   )}
