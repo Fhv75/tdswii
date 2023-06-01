@@ -102,32 +102,14 @@ async function getTrackTags(req, res) {
 
 async function rateTrack(req, res) {
     try {
-        const { token, rating, trackTitle, trackArtist } = req.body
+        const { token, rating, trackID } = req.body
         const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
         const userMail = decoded.id
 
-        const user = await User.findOne({ 
-            where: { 
-                correo: userMail 
-            } 
-        })
-
-        const trackUploader = await User.findOne({
-            where: {
-                username: trackArtist
-            }
-        })
-        const track = await AudioFile.findOne({ 
-            where: { 
-                titulo: trackTitle,
-                id_user_cargas: trackUploader.correo
-            } 
-        })
-
         const trackUserRating = await TrackUserRating.findOne({
             where: {
-                id_usuario: user.correo,
-                id_pista: track.id
+                id_usuario: userMail,
+                id_pista: trackID
             }
         })
 
@@ -140,8 +122,8 @@ async function rateTrack(req, res) {
         } else {
             console.log("does not exist")
             const newTrackUserRating = await TrackUserRating.create({ 
-                id_usuario: user.correo,  
-                id_pista: track.id,
+                id_usuario: userMail,  
+                id_pista: trackID,
                 valoracion: rating
             })
             console.log('Track rating saved to database:', newTrackUserRating.dataValues);

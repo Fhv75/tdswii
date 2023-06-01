@@ -21,7 +21,7 @@ function MusicCard ({track}) {
         
         setTimeout(() => {
             setShow(!show)
-        }, 300);
+        }, 500);
         await rateTrack()
     }
 
@@ -40,8 +40,7 @@ function MusicCard ({track}) {
                 {
                     token: localStorage.getItem("token"),
                     rating: rating,
-                    trackTitle: track.titulo,
-                    trackArtist: track.artista
+                    trackID: track.id
                 },
                 {
                     headers: {
@@ -118,6 +117,8 @@ function MusicCard ({track}) {
                                             disableFillHover={true}
                                             onPointerEnter={onPointerEnter}
                                             onPointerLeave={onPointerLeave}
+                                            readonly={localStorage.getItem("token") ? false : true}
+                                            
                                         />
                                     </Popover>
                                 </Overlay>
