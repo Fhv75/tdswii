@@ -1,4 +1,5 @@
 const AudioFile = require("../models/AudioFile")
+const TrackUserRating = require("../models/TrackUserRating")
 const User = require("../models/User")
 const Tag = require("../models/Tag")
 const AudioFileTags = require("../models/AudioFileTags")
@@ -48,17 +49,18 @@ async function uploadAudioFile (req, res) {
         })
     }
 }
+
 async function getUserTracks(req, res){
     try{
-        const token = req.body.token
-        const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
-        const userMail = decoded.id
-        const tracks = await AudioFile.findAll(
+        const username = req.body.username
+        console.log(username)
+        const tracks = await User.findOne(
             {
-                include: { model: User, required: true, attributes: ['username']},
+                include: { model: AudioFile, required: true},
+                attributes: ['username'],
                 where: 
                 {
-                    id_user_cargas:userMail
+                    username: username
                 }
             }
         )
@@ -74,8 +76,7 @@ async function getUserTracks(req, res){
         })
     }
 }
-// Utilizar esta función dentro de useEffect() en
-// MusicCard.jsx para obtener las etiquetas de la pista
+
 async function getTrackTags(req, res) {
     try {
         const trackId = req.body.trackId
