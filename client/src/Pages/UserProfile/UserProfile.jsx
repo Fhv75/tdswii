@@ -4,7 +4,7 @@ import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCar
 import MusicCard from "../../components/MusicCard/MusicCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { NavBar } from '../../components/NavBar/NavBar';
+import NavBar from "../../components/NavBar/NavBar";
 
 export default function UserProfile() {
 
