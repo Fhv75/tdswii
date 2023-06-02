@@ -22,6 +22,7 @@ export default function UserProfile() {
                 username : username
             }, 
           )  
+          console.log(response.data)
           setTracksData(response.data.AudioFiles)
         }
         catch(error){
