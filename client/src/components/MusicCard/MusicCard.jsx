@@ -8,15 +8,15 @@ import axios from 'axios'
 
 function MusicCard ({track}) {
 
-    const [rating, setRating] = useState(-1)
     const [isHovering, setIsHovering] = useState(false)
     const [tags, setTags] = useState([])
     const [show, setShow] = useState(false);
     const target = useRef(null);
+    const rating = useRef(0)
 
 
     async function handleRating(rate) {
-        setRating(rate)
+        rating.current = rate
         console.log(rating)
         
         setTimeout(() => {
@@ -33,13 +33,21 @@ function MusicCard ({track}) {
         setIsHovering(false)
     }
 
+    async function resetRate() {
+        rating.current = 0
+        setTimeout(() => {
+            setShow(!show)
+        }, 300);
+        await rateTrack()
+    }
+
     async function rateTrack() {
         try {
             const response = await axios.post(
-                "http://localhost:5000/audio/rate-track",
+                "http://localhost:5000/audio/rateTrack",
                 {
                     token: localStorage.getItem("token"),
-                    rating: rating,
+                    rating: rating.current,
                     trackID: track.id
                 },
                 {
@@ -69,10 +77,30 @@ function MusicCard ({track}) {
                 console.log(error)
             }
         }
+        async function getUserRating() {
+            try {
+                const response = await axios.post(
+                    "http://localhost:5000/audio/getUserRating",
+                    {
+                        token: localStorage.getItem("token"),
+                        trackID: track.id
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                    }
+                );
+                console.log(response.data);
+                rating.current = response.data.valoracion
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
         getTrackTags()
+        getUserRating()
     }, [track.id])
-
 
     return (
         <Card style={{ width: '40rem' }} >
@@ -109,7 +137,7 @@ function MusicCard ({track}) {
                                     <Popover id="rating">
                                         <Rating
                                             onClick={handleRating}
-                                            initialValue={rating}
+                                            initialValue={rating.current}
                                             transition
                                             allowHover={false}
                                             fillColor={isHovering ? 'red' : 'orange'}
@@ -120,7 +148,7 @@ function MusicCard ({track}) {
                                             readonly={localStorage.getItem("token") ? false : true}
                                             
                                         />
-                                        <Button variant="">
+                                    <Button variant="" onClick={resetRate}>
                                             <FontAwesomeIcon icon={faRotateLeft} style={{ color: "#c0c0c0", }} />
                                         </Button>
                                     </Popover>

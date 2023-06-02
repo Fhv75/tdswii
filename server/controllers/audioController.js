@@ -114,13 +114,24 @@ async function rateTrack(req, res) {
         })
 
         if (trackUserRating) {
-            console.log("exists")
+            console.log("exists")                
+            if (rating == 0) {
+                await trackUserRating.destroy()
+                return res.status(201).json({
+                    message: "Track rating reset"
+                })
+            }
             trackUserRating.valoracion = rating
             await trackUserRating.save()
             console.log('Track rating updated in database:', trackUserRating.dataValues);
             res.status(201).json(trackUserRating)
         } else {
             console.log("does not exist")
+            if (rating == 0) {
+                return res.status(201).json({
+                    message: "Track rating reset"
+                })
+            }
             const newTrackUserRating = await TrackUserRating.create({ 
                 id_usuario: userMail,  
                 id_pista: trackID,
@@ -139,20 +150,43 @@ async function rateTrack(req, res) {
     }
 }
 
-async function getAverageRating(req, res) {
-    const trackRatings = await TrackUserRating.findAll(
-        { where: { id_pista: req.track.id } }
-    ).map((rating) => rating.valoracion)
+async function getUserTrackRating (req, res) {
+    try {
+        const { token, trackID } = req.body
+        const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
+        const userMail = decoded.id
 
-    const averageRating = trackRatings.reduce((a, b) => a + b, 0) / trackRatings.length
-    
-    res.status(200).json(averageRating)
+        const trackUserRating = await TrackUserRating.findOne({
+            where: {
+                id_usuario: userMail,
+                id_pista: trackID
+            }
+        })
+
+        if (trackUserRating) {
+            console.log('Track rating retrieved from database');
+            res.status(201).json(trackUserRating)
+        } else {
+            console.log('Track rating not found in database');
+            res.status(201).json({valoracion: 0})
+        }
+    } catch(error) {
+        console.error('Error retrieving track rating from database:', error);
+        res.status(400).json({
+            error: error.name,
+            message: error.message
+        })
+    }
+
+
 }
+
 
 module.exports = {
     upload,
     uploadAudioFile,
     rateTrack,
     getUserTracks,
-    getTrackTags
+    getTrackTags,
+    getUserTrackRating
 }
