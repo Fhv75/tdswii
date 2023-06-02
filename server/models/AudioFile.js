@@ -2,7 +2,6 @@ const { DataTypes } = require('sequelize')
 const sequelize = require('../db')
 const Tag = require('../models/Tag')
 const AudioFileTags = require('../models/AudioFileTags')
-const User = require('../models/User')
 
 const AudioFile = sequelize.define('AudioFile', {
     id: {
@@ -39,11 +38,8 @@ const AudioFile = sequelize.define('AudioFile', {
 AudioFile.belongsTo(User, {
     foreignKey: 'id_user_cargas'
 })
-AudioFile.hasMany(AudioFileTags, {
-    foreignKey: 'id_pista'
-})
 
-
+AudioFile.hasMany(AudioFileTags, { foreignKey: 'id_pista' })
 
 AudioFile.prototype.setTags = async function (tags) {
 
