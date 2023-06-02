@@ -6,7 +6,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom'
 
-export default function EditButton() {
+export default function UserProfile() {
 
   const { username } = useParams()
   const [tracksData, setTracksData] = useState([])
