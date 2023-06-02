@@ -1,4 +1,6 @@
-const { DataTypes } = require('sequelize')
+const {
+    DataTypes
+} = require('sequelize')
 const sequelize = require('../db')
 const TrackUserRating = require('../models/TrackUserRating')
 const AudioFile = require('./AudioFile')
@@ -35,7 +37,7 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING(60),
         allowNull: false
     }
-}, { 
+}, {
     // Trabaja en la tabla "usuario"
     tableName: "usuario",
     // Remueve "createdAt" y "updatedAt"
