@@ -4,6 +4,7 @@ import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCar
 import MusicCard from "../../components/MusicCard/MusicCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import NavBar from '../../components/NavBar/NavBar';
 
 export default function EditButton() {
 
@@ -111,7 +112,9 @@ export default function EditButton() {
                         const trackData = {
                           id: track.id,
                           titulo: track.titulo,
-                          artista: track.User.username
+                          artista: track.User.username,
+                          plays: track.cant_reprod,
+                          rating: track.rating                                
                         }
                         return(
                           <MusicCard track={trackData} />

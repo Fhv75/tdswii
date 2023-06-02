@@ -1,11 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const { upload, uploadAudioFile, getUserTracks, getTrackTags } = require('../controllers/audioController')
+const { upload, uploadAudioFile, getUserTracks, getTrackTags, getStatistics } = require('../controllers/audioController')
 
 
 router.post('/upload/:trackData', upload.single('audioFile'), uploadAudioFile)
-router.get('/getRating', audioController.mostrarValoraciones);
-
+router.post('/getRating/:trackId', getStatistics)
 
 router.post('/upload/:trackData', upload.single('audioFile'), uploadAudioFile)
 router.post('/getUserTracks', getUserTracks )

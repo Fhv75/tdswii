@@ -20,34 +20,23 @@ const storage = multer.diskStorage({
 })  
 
 const upload = multer({ storage: storage })
-
-
-
-async function obtenerPistaAudio (req, res){
-    try {
-         const pistaId = req.params.id;
-         const pistaDeAudio = await AudioFile.findByPk(pistaId);
-         if (pistaDeAudio) {
-            res.status(200).json(pistaDeAudio);
-            } else {
-            res.status(404).json({ error: "Pista de audio no encontrada" });
-            }
-        }    
-    catch (error) {
-            console.error("Error al obtener la pista de audio:", error);
-            res.status(500).json({ error: "Error del servidor" });
-            }
-            }
-            
+           
     async function getStatistics(req, res) {
         try {
-            const ratings = await TrackUserRating.findAll();
+            const trackId = req.params.trackId;
+            const ratings = await TrackUserRating.findAll({where:{id_pista : trackId}});
+            console.log(ratings);
             res.status(200).json(ratings);
             
         } catch (error) {
-                console.error('Error', error);
+            console.error('Error', error);
+            console.error(error.name)
+            console.error(error.message)
+            res.status(500).json({
+                error: 'Error del servidor',
+                message: error.message
+            }); 
         }
-        
     }
 async function uploadAudioFile (req, res) {
     try {

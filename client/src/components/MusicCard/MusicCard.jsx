@@ -6,8 +6,23 @@ import axios from 'axios'
 function MusicCard ({track}) {
 
     const [tags, setTags] = useState([])
-
+    const [rating, setRating] = useState(0)
     useEffect(() => {
+        async function getStatistics() {
+            try {
+                const response = await axios.post(
+                    'http://localhost:5000/audio/getStatistics',
+                    {
+                        trackId : track.id
+                    },                    
+                )
+                console.log(response.data)
+                setRating(response.data[0]?.valoracion || 0);
+                
+            } catch (error) {                
+            }            
+        }
+        getStatistics()
         async function getTrackTags (){
             try{
                 const response = await axios.post(
@@ -22,8 +37,7 @@ function MusicCard ({track}) {
             catch(error){
                 console.log(error)
             }
-        }
-
+        }        
         getTrackTags()
     }, [track.id])
 
@@ -43,11 +57,15 @@ function MusicCard ({track}) {
                             <h6>{track.artista}</h6>
                             <audio controls>
                                 <source src="./music.mp3"/>
-                            </audio> 
-                        </Col>
-                    </Row>
+                            </audio>  
+                            <h6>Played {track.plays} times</h6> 
+                            <h6>{rating}</h6>           
+                        </Col>                       
+                    </Row>                    
                     <Row>
-                        <Col md={6}>
+                    
+                        <Col md={6}>                        
+                                                       
                             <Card style={{marginTop: '15px' }}>                 
                                 <Card.Text>
                                     Etiquetas: {tags.map((tag) => tag.Tag.TAG).join(', ')}
