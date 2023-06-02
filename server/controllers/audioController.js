@@ -6,6 +6,7 @@ const AudioFileTags = require("../models/AudioFileTags")
 const multer = require("multer")
 const path = require("path")
 const jwt = require("jsonwebtoken")
+const sequelize = require('../db')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -24,10 +25,14 @@ const upload = multer({ storage: storage })
 async function getStatistics(req, res) {
     try {
         const trackId = req.body.trackId;
-        const ratings = await TrackUserRating.findAll({where:{id_pista : trackId}});
+        const ratings = await TrackUserRating.findAll({
+            where: { id_pista: trackId },
+            attributes: [[sequelize.fn('AVG', sequelize.col('valoracion')), 'average_rating']],
+          });      
+        const averageRating = parseFloat(ratings[0].dataValues.average_rating) || 0;      
+        res.status(200).json({ averageRating });
         
-        console.log(ratings);
-        res.status(200).json(ratings);
+          console.log(ratings);      
         
     } catch (error) {
         console.error('Error', error);

@@ -114,7 +114,8 @@ export default function UserProfile() {
                         const trackData = {
                           id: track.id,
                           titulo: track.titulo,
-                          artista: track.username
+                          artista: track.username,
+                          plays: track.cant_reprod
                         }
                         return(
                           <MusicCard key={track.id} track={trackData} />

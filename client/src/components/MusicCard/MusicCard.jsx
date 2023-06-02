@@ -6,7 +6,8 @@ import axios from 'axios'
 function MusicCard ({track}) {
 
     const [tags, setTags] = useState([])
-    const [rating, setRating] = useState(0)
+    const [averageRating, setAverageRating] = useState(0);
+
     useEffect(() => {
         async function getStatistics() {
             try {
@@ -16,8 +17,8 @@ function MusicCard ({track}) {
                         trackId : track.id
                     },                    
                 )
-                console.log(response.data)
-                setRating(response.data[0]?.valoracion || 0);
+                console.log(response.data.averageRating)
+                setAverageRating(response.data.averageRating || 0);
             } catch (error) {                
             }            
         }
@@ -57,7 +58,7 @@ function MusicCard ({track}) {
                                 <source src="./music.mp3"/>
                             </audio>  
                             <h6>Played {track.plays} times</h6> 
-                            <h6>{rating}</h6>           
+                            <h6>Rating: {averageRating}</h6>           
                         </Col>                       
                     </Row>                    
                     <Row>
