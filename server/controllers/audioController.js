@@ -100,9 +100,59 @@ async function getTrackTags(req, res) {
     }
 }
 
+async function rateTrack(req, res) {
+    try {
+        const { token, rating, trackID } = req.body
+        const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
+        const userMail = decoded.id
+
+        const trackUserRating = await TrackUserRating.findOne({
+            where: {
+                id_usuario: userMail,
+                id_pista: trackID
+            }
+        })
+
+        if (trackUserRating) {
+            console.log("exists")
+            trackUserRating.valoracion = rating
+            await trackUserRating.save()
+            console.log('Track rating updated in database:', trackUserRating.dataValues);
+            res.status(201).json(trackUserRating)
+        } else {
+            console.log("does not exist")
+            const newTrackUserRating = await TrackUserRating.create({ 
+                id_usuario: userMail,  
+                id_pista: trackID,
+                valoracion: rating
+            })
+            console.log('Track rating saved to database:', newTrackUserRating.dataValues);
+            res.status(201).json(newTrackUserRating)
+        }
+    } 
+    catch (error) {
+        console.error('Error saving track rating to database:', error);
+        res.status(400).json({
+            error: error.name,
+            message: error.message
+        })
+    }
+}
+
+async function getAverageRating(req, res) {
+    const trackRatings = await TrackUserRating.findAll(
+        { where: { id_pista: req.track.id } }
+    ).map((rating) => rating.valoracion)
+
+    const averageRating = trackRatings.reduce((a, b) => a + b, 0) / trackRatings.length
+    
+    res.status(200).json(averageRating)
+}
+
 module.exports = {
     upload,
     uploadAudioFile,
+    rateTrack,
     getUserTracks,
     getTrackTags
 }
