@@ -21,23 +21,25 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
            
-    async function getStatistics(req, res) {
-        try {
-            const trackId = req.params.trackId;
-            const ratings = await TrackUserRating.findAll({where:{id_pista : trackId}});
-            console.log(ratings);
-            res.status(200).json(ratings);
-            
-        } catch (error) {
-            console.error('Error', error);
-            console.error(error.name)
-            console.error(error.message)
-            res.status(500).json({
-                error: 'Error del servidor',
-                message: error.message
-            }); 
-        }
+async function getStatistics(req, res) {
+    try {
+        const trackId = req.body.trackId;
+        const ratings = await TrackUserRating.findAll({where:{id_pista : trackId}});
+        
+        console.log(ratings);
+        res.status(200).json(ratings);
+        
+    } catch (error) {
+        console.error('Error', error);
+        console.error(error.name)
+        console.error(error.message)
+        res.status(500).json({
+            error: 'Error del servidor',
+            message: error.message
+        }); 
     }
+}
+
 async function uploadAudioFile (req, res) {
     try {
         const titulo = req.body.titulo

@@ -4,7 +4,7 @@ const { upload, uploadAudioFile, getUserTracks, getTrackTags, getStatistics } = 
 
 
 router.post('/upload/:trackData', upload.single('audioFile'), uploadAudioFile)
-router.post('/getRating/:trackId', getStatistics)
+router.post('/getStatistics', getStatistics)
 
 router.post('/upload/:trackData', upload.single('audioFile'), uploadAudioFile)
 router.post('/getUserTracks', getUserTracks )

@@ -36,8 +36,13 @@ const AudioFile = sequelize.define('AudioFile', {
     tableName: "pista_musica",
 })
 
-AudioFile.belongsTo(User, { foreignKey: 'id_user_cargas' })
-AudioFile.belongsToMany(User, { through: 'TrackUserRating', as: 'rating', foreignKey: 'id_usuario' });
+AudioFile.belongsTo(User, {
+    foreignKey: 'id_user_cargas'
+})
+AudioFile.hasMany(AudioFileTags, {
+    foreignKey: 'id_pista'
+})
+
 
 
 AudioFile.prototype.setTags = async function (tags) {

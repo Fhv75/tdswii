@@ -18,7 +18,6 @@ function MusicCard ({track}) {
                 )
                 console.log(response.data)
                 setRating(response.data[0]?.valoracion || 0);
-                
             } catch (error) {                
             }            
         }
@@ -31,7 +30,6 @@ function MusicCard ({track}) {
                         trackId : track.id
                     }, 
                 )  
-                console.log(response.data)
                 setTags(response.data)
             }
             catch(error){
