@@ -3,7 +3,7 @@ import { Card, Container, Row, Col, Button, Overlay, Popover } from 'react-boots
 import { useEffect, useState, useRef } from 'react'
 import { Rating } from 'react-simple-star-rating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar } from '@fortawesome/free-solid-svg-icons'
+import { faRotateLeft, faStar } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 
 function MusicCard ({track}) {
@@ -120,9 +120,12 @@ function MusicCard ({track}) {
                                             readonly={localStorage.getItem("token") ? false : true}
                                             
                                         />
+                                        <Button variant="">
+                                            <FontAwesomeIcon icon={faRotateLeft} style={{ color: "#c0c0c0", }} />
+                                        </Button>
                                     </Popover>
                                 </Overlay>
-                                4.7
+                                Aquí va el promedio de los ratings
                         </Col>
                     </Row>
                 </Container>
