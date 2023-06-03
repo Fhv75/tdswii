@@ -11,8 +11,10 @@ function MusicCard ({track}) {
     const [isHovering, setIsHovering] = useState(false)
     const [tags, setTags] = useState([])
     const [show, setShow] = useState(false);
+    const [averageRating, setAverageRating] = useState(0);
     const target = useRef(null);
     const rating = useRef(0)
+    
 
 
     async function handleRating(rate) {
@@ -40,6 +42,7 @@ function MusicCard ({track}) {
         }, 300);
         await rateTrack()
     }
+    
 
     async function rateTrack() {
         try {
@@ -77,6 +80,20 @@ function MusicCard ({track}) {
                 console.log(error)
             }
         }
+        async function getStatistics() {
+            try {
+                const response = await axios.post(
+                    'http://localhost:5000/audio/getStatistics',
+                    {
+                        trackId : track.id
+                    },                    
+                )
+                console.log(response.data.averageRating)
+                setAverageRating(response.data.averageRating || 0);
+            } catch (error) {                
+            }            
+        }
+        getStatistics()
         async function getUserRating() {
             try {
                 const response = await axios.post(
@@ -153,7 +170,7 @@ function MusicCard ({track}) {
                                         </Button>
                                     </Popover>
                                 </Overlay>
-                                Aquí va el promedio de los ratings
+                               <span>{averageRating}</span>
                         </Col>
                     </Row>
                 </Container>

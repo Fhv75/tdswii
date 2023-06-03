@@ -6,7 +6,7 @@ const AudioFileTags = require("../models/AudioFileTags")
 const multer = require("multer")
 const path = require("path")
 const jwt = require("jsonwebtoken")
-
+const sequelize = require('../db')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(__dirname, "../public/userUploads/audio"))
@@ -74,6 +74,31 @@ async function getUserTracks(req, res){
             error: error.name,
             message: error.message
         })
+    }
+}
+async function getStatistics(req, res) {
+    try {
+        const trackId = req.body.trackId;
+        const ratings = await TrackUserRating.findAll({
+            where: { id_pista: trackId },
+            attributes: [[sequelize.fn('AVG', sequelize.col('valoracion')), 'average_rating']],
+          });   
+        console.log(ratings); 
+        const averageRating = parseFloat(ratings[0].dataValues.average_rating) || 0;  
+        console.log(averageRating);      
+        console.log('####################################');     
+        res.status(200).json({ averageRating });
+        
+          
+        
+    } catch (error) {
+        console.error('Error', error);
+        console.error(error.name)
+        console.error(error.message)
+        res.status(500).json({
+            error: 'Error del servidor',
+            message: error.message
+        }); 
     }
 }
 
@@ -188,5 +213,6 @@ module.exports = {
     rateTrack,
     getUserTracks,
     getTrackTags,
+    getStatistics,
     getUserTrackRating
 }
