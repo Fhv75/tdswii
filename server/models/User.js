@@ -1,8 +1,9 @@
-const { DataTypes } = require('sequelize')
+const {
+    DataTypes
+} = require('sequelize')
 const sequelize = require('../db')
-const TrackUserRating = require('../models/TrackUserRating')
-const AudioFile = require('./AudioFile')
-
+const AudioFile = require('../models/AudioFile')
+// Se crea un objeto "User", cuyas propiedades se corresponden con las de la tabla "usuario" de la DB
 
 const User = sequelize.define('User', {
     correo: {
@@ -35,16 +36,14 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING(60),
         allowNull: false
     }
-}, { 
+}, {
     // Trabaja en la tabla "usuario"
     tableName: "usuario",
     // Remueve "createdAt" y "updatedAt"
     timestamps: false
 })
-
 User.hasMany(AudioFile, {
     foreignKey: 'id_user_cargas'
 })
-
 
 module.exports = User
