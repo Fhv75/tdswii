@@ -1,83 +1,85 @@
-import React from 'react'
-import { Button, Form } from 'react-bootstrap'
-import { useState } from 'react'
-import axios from 'axios'
+import React from 'react';
+import { Button, Form, Container, Row, Col } from 'react-bootstrap';
+import { useState } from 'react';
+import axios from 'axios';
+import './UploadAudioFile.css';
 
-function UploadAudioFile () {
+function UploadAudioFile() {
+  const [fileData, setFileData] = useState({ titulo: '', tags: '' });
+  const [file, setFile] = useState('');
 
-    const [fileData, setFileData] = useState({titulo: "", tags: ""})
-    const [file, setFile] = useState("")
+  function inputHandler(e) {
+    const { id, value } = e.target;
+    setFileData((prevData) => ({ ...prevData, [id]: value }));
+  }
 
-    function inputHandler(e) {
-        const { id, value } = e.target
-        setFileData(prevData => ({ ...prevData, [id]: value}))
+  function fileHandler(e) {
+    setFile(e.target.files[0]);
+    console.log(file.name);
+  }
+
+  async function submitHandler(e) {
+    e.preventDefault();
+    await uploadFile();
+  }
+
+  async function uploadFile() {
+    const formData = new FormData();
+    const tagsArray = fileData.tags.split(',').map((tag) => tag.trim());
+    console.log(tagsArray);
+
+    formData.append('audioFile', file);
+    formData.append('titulo', fileData.titulo);
+    formData.append('token', localStorage.getItem('token'));
+    formData.append('tags', JSON.stringify(tagsArray));
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/audio/upload/${fileData.titulo}-${localStorage.getItem('username')}`,
+        formData,
+        { headers: { 'x-access-token': localStorage.getItem('token') } }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    function fileHandler(e) {
-        setFile(e.target.files[0])
-        console.log(file.name)
-    }
+  return (
+    <Container fluid>
+      <Row className="justify-content-center">
+        <Col md={6}>
+          <Form onSubmit={submitHandler}>
+            <Form.Group controlId="email">
+              <Form.Label>Pista</Form.Label>
+              <Form.Control type="file" onChange={fileHandler} />
+            </Form.Group>
 
-    async function submitHandler(e) {
-        e.preventDefault()
-        await uploadFile()
-    }
-
-    async function uploadFile() {
-        const formData = new FormData()
-        const tagsArray = fileData.tags.split(',').map(tag => tag.trim())
-        console.log(tagsArray)
-
-        formData.append('audioFile', file)
-        formData.append('titulo', fileData.titulo)
-        formData.append('token', localStorage.getItem('token'))
-        formData.append('tags', JSON.stringify(tagsArray))
-        try {
-            const response = await axios.post(
-                `http://localhost:5000/audio/upload/${fileData.titulo}-${localStorage.getItem('username')}`,
-                formData,
-                { headers: { 'x-access-token': localStorage.getItem('token') } }
-            )
-            console.log(response)
-        } catch (error) {
-            console.log(error)
-        }
-    }   
-
-
-    return (
-        <div>
-            <Form onSubmit={submitHandler}>
-                <Form.Group className="mb-3" controlId="email">
-                    <Form.Label>Pista</Form.Label>
-                    <Form.Control 
-                        type="file" 
-                        onChange={fileHandler}
-                    />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="titulo">
-                    <Form.Label>Titulo de la pista</Form.Label>
-                    <Form.Control 
-                        type="text" 
-                        onChange={inputHandler}
-                        value={fileData.titulo}
-                    />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="tags">
-                    <Form.Label>Etiquetas</Form.Label>
-                    <Form.Control 
-                        type="text" 
-                        onChange={inputHandler}
-                        value={fileData.tags}
-                        placeholder="Ej: rock, pop, jazz, etc. Separadas por comas"
-                    />
-                </Form.Group>
-                <Button variant="primary" type="submit">Subir</Button>
-            </Form>
-            
-        </div>
-    )   
+            <Form.Group controlId="titulo">
+              <Form.Label>Titulo de la pista
+              </Form.Label>
+<Form.Control
+type="text"
+onChange={inputHandler}
+value={fileData.titulo}
+/>
+</Form.Group>
+<Form.Group controlId="tags">
+<Form.Label>Etiquetas</Form.Label>
+<Form.Control
+type="text"
+onChange={inputHandler}
+value={fileData.tags}
+placeholder="Ej: rock, pop, jazz, etc. Separadas por comas"
+/>
+</Form.Group>
+<Button variant="primary" type="submit">
+Subir
+</Button>
+</Form>
+</Col>
+</Row>
+</Container>
+);
 }
 
-export default UploadAudioFile
+export default UploadAudioFile;

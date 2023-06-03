@@ -1,0 +1,56 @@
+/* UploadAudioFile.css */
+
+.container {
+    margin-top: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  .form-label {
+    font-weight: bold;
+  }
+  
+  .form-control {
+    border-radius: 0;
+  }
+  
+  .input-file {
+    margin-bottom: 10px;
+  }
+  
+  .input-file-label {
+    display: block;
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .input-file-label:hover {
+    background-color: #ced4da;
+  }
+  
+  .input-file-label:active {
+    background-color: #adb5bd;
+  }
+  
+  .tags-input {
+    margin-bottom: 10px;
+  }
+  
+  .submit-button {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .submit-button:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+  
+  .submit-button:active {
+    background-color: #005cbf;
+    border-color: #0056b3;
+  }
+  
