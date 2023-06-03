@@ -1,12 +1,24 @@
-import React from 'react';
-import { Button, Form, Container, Row, Col } from 'react-bootstrap';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Button, Form, Container, Row, Col, Toast } from 'react-bootstrap';
 import axios from 'axios';
 import './UploadAudioFile.css';
 
 function UploadAudioFile() {
   const [fileData, setFileData] = useState({ titulo: '', tags: '' });
   const [file, setFile] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastVariant, setToastVariant] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
 
   function inputHandler(e) {
     const { id, value } = e.target;
@@ -15,7 +27,6 @@ function UploadAudioFile() {
 
   function fileHandler(e) {
     setFile(e.target.files[0]);
-    console.log(file.name);
   }
 
   async function submitHandler(e) {
@@ -26,7 +37,6 @@ function UploadAudioFile() {
   async function uploadFile() {
     const formData = new FormData();
     const tagsArray = fileData.tags.split(',').map((tag) => tag.trim());
-    console.log(tagsArray);
 
     formData.append('audioFile', file);
     formData.append('titulo', fileData.titulo);
@@ -38,10 +48,38 @@ function UploadAudioFile() {
         formData,
         { headers: { 'x-access-token': localStorage.getItem('token') } }
       );
+      setToastVariant('success');
+      setToastMessage('¡La pista se cargó exitosamente!');
+      setShowToast(true);
       console.log(response);
+      setFormSubmitted(true); 
     } catch (error) {
+      setToastVariant('danger');
+      setToastMessage('Hubo un error al cargar la pista.');
+      setShowToast(true);
       console.log(error);
     }
+  }
+
+  function resetForm() {
+    setFormSubmitted(false);
+    setFileData({ titulo: '', tags: '' });
+    setFile('');
+  }
+
+  if (formSubmitted) {
+    return (
+      <Container fluid>
+        <Row className="justify-content-center">
+          <Col md={6}>
+            <div>¡La pista se cargó exitosamente!</div> 
+            <Button variant="primary" onClick={resetForm}>
+              Cargar otra pista
+            </Button>
+          </Col>
+        </Row>
+      </Container>
+    );
   }
 
   return (
@@ -55,31 +93,41 @@ function UploadAudioFile() {
             </Form.Group>
 
             <Form.Group controlId="titulo">
-              <Form.Label>Titulo de la pista
-              </Form.Label>
-<Form.Control
-type="text"
-onChange={inputHandler}
-value={fileData.titulo}
-/>
-</Form.Group>
-<Form.Group controlId="tags">
-<Form.Label>Etiquetas</Form.Label>
-<Form.Control
+              <Form.Label>Título de la pista</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={inputHandler}
+                value={fileData.titulo}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="tags">
+              <Form.Label>
+		Etiquetas</Form.Label>
+	<Form.Control
 type="text"
 onChange={inputHandler}
 value={fileData.tags}
 placeholder="Ej: rock, pop, jazz, etc. Separadas por comas"
 />
 </Form.Group>
-<Button variant="primary" type="submit">
-Subir
-</Button>
-</Form>
-</Col>
-</Row>
+ <Button variant="primary" type="submit">
+          Subir
+        </Button>
+      </Form>
+
+      <Toast
+        show={showToast}
+        onClose={() => setShowToast(false)}
+        className={`mt-3 bg-${toastVariant}`}
+      >
+        <Toast.Body>{toastMessage}</Toast.Body>
+      </Toast>
+    </Col>
+  </Row>
 </Container>
 );
 }
 
 export default UploadAudioFile;
+
