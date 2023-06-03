@@ -135,6 +135,7 @@ function MusicCard ({track}) {
                             <audio controls>
                                 <source src="./music.mp3"/>
                             </audio> 
+                            <h6>Played {track.plays} times</h6>
                         </Col>
                     </Row>
                     <Row>
