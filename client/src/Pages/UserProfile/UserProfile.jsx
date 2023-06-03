@@ -10,6 +10,9 @@ export default function UserProfile() {
 
   const { username } = useParams()
   const [tracksData, setTracksData] = useState([])
+  const [profileData, setProfileData] = useState({})
+  const [responseStatus, setResponseStatus] = useState(0)
+
 
   useEffect(() => {
       async function getTracks (){
@@ -27,9 +30,28 @@ export default function UserProfile() {
           console.log(error)
         }
       }
-
+      
       getTracks()
-  }, [])
+
+      async function fetchUserProfile() {
+        try {
+            const response = await axios.post(
+                `http://localhost:5000/users/getUserData`,
+                { 
+                    username: username
+                }
+            )
+            console.log(response)
+            setProfileData(response.data)                
+            setResponseStatus(response.status)
+        } catch (error) {
+            console.log("Error fetching user profile: ", error)
+            setResponseStatus(404)
+        }
+    }
+    fetchUserProfile()
+}, [username])
+
 
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: '#9de2ff' }}>
@@ -46,33 +68,32 @@ export default function UserProfile() {
                   </MDBBtn>
                 </div>
                 <div className="ms-3" style={{ marginTop: '130px' }}>
-                  <MDBTypography tag="h5">Andy Horwitz</MDBTypography>
-                  <MDBCardText>New York</MDBCardText>
+                  <MDBTypography tag="h5">{username}</MDBTypography>
+                  <MDBCardText>{profileData.ciudad}</MDBCardText>
                 </div>
               </div>
               <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
                 <div className="d-flex justify-content-end text-center py-1">
                   <div>
                     <MDBCardText className="mb-1 h5">253</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">Photos</MDBCardText>
+                    <MDBCardText className="small text-muted mb-0">start</MDBCardText>
                   </div>
                   <div className="px-3">
                     <MDBCardText className="mb-1 h5">1026</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">Followers</MDBCardText>
+                    <MDBCardText className="small text-muted mb-0">Reproducciones</MDBCardText>
                   </div>
                   <div>
                     <MDBCardText className="mb-1 h5">478</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">Following</MDBCardText>
+                    <MDBCardText className="small text-muted mb-0"></MDBCardText>
                   </div>
                 </div>
               </div>
               <MDBCardBody className="text-black p-4">
                 <div className="mb-5">
-                  <p className="lead fw-normal mb-1">About</p>
+                  <p className="lead fw-normal mb-1">Acerca de mí</p>
                   <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
-                    <MDBCardText className="font-italic mb-1">Web Developer</MDBCardText>
-                    <MDBCardText className="font-italic mb-1">Lives in New York</MDBCardText>
-                    <MDBCardText className="font-italic mb-0">Photographer</MDBCardText>
+                    <MDBCardText className="font-italic mb-1">{profileData.biografia}</MDBCardText>
+                    
                   </div>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-4">
@@ -87,7 +108,8 @@ export default function UserProfile() {
                         const trackData = {
                           id: track.id,
                           titulo: track.titulo,
-                          artista: track.username
+                          artista: track.username,
+                          plays: track.cant_reprod
                         }
                         return(
                           <MusicCard key={track.id} track={trackData} />

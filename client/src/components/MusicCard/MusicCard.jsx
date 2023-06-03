@@ -3,7 +3,8 @@ import { Card, Container, Row, Col, Button, Overlay, Popover } from 'react-boots
 import { useEffect, useState, useRef } from 'react'
 import { Rating } from 'react-simple-star-rating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRotateLeft, faStar } from '@fortawesome/free-solid-svg-icons'
+import { faRotateLeft, faStar,faPlay } from '@fortawesome/free-solid-svg-icons'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios'
 
 function MusicCard ({track}) {
@@ -11,8 +12,10 @@ function MusicCard ({track}) {
     const [isHovering, setIsHovering] = useState(false)
     const [tags, setTags] = useState([])
     const [show, setShow] = useState(false);
+    const [averageRating, setAverageRating] = useState(0);
     const target = useRef(null);
     const rating = useRef(0)
+    
 
 
     async function handleRating(rate) {
@@ -40,6 +43,7 @@ function MusicCard ({track}) {
         }, 300);
         await rateTrack()
     }
+    
 
     async function rateTrack() {
         try {
@@ -77,6 +81,20 @@ function MusicCard ({track}) {
                 console.log(error)
             }
         }
+        async function getStatistics() {
+            try {
+                const response = await axios.post(
+                    'http://localhost:5000/audio/getStatistics',
+                    {
+                        trackId : track.id
+                    },                    
+                )
+                console.log(response.data.averageRating)
+                setAverageRating(response.data.averageRating || 0);
+            } catch (error) {                
+            }            
+        }
+        getStatistics()
         async function getUserRating() {
             try {
                 const response = await axios.post(
@@ -117,7 +135,7 @@ function MusicCard ({track}) {
                             <h6>{track.artista}</h6>
                             <audio controls>
                                 <source src="./music.mp3"/>
-                            </audio> 
+                            </audio>                            
                         </Col>
                     </Row>
                     <Row>
@@ -130,7 +148,13 @@ function MusicCard ({track}) {
                         </Col>
                         <Col>
                             <Button variant="a" ref={target} onClick={() => setShow(!show)}>
-                                <FontAwesomeIcon icon={faStar} style={{ color: "orange", height: "32px" }} />
+                                <OverlayTrigger
+                                    placement="top"
+                                    overlay={<Tooltip>Total Ratings</Tooltip>}
+                                >
+                                    <FontAwesomeIcon icon={faStar} style={{ color: "orange", height: "32px" }} />    
+                                </OverlayTrigger>
+                                                       
                             </Button>
                             <Overlay target={target.current} show={show}  
                                 placement='top'>
@@ -150,10 +174,18 @@ function MusicCard ({track}) {
                                         />
                                     <Button variant="" onClick={resetRate}>
                                             <FontAwesomeIcon icon={faRotateLeft} style={{ color: "#c0c0c0", }} />
+                                            
                                         </Button>
                                     </Popover>
                                 </Overlay>
-                                Aquí va el promedio de los ratings
+                               <span>{averageRating}</span>
+                               <OverlayTrigger
+                                    placement="top"
+                                    overlay={<Tooltip>Total plays</Tooltip>}
+                               >
+                                 <FontAwesomeIcon icon={faPlay} style={{marginLeft:'40px', color: "peru", transform: "scale(1.85)"}}/>
+                               </OverlayTrigger>
+                               <span style={{ marginLeft:'10px' }}>{track.plays}</span>
                         </Col>
                     </Row>
                 </Container>
