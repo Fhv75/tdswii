@@ -7,6 +7,9 @@ import { faRotateLeft, faStar,faPlay } from '@fortawesome/free-solid-svg-icons'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios'
 
+//Para comentarios
+import CommentSection from '../CommentSection/CommentSection'
+
 
 function MusicCard ({track}) {
 
@@ -19,8 +22,9 @@ function MusicCard ({track}) {
 
     //para comentarios
     const [comments, setComments] = useState([]);
-    const [showComments, setShowComments] = useState(false);
-    //-----------------------------------------------------------
+    const [newComment, setNewComment] = useState('');
+
+ //-----------------------------------------------------------
 
 
     async function handleRating(rate) {
@@ -121,11 +125,28 @@ function MusicCard ({track}) {
             }
         }
 
-        // Para obtener los comentarios de las pistas
-        async function getComentarios(trackId) {
+        // Para Añadir los comentarios de las pistas
+ 
+        async function addComentario() {
             try {
               const response = await axios.post(
-                "http://localhost:5000/audio/getComentarios",
+                'http://localhost:5000/audio/addComentario',
+                {
+                  comentario: 'Nuevo comentario',
+                  id_pista: track.id,
+                  id_usuario: 'correo_usuario' // Reemplaza 'correo_usuario' con el correo del usuario actual
+                }
+              );
+              console.log(response);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+// Para Obtener los comentarios
+          async function getComentarios() {
+            try {
+              const response = await axios.post(
+                'http://localhost:5000/audio/getComentarios',
                 {
                   trackID: track.id
                 }
@@ -136,12 +157,8 @@ function MusicCard ({track}) {
               console.log(error);
             }
           }
-          /* getComentarios() */
 
-
-         /*  function showAllComments() {
-            setShowComments(true);
-          } */
+     
    
 //-------------------------------------------------------------------------------
     useEffect (()=> {   
@@ -218,25 +235,38 @@ function MusicCard ({track}) {
                                <span style={{ marginLeft:'10px' }}>{track.plays}</span>                        
 
                             
+                               <Row>
 
-                               <Button
-                                    variant="a"
-                                    onClick={() => {
-                                        getComentarios(track.id);
-                                        setShowComments(true);
-                                    }}
-                                    style={{
-                                        marginLeft: '10px',
-                                        backgroundColor: 'blue',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '5px',
-                                        padding: '5px 10px',
-                                        cursor: 'pointer',
-                                    }}
-                                    >
-                                    Mostrar Comentarios
-                                </Button>
+                                    <Col>
+                                    <input
+                                        type="text"
+                                        value={newComment}
+                                        onChange={(e) => setNewComment(e.target.value)}
+                                        placeholder="Ingrese un comentario"
+                                    />
+                                    </Col>
+
+                                    <Col>
+                                        <Button variant="primary" onClick={addComentario} style={{ marginTop: '15px' }}>
+                                        Ingresar Comentario
+                                        </Button>
+                                    </Col>
+                                    <Col>
+                                        <Button variant="secondary" onClick={getComentarios} style={{ marginTop: '15px' }}>
+                                        Mostrar Comentarios
+                                        </Button>
+                                    </Col>
+                                    </Row>
+                                    {/* Resto del código */}
+                                    {comments.length > 0 && (
+                                    <Row>
+                                        <Col>
+                                        <CommentSection trackId={track.id} />
+                                        </Col>
+                                    </Row>
+                                    )}
+                            
+                            
 
                         </Col>
                     </Row>
