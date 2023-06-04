@@ -7,6 +7,7 @@ const multer = require("multer")
 const path = require("path")
 const jwt = require("jsonwebtoken")
 const sequelize = require('../db')
+const Comentarios = require("../models/Comentarios")
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(__dirname, "../public/userUploads/audio"))
@@ -206,6 +207,35 @@ async function getUserTrackRating (req, res) {
 
 }
 
+// Este para los comentarios 
+async function getComentarios(req, res) {
+    try {
+      const { token, trackID, comment } = req.body;
+      const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`);
+      const userMail = decoded.id;
+  
+      // Verificar si el usuario existe o tiene permisos para comentar
+  
+      // Crear el nuevo comentario
+      const newComment = await Comentarios.create({
+        id_usuario: userMail,
+        id_pista: trackID,
+        comentario: comment,
+      });
+  
+      console.log('Comment created:', newComment);
+  
+      res.status(201).json(newComment);
+    } catch (error) {
+      console.error('Error creating track comment:', error);
+      res.status(400).json({
+        error: error.name,
+        message: error.message,
+      });
+    }
+  }
+  
+
 
 module.exports = {
     upload,
@@ -214,5 +244,6 @@ module.exports = {
     getUserTracks,
     getTrackTags,
     getStatistics,
-    getUserTrackRating
+    getUserTrackRating,
+    getComentarios
 }
