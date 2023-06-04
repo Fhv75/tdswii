@@ -1,10 +1,10 @@
 import React from 'react';
-import './userProfile.css';
-import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
 import MusicCard from "../../components/MusicCard/MusicCard";
-import axios from "axios";
+import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
 import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom'
+import axios from "axios";
+import './userProfile.css';
 
 export default function UserProfile() {
 
