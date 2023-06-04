@@ -2,10 +2,11 @@
 const { DataTypes } = require('sequelize')
 const sequelize = require('../db')
 const User = require('../models/User')
+const AudioFile = require('./AudioFile')
 
 const Comentarios = sequelize.define('Comentarios', {
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
@@ -35,5 +36,6 @@ const Comentarios = sequelize.define('Comentarios', {
     timestamps: false
 })
 Comentarios.belongsTo(User, {foreignKey: 'id_usuario'})
+Comentarios.belongsTo(AudioFile, { foreignKey: 'id_pista' });
 
 module.exports = Comentarios

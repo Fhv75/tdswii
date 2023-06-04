@@ -7,6 +7,7 @@ import { faRotateLeft, faStar,faPlay } from '@fortawesome/free-solid-svg-icons'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios'
 
+
 function MusicCard ({track}) {
 
     const [isHovering, setIsHovering] = useState(false)
@@ -15,7 +16,11 @@ function MusicCard ({track}) {
     const [averageRating, setAverageRating] = useState(0);
     const target = useRef(null);
     const rating = useRef(0)
-    
+
+    //para comentarios
+    const [comments, setComments] = useState([]);
+    const [showComments, setShowComments] = useState(false);
+    //-----------------------------------------------------------
 
 
     async function handleRating(rate) {
@@ -66,7 +71,7 @@ function MusicCard ({track}) {
         }
     }
 
-    useEffect(() => {
+    /* useEffect(() => { */
         async function getTrackTags (){
             try{
                 const response = await axios.post(
@@ -94,7 +99,7 @@ function MusicCard ({track}) {
             } catch (error) {                
             }            
         }
-        getStatistics()
+       /*  getStatistics() */
         async function getUserRating() {
             try {
                 const response = await axios.post(
@@ -116,9 +121,34 @@ function MusicCard ({track}) {
             }
         }
 
-        getTrackTags()
-        getUserRating()
-    }, [track.id])
+        // Para obtener los comentarios de las pistas
+        async function getComentarios(trackId) {
+            try {
+              const response = await axios.post(
+                "http://localhost:5000/audio/getComentarios",
+                {
+                  trackID: track.id
+                }
+              );
+              console.log(response.data);
+              setComments(response.data);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+          /* getComentarios() */
+
+
+         /*  function showAllComments() {
+            setShowComments(true);
+          } */
+   
+//-------------------------------------------------------------------------------
+    useEffect (()=> {   
+        getStatistics();
+        getTrackTags();
+        getUserRating();
+    }, [track.id]);
 
     return (
         <Card style={{ width: '40rem' }} >
@@ -185,7 +215,29 @@ function MusicCard ({track}) {
                                >
                                  <FontAwesomeIcon icon={faPlay} style={{marginLeft:'40px', color: "peru", transform: "scale(1.85)"}}/>
                                </OverlayTrigger>
-                               <span style={{ marginLeft:'10px' }}>{track.plays}</span>
+                               <span style={{ marginLeft:'10px' }}>{track.plays}</span>                        
+
+                            
+
+                               <Button
+                                    variant="a"
+                                    onClick={() => {
+                                        getComentarios(track.id);
+                                        setShowComments(true);
+                                    }}
+                                    style={{
+                                        marginLeft: '10px',
+                                        backgroundColor: 'blue',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        padding: '5px 10px',
+                                        cursor: 'pointer',
+                                    }}
+                                    >
+                                    Mostrar Comentarios
+                                </Button>
+
                         </Col>
                     </Row>
                 </Container>
@@ -194,4 +246,4 @@ function MusicCard ({track}) {
       );
 }
 
-export default MusicCard
+export default MusicCard;

@@ -206,36 +206,66 @@ async function getUserTrackRating (req, res) {
 
 
 }
-
-// Este para los comentarios 
-async function getComentarios(req, res) {
-    try {
-      const { token, trackID, comment } = req.body;
-      const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`);
-      const userMail = decoded.id;
   
-      // Verificar si el usuario existe o tiene permisos para comentar
+//----------------------------------------------------------------------------------
+  //Añadir Comentarios
+  async function addComentario(req, res){
+    try {
+      const { comentario, id_pista, id_usuario } = req.body;
+      const token = req.headers.authorization;
+      // Verificar el token y realizar la validación de autenticación
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      // Verificar la autenticación del usuario si es necesario
   
       // Crear el nuevo comentario
       const newComment = await Comentarios.create({
-        id_usuario: userMail,
-        id_pista: trackID,
-        comentario: comment,
+        id_usuario,
+        id_pista,
+        comentario,
       });
   
-      console.log('Comment created:', newComment);
+      console.log('Comentario Creado:', newComment);
   
       res.status(201).json(newComment);
     } catch (error) {
-      console.error('Error creating track comment:', error);
+      console.error('Error al crear un comentario:', error);
       res.status(400).json({
         error: error.name,
         message: error.message,
       });
     }
-  }
-  
+  };
 
+  //Obtener los comentarios de los usuarios
+
+    async function  getComentarios(req, res){
+    try {
+      const { id_pista } = req.body;
+      const token = req.headers.authorization;
+      // Verificar el token y realizar la validación de autenticación
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      // Verificar la autenticación del usuario si es necesario
+  
+      // Obtener los comentarios de la pista especificada
+      const comentarios = await Comentarios.findAll({
+        where: {
+          id_pista,
+        },
+      });
+  
+      console.log('Comentarios obtenidos:', comentarios);
+  
+      res.status(200).json(comentarios);
+    } catch (error) {
+      console.error('Error al obtener los comentarios:', error);
+      res.status(400).json({
+        error: error.name,
+        message: error.message,
+      });
+    }
+  };
+
+//----------------------------------------------------------------------------
 
 module.exports = {
     upload,
@@ -245,5 +275,6 @@ module.exports = {
     getTrackTags,
     getStatistics,
     getUserTrackRating,
-    getComentarios
+    getComentarios,
+    addComentario
 }
