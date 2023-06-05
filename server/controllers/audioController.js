@@ -211,15 +211,17 @@ async function getUserTrackRating (req, res) {
   //Añadir Comentarios
   async function addComentario(req, res){
     try {
-      const { comentario, id_pista, id_usuario } = req.body;
-      const token = req.headers.authorization;
+      const { token, comentario, id_pista/* , id_usuario */ } = req.body;
+      /* const id_usuario = req.user.id; */ // Utiliza el ID del usuario actual
+
+      //const token = req.headers.authorization;
       // Verificar el token y realizar la validación de autenticación
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       // Verificar la autenticación del usuario si es necesario
   
       // Crear el nuevo comentario
       const newComment = await Comentarios.create({
-        id_usuario,
+       /*  id_usuario, */
         id_pista,
         comentario,
       });
@@ -240,8 +242,9 @@ async function getUserTrackRating (req, res) {
 
     async function  getComentarios(req, res){
     try {
-      const { id_pista } = req.body;
-      const token = req.headers.authorization;
+      const {token, id_pista } = req.body;
+      
+      //const token = req.headers.authorization;
       // Verificar el token y realizar la validación de autenticación
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       // Verificar la autenticación del usuario si es necesario

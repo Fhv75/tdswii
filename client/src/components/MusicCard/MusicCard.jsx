@@ -23,6 +23,7 @@ function MusicCard ({track}) {
     //para comentarios
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+    
 
  //-----------------------------------------------------------
 
@@ -132,10 +133,16 @@ function MusicCard ({track}) {
               const response = await axios.post(
                 'http://localhost:5000/audio/addComentario',
                 {
-                  comentario: 'Nuevo comentario',
-                  id_pista: track.id,
-                  id_usuario: 'correo_usuario' // Reemplaza 'correo_usuario' con el correo del usuario actual
-                }
+                    token: localStorage.getItem("token"),
+                    comentario: newComment,
+                    id_pista: track.id
+                    /* id_usuario: userId   */ //Faltaria relacionarlo con id del usuario
+                },
+                {
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                  }
               );
               console.log(response);
             } catch (error) {
@@ -148,8 +155,14 @@ function MusicCard ({track}) {
               const response = await axios.post(
                 'http://localhost:5000/audio/getComentarios',
                 {
+                  token: localStorage.getItem("token"),
                   trackID: track.id
-                }
+                },
+                {
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                  }
               );
               console.log(response.data);
               setComments(response.data);
@@ -165,6 +178,8 @@ function MusicCard ({track}) {
         getStatistics();
         getTrackTags();
         getUserRating();
+        getComentarios();
+        addComentario();
     }, [track.id]);
 
     return (
@@ -232,11 +247,11 @@ function MusicCard ({track}) {
                                >
                                  <FontAwesomeIcon icon={faPlay} style={{marginLeft:'40px', color: "peru", transform: "scale(1.85)"}}/>
                                </OverlayTrigger>
-                               <span style={{ marginLeft:'10px' }}>{track.plays}</span>                        
+                               <span style={{ marginLeft:'10px' }}>{track.plays}</span>  
 
-                            
-                               <Row>
 
+                            {/*-------------Para Comentarios---------------*/}
+                                <Row>
                                     <Col>
                                     <input
                                         type="text"
@@ -264,9 +279,10 @@ function MusicCard ({track}) {
                                         <CommentSection trackId={track.id} />
                                         </Col>
                                     </Row>
-                                    )}
-                            
-                            
+                                    )} 
+                                
+                            {/*----------------------------------------------------------------------------------- */}
+              
 
                         </Col>
                     </Row>

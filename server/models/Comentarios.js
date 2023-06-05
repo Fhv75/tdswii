@@ -6,7 +6,7 @@ const AudioFile = require('./AudioFile')
 
 const Comentarios = sequelize.define('Comentarios', {
     id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
@@ -28,14 +28,14 @@ const Comentarios = sequelize.define('Comentarios', {
         allowNull: false
     },
     id_usuario: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     }
 }, {
     tableName: "comentario_pista",
     timestamps: false
 })
-Comentarios.belongsTo(User, {foreignKey: 'id_usuario'})
-Comentarios.belongsTo(AudioFile, { foreignKey: 'id_pista' });
+Comentarios.belongsTo(User, {foreignKey: 'id_usuario', targetKey: 'correo' }); // Relación con la tabla User usando el campo 'correo'
+Comentarios.belongsTo(AudioFile, { foreignKey: 'id_pista' , targetKey: 'id'});// Lo mismo
 
 module.exports = Comentarios
