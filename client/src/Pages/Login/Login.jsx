@@ -39,7 +39,7 @@ function Login() {
     
     return (
         <Container fluid className={styles["login-container"] + " p-5 bg-white mt-5"}>
-            <div className="text-center mb-5">
+            <div className="text-center mb-4">
                 <h1 className="px-sm-5">Iniciar Sesión</h1>
                 <hr />
             </div>
