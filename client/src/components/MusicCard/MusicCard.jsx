@@ -271,14 +271,15 @@ function MusicCard ({track}) {
                                         Mostrar Comentarios
                                         </Button>
                                     </Col>
-                                    </Row>
+                                </Row>
                                     {/* Resto del código */}
-                                    {comments.length > 0 && (
-                                    <Row>
-                                        <Col>
-                                        <CommentSection trackId={track.id} />
-                                        </Col>
-                                    </Row>
+                                    {
+                                        comments.length > 0 && (
+                                            <Row>
+                                                <Col>
+                                                    <CommentSection trackId={track.id} comments={comments} />
+                                                </Col>
+                                            </Row>
                                     )} 
                                 
                             {/*----------------------------------------------------------------------------------- */}

@@ -218,12 +218,13 @@ async function getUserTrackRating (req, res) {
       // Verificar el token y realizar la validación de autenticación
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       // Verificar la autenticación del usuario si es necesario
-  
+      const userMail = decoded.id 
       // Crear el nuevo comentario
       const newComment = await Comentarios.create({
        /*  id_usuario, */
-        id_pista,
-        comentario,
+        id_pista: id_pista,
+        comentario: comentario,
+        id_usuario: userMail,
       });
   
       console.log('Comentario Creado:', newComment);
@@ -242,7 +243,7 @@ async function getUserTrackRating (req, res) {
 
     async function  getComentarios(req, res){
     try {
-      const {token, id_pista } = req.body;
+      const {token, trackID } = req.body;
       
       //const token = req.headers.authorization;
       // Verificar el token y realizar la validación de autenticación
@@ -252,7 +253,7 @@ async function getUserTrackRating (req, res) {
       // Obtener los comentarios de la pista especificada
       const comentarios = await Comentarios.findAll({
         where: {
-          id_pista,
+          id_pista: trackID,
         },
       });
   

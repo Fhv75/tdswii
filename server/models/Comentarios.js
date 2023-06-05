@@ -15,14 +15,6 @@ const Comentarios = sequelize.define('Comentarios', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
     id_pista: {
         type: DataTypes.INTEGER,
         allowNull: false
