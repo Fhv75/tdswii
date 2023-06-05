@@ -34,7 +34,6 @@ export default function Router(props) {
                 {routes}
                 <Route path='*' element={<Page404 />}></Route>
             </Routes>
-            <LogoutButton />
         </BrowserRouter>
     );
 }
