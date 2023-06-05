@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Container, Row, Col, Button, Overlay, Popover } from 'react-bootstrap'
+import { Card, Container, Row, Col, Button, Overlay, Popover, Stack } from 'react-bootstrap'
 import { useEffect, useState, useRef } from 'react'
 import { Rating } from 'react-simple-star-rating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -124,26 +124,18 @@ function MusicCard ({track}) {
         <Card style={{padding:0}} >
             <Card.Body >
                 
-                    <Row >
+                    <Row>
                         <Col md={3}>
-                            <Card style={{ width: '150px'}} >                 
+                            <Card className="d-flex " style={{ width: '150px'}} >                 
                                 <Card.Img src="/images/logomelorit.png" alt="Melorit Logo" />
                             </Card>
                         </Col>
-                        <Col md={9}>
-                            <Row>
-                                <Col>
-                                    <h4 style={{fontSize:"18px"}}>{track.titulo}</h4>
-                                    <h6 style={{fontSize:"14px"}}>{track.artista}</h6>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>  
-                                    <audio controls>
-                                        <source src="http://localhost:5000/public/userUploads/audio/LAPRUEBA-ismapuntocom.mp3"/>
-                                    </audio>  
-                                </Col>
-                            </Row>                          
+                        <Col md={9} className="d-flex flex-column">
+                            <h4 style={{fontSize:"18px"}}>{track.titulo}</h4>
+                            <h6 style={{fontSize:"14px"}}>{track.artista}</h6>
+                            <audio controls className="mt-auto">
+                                <source src="http://localhost:5000/public/userUploads/audio/LAPRUEBA-ismapuntocom.mp3"/>
+                            </audio>  
                         </Col>
                     </Row>
                     <Row>
