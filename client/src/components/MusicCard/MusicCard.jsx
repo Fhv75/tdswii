@@ -121,21 +121,29 @@ function MusicCard ({track}) {
     }, [track.id])
 
     return (
-        <Card style={{ width: '40rem' }} >
+        <Card style={{padding:0}} >
             <Card.Body >
-                <Container>
+                
                     <Row >
-                        <Col md={6}>
-                            <Card>                 
+                        <Col md={3}>
+                            <Card style={{ width: '150px'}} >                 
                                 <Card.Img src="/images/logomelorit.png" alt="Melorit Logo" />
                             </Card>
                         </Col>
-                        <Col md={6}>
-                            <h4>{track.titulo}</h4>
-                            <h6>{track.artista}</h6>
-                            <audio controls>
-                                <source src="http://localhost:5000/public/userUploads/audio/LAPRUEBA-ismapuntocom.mp3"/>
-                            </audio>                            
+                        <Col md={9}>
+                            <Row>
+                                <Col>
+                                    <h4 style={{fontSize:"18px"}}>{track.titulo}</h4>
+                                    <h6 style={{fontSize:"14px"}}>{track.artista}</h6>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>  
+                                    <audio controls>
+                                        <source src="http://localhost:5000/public/userUploads/audio/LAPRUEBA-ismapuntocom.mp3"/>
+                                    </audio>  
+                                </Col>
+                            </Row>                          
                         </Col>
                     </Row>
                     <Row>
@@ -188,7 +196,7 @@ function MusicCard ({track}) {
                                <span style={{ marginLeft:'10px' }}>{track.plays}</span>
                         </Col>
                     </Row>
-                </Container>
+                
             </Card.Body>
         </Card>
       );
