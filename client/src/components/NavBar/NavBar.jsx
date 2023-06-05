@@ -24,8 +24,8 @@ function NavBar() {
           <Image
             src="/images/logomelorit.png"
             alt="Melorit Logo"
-            width="30"
-            height="30"
+            width="50"
+            height="50"
           />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
