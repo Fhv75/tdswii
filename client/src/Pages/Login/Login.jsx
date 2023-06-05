@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Button, Container, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import styles from './login.module.css'
 
 function Login() {
 
@@ -37,34 +38,60 @@ function Login() {
     }
     
     return (
-        <div>
-            <h1>Iniciar Sesión</h1>
+        <Container fluid className={styles["login-container"] + " p-5 bg-white mt-5"}>
+            <div className="text-center mb-4">
+                <h1 className="px-sm-5">Iniciar Sesión</h1>
+                <hr />
+            </div>
+
             <Form onSubmit={submitHandler}>
-                <Form.Group className="mb-3" controlId="email">
+                <Form.Group className="pt-3 mb-4" controlId="email">
                     <Form.Label>Correo Electrónico</Form.Label>
                     <Form.Control 
+                        onChange={inputHandler}  
                         type="email" 
                         placeholder="Ingresa tu Correo" 
-                        onChange={inputHandler}
                         value={data.email}
                     />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="password">
+                <Form.Group className="mb-5" controlId="password">
                     <Form.Label>Contraseña</Form.Label>
-                    <Form.Control 
-                        type="password" 
-                        placeholder="Contraseña" 
+                    <Form.Control
+                        type="password"
+                        placeholder="Contraseña"
                         onChange={inputHandler}
-                        value={data.pw}
+                        value={data.password}
                     />
                 </Form.Group>
 
-                <Button variant="primary" type="submit">
-                    Ingresar
-                </Button>
+                <Button className="mb-3 w-100" variant="primary" type="submit">Ingresar</Button>
             </Form>
-        </div>
+
+            <div className="text-center text-secondary">
+                <p>O</p>
+
+                <Button 
+                    className="mb-3 w-100" 
+                    variant="dark" 
+                    type="button" 
+                    onClick={() => navigate("../register")}
+                >
+                    Registrate
+                </Button>
+
+                <hr />
+
+                <Button 
+                    variant="link" 
+                    type="button" 
+                    onClick={() => navigate("../password-recovery")}
+                >
+                    ¿Olvidaste tu Contraseña?
+                </Button>
+
+            </div>
+        </Container>
     )
 }
 
