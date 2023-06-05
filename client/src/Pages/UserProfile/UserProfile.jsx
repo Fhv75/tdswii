@@ -24,7 +24,8 @@ export default function UserProfile() {
                 username : username
             }, 
           )  
-          setTracksData(response.data.AudioFiles)
+          console.log(response.data)
+          setTracksData(response.data)
         }
         catch(error){
           console.log(error)
@@ -103,12 +104,12 @@ export default function UserProfile() {
                 <MDBRow>
                   {
                     tracksData &&
-                    tracksData.map(
+                    tracksData.AudioFiles?.map(
                       (track)=>{
                         const trackData = {
                           id: track.id,
                           titulo: track.titulo,
-                          artista: track.username,
+                          artista: tracksData.username,
                           plays: track.cant_reprod
                         }
                         return(
