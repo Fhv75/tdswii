@@ -57,24 +57,50 @@ function NavBar() {
                   </Button>
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="">
-                  <Button onClick={() => navigate("/login")} variant="link">
-                    Ir a Login
-                  </Button>
-                </NavDropdown.Item>
-                <NavDropdown.Item href="">
-                  <Button onClick={() => navigate("/register")} variant="link">
-                    Ir a Registro
-                  </Button>
-                </NavDropdown.Item>
-                <NavDropdown.Item href="">
-                  <Button
-                    onClick={() => navigate("/password-recovery")}
-                    variant="link"
-                  >
-                    Ir a Recuperación de Contraseña
-                  </Button>
-                </NavDropdown.Item>
+                {
+                  !localStorage.getItem("token") && (
+                    <div>
+                    <NavDropdown.Item href="">
+                      <Button onClick={() => navigate("/login")} variant="link">
+                        Ir a Login
+                      </Button>
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="">
+                      <Button onClick={() => navigate("/register")} variant="link">
+                        Ir a Registro
+                      </Button>
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="">
+                      <Button
+                        onClick={() => navigate("/password-recovery")}
+                        variant="link"
+                      >
+                        Ir a Recuperación de Contraseña
+                      </Button>
+                    </NavDropdown.Item>
+                    </div>
+                  )
+                }                
+                {
+                  localStorage.getItem("token") && (
+                    <div>
+                      <NavDropdown.Item href="">
+                        <Button onClick={navigateToProfile} variant="link">
+                          Ir a perfil
+                        </Button>
+                      </NavDropdown.Item>
+                      <NavDropdown.Item href="">  
+                        <Button onClick={()=>{
+                          localStorage.removeItem('token')
+                          localStorage.removeItem('username')
+                          navigate('/')
+                        }} variant="link">
+                          Cerrar Sesión
+                        </Button>
+                      </NavDropdown.Item>
+                    </div>
+                  )
+                }
                 <NavDropdown.Item href="">
                   <Button
                     onClick={() => navigate("/contact-Form")}
@@ -82,13 +108,6 @@ function NavBar() {
                   >
                     Contacto
                   </Button>
-                </NavDropdown.Item>
-                <NavDropdown.Item href="">
-                  {localStorage.getItem("token") && (
-                    <Button onClick={navigateToProfile} variant="link">
-                      Ir a perfil
-                    </Button>
-                  )}
                 </NavDropdown.Item>
               </NavDropdown>
             </div>
