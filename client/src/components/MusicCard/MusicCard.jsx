@@ -1,9 +1,9 @@
 import React from 'react'
-import { Card, Container, Row, Col, Button, Overlay, Popover, Badge } from 'react-bootstrap'
+import { Card, Container, Row, Col, Button, Overlay, Popover } from 'react-bootstrap'
 import { useEffect, useState, useRef } from 'react'
 import { Rating } from 'react-simple-star-rating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRotateLeft, faStar, faPlay, faComment } from '@fortawesome/free-solid-svg-icons'
+import { faRotateLeft, faStar,faPlay } from '@fortawesome/free-solid-svg-icons'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios'
 
@@ -17,7 +17,6 @@ function MusicCard ({track}) {
     const [tags, setTags] = useState([])
     const [show, setShow] = useState(false);
     const [averageRating, setAverageRating] = useState(0);
-    const [audioUrl, setAudioUrl] = useState('')
     const target = useRef(null);
     const rating = useRef(0)
 
@@ -126,28 +125,6 @@ function MusicCard ({track}) {
             }
         }
 
-        async function getAudioFile() {
-            try {
-                const response = await axios.get(
-                    `http://localhost:5000/audio/file/${track.id}`,
-                    {
-                        responseType: 'blob',
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`,
-                        },
-                    }
-                );
-                setAudioUrl(URL.createObjectURL(response.blob()))
-                console.log(audioUrl)
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        getTrackTags()
-        getUserRating()
-        getAudioFile()
-    }, [track.id])
         // Para Añadir los comentarios de las pistas
  
         async function addComentario() {
@@ -207,43 +184,40 @@ function MusicCard ({track}) {
     }, [track.id]);
 
     return (
-        <Card style={{padding:0}} >
+        <Card style={{ width: '40rem' }} >
             <Card.Body >
-                
-                    <Row>
-                        <Col md={3} className="d-flex">
-                            <Card className="my-auto" style={{ width: '150px'}} >                 
+                <Container>
+                    <Row >
+                        <Col md={6}>
+                            <Card>                 
                                 <Card.Img src="/images/logomelorit.png" alt="Melorit Logo" />
                             </Card>
                         </Col>
-                        <Col md={9} className="d-flex flex-column">
-                            <h4 style={{fontSize:"18px"}}>{track.titulo}</h4>
-                            <h6 style={{fontSize:"14px"}}>{track.artista}</h6>
-                            <audio controls className="mt-auto">
-                                <source src={audioUrl}/>
-                            </audio>  
+                        <Col md={6}>
+                            <h4>{track.titulo}</h4>
+                            <h6>{track.artista}</h6>
+                            <audio controls>
+                                <source src="http://localhost:5000/public/userUploads/audio/LAPRUEBA-ismapuntocom.mp3"/>
+                            </audio>                            
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={7}>
-                            <Container style={{marginTop: '15px' }}>                 
-                                
-                                    {
-                                        tags.map((tag) => 
-                                            <Badge bg="" text="dark" style={{marginRight: '5px', backgroundColor:"#eeeeee"}}>{tag.Tag.TAG}</Badge>
-                                        )
-                                    }
-                                
-                            </Container>
+                        <Col md={6}>
+                            <Card style={{marginTop: '15px' }}>                 
+                                <Card.Text>
+                                    Etiquetas: {tags.map((tag) => tag.Tag.TAG).join(', ')}
+                                </Card.Text>
+                            </Card>
                         </Col>
-                        <Col className="mt-auto">
+                        <Col>
                             <Button variant="a" ref={target} onClick={() => setShow(!show)}>
                                 <OverlayTrigger
                                     placement="top"
                                     overlay={<Tooltip>Total Ratings</Tooltip>}
                                 >
                                     <FontAwesomeIcon icon={faStar} style={{ color: "orange", height: "32px" }} />    
-                                </OverlayTrigger>                 
+                                </OverlayTrigger>
+                                                       
                             </Button>
                             <Overlay target={target.current} show={show}  
                                 placement='top'>
@@ -262,8 +236,9 @@ function MusicCard ({track}) {
                                             
                                         />
                                     <Button variant="" onClick={resetRate}>
-                                        <FontAwesomeIcon icon={faRotateLeft} style={{ color: "#c0c0c0", }} />   
-                                    </Button>
+                                            <FontAwesomeIcon icon={faRotateLeft} style={{ color: "#c0c0c0", }} />
+                                            
+                                        </Button>
                                     </Popover>
                                 </Overlay>
                                <span>{averageRating}</span>
@@ -273,16 +248,6 @@ function MusicCard ({track}) {
                                >
                                  <FontAwesomeIcon icon={faPlay} style={{marginLeft:'40px', color: "peru", transform: "scale(1.85)"}}/>
                                </OverlayTrigger>
-                               <span style={{ marginLeft:'17px' }}>{track.plays}</span>
-
-                               <OverlayTrigger
-                                    placement="top"
-                                    overlay={<Tooltip>Total comments</Tooltip>}
-                               >
-                                 <FontAwesomeIcon icon={faComment} style={{color: "#b0b6bf", marginLeft:'36px', transform: "scale(1.85)"}} />
-                               </OverlayTrigger>
-
-                               <span style={{ marginLeft:'17px' }}>13</span>
                                <span style={{ marginLeft:'10px' }}>{track.plays}</span>  
 
 
@@ -326,7 +291,7 @@ function MusicCard ({track}) {
             
                         </Col>
                     </Row>
-                
+                </Container>
             </Card.Body>
         </Card>
       );
