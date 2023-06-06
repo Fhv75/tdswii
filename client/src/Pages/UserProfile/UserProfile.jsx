@@ -1,10 +1,10 @@
 import React from 'react';
-import './userProfile.css';
-import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
 import MusicCard from "../../components/MusicCard/MusicCard";
-import axios from "axios";
+import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
 import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom'
+import axios from "axios";
+import './userProfile.css';
 
 export default function UserProfile() {
 
@@ -24,7 +24,8 @@ export default function UserProfile() {
                 username : username
             }, 
           )  
-          setTracksData(response.data.AudioFiles)
+          console.log(response.data)
+          setTracksData(response.data)
         }
         catch(error){
           console.log(error)
@@ -103,12 +104,12 @@ export default function UserProfile() {
                 <MDBRow>
                   {
                     tracksData &&
-                    tracksData.map(
+                    tracksData.AudioFiles?.map(
                       (track)=>{
                         const trackData = {
                           id: track.id,
                           titulo: track.titulo,
-                          artista: track.username,
+                          artista: tracksData.username,
                           plays: track.cant_reprod
                         }
                         return(

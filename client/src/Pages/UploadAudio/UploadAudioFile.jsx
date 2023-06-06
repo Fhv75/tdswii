@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Container, Row, Col, Toast } from 'react-bootstrap';
 import axios from 'axios';
-import './UploadAudioFile.css';
+import styles from './uploadAudioFile.module.css';
 
 function UploadAudioFile() {
   const [fileData, setFileData] = useState({ titulo: '', tags: '' });

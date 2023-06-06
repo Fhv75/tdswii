@@ -197,7 +197,7 @@ function MusicCard ({track}) {
                             <h4>{track.titulo}</h4>
                             <h6>{track.artista}</h6>
                             <audio controls>
-                                <source src="./music.mp3"/>
+                                <source src="http://localhost:5000/public/userUploads/audio/LAPRUEBA-ismapuntocom.mp3"/>
                             </audio>                            
                         </Col>
                     </Row>

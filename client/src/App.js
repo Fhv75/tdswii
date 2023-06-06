@@ -13,8 +13,8 @@ import CompleteProfile from './components/CompleteProfile'
 import Contact from './Pages/Contact/Contact';
 import UploadAudioFile from './Pages/UploadAudio/UploadAudioFile'
 import MusicCard from './components/MusicCard/MusicCard'
-/* import CommentsPage from './components/CommentsPage/CommentsPage' */
-/* import CommentSection from './components/CommentSection/CommentSection' */
+import './App.css'
+
 
 const routes = [
     { 
