@@ -7,7 +7,8 @@ const multer = require("multer")
 const path = require("path")
 const jwt = require("jsonwebtoken")
 const sequelize = require('../db')
-const storage = multer.diskStorage({
+
+const audiostorage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(__dirname, "../public/userUploads/audio"))
     },
@@ -18,14 +19,28 @@ const storage = multer.diskStorage({
         cb(null, `${trackData}${ext}`)
     }
 })  
+const imagestorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, "../public/userUploads/images"))
+    },
+    filename: function (req, file, cb) {
+        const ext = path.extname(file.originalname)
+        const imageData = req.params.imageData
 
-const upload = multer({ storage: storage })
+        cb(null, `${imageData}${ext}`)
+    }
+})  
+
+
+const uploadAudio = multer({ storage: audiostorage })
+const uploadImage = multer({ storage: imagestorage })
 
 async function uploadAudioFile (req, res) {
     try {
         const titulo = req.body.titulo
         const token = req.body.token
         const tags = JSON.parse(req.body.tags)
+        const image = req.body.image
 
         const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
         const userMail = decoded.id
@@ -33,7 +48,9 @@ async function uploadAudioFile (req, res) {
         const newAudioFile = await AudioFile.create({ 
             titulo: titulo,  
             id_user_cargas: userMail,
-            nombre_archivo: titulo + "-" + userMail
+            nombre_archivo: titulo + "-" + userMail,
+            imagen
+
         })
 
         await newAudioFile.setTags(tags)
@@ -208,7 +225,8 @@ async function getUserTrackRating (req, res) {
 
 
 module.exports = {
-    upload,
+    uploadAudio,
+    uploadImage,
     uploadAudioFile,
     rateTrack,
     getUserTracks,

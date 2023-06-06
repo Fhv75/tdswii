@@ -127,7 +127,7 @@ function MusicCard ({track}) {
                     <Row >
                         <Col md={6}>
                             <Card>                 
-                                <Card.Img src="/images/logomelorit.png" alt="Melorit Logo" />
+                                <Card.Img src="C:\Users\ismao\Documents\GitHub\tdswii\server\public\userUploads\images" alt="Track Image" />
                             </Card>
                         </Col>
                         <Col md={6}>
@@ -183,7 +183,7 @@ function MusicCard ({track}) {
                                     placement="top"
                                     overlay={<Tooltip>Total plays</Tooltip>}
                                >
-                                 <FontAwesomeIcon icon={faPlay} style={{marginLeft:'40px', color: "peru", transform: "scale(1.85)"}}/>
+                                 <FontAwesomeIcon icon={faPlay} style={{marginLeft:'40px', color: "green", transform: "scale(1.85)"}}/>
                                </OverlayTrigger>
                                <span style={{ marginLeft:'10px' }}>{track.plays}</span>
                         </Col>
