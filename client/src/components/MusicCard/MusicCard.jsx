@@ -1,9 +1,9 @@
 import React from 'react'
-import { Card, Container, Row, Col, Button, Overlay, Popover } from 'react-bootstrap'
+import { Card, Container, Row, Col, Button, Overlay, Popover, Badge } from 'react-bootstrap'
 import { useEffect, useState, useRef } from 'react'
 import { Rating } from 'react-simple-star-rating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRotateLeft, faStar,faPlay } from '@fortawesome/free-solid-svg-icons'
+import { faRotateLeft, faStar, faPlay, faComment } from '@fortawesome/free-solid-svg-icons'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios'
 
@@ -184,7 +184,7 @@ function MusicCard ({track}) {
     }, [track.id]);
 
     return (
-        <Card style={{ width: '40rem' }} >
+        <Card style={{ padding: 0 }} >
             <Card.Body >
                 <Row>
                     <Col md={3} className="d-flex">
@@ -201,7 +201,7 @@ function MusicCard ({track}) {
                     </Col>
                 </Row>
                 <Row className="mt-3">
-                    <Col md={7} className="my-auto">
+                    <Col md={6  } className="my-auto">
                         <Container>                 
                                 {
                                     tags.map((tag) => 
@@ -261,42 +261,42 @@ function MusicCard ({track}) {
                     </Col>
                 </Row>
                 {/*-------------Para Comentarios---------------*/}
-                <Row>
-                                    <Col>
-                                    <input
-                                        type="text"
-                                        value={newComment}
-                                        onChange={(e) => setNewComment(e.target.value)}
-                                        placeholder="Ingrese un comentario"
-                                    />
-                                    </Col>
+                <Row className="my-4">
+                    <Col className="mt-3">
+                    <input
+                        type="text"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder="Ingrese un comentario"
+                        
+                    />
+                    </Col>
 
-                                    <Col>
-                                        <Button variant="primary" onClick={addComentario} style={{ marginTop: '15px' }}>
-                                        Comentar
-                                        </Button>
-                                    </Col>
-                                    <hr/>
-                                    <Col>
-                                        <Button variant="secondary" onClick={getComentarios} style={{ marginTop: '15px' }}>
-                                        Mostrar
-                                        </Button>
-                                    </Col>
-                                    <Col>
-                                        <Button variant="secondary" onClick={() => setShowComments(false)} style={{ marginTop: '15px' }}>
-                                        Ocultar 
-                                        </Button>
-                                    </Col>
-                                </Row>
+                    <Col>
+                        <Button variant="primary" onClick={addComentario} style={{ marginTop: '15px' }}>
+                        Comentar
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button variant="secondary" onClick={getComentarios} style={{ marginTop: '15px' }}>
+                        Mostrar
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button variant="secondary" onClick={() => setShowComments(false)} style={{ marginTop: '15px' }}>
+                        Ocultar 
+                        </Button>
+                    </Col>
+                </Row>
 
-                                    {showComments && (
-                                            <Row>
-                                                <Col>
-                                                    <CommentSection trackId={track.id} comments={comments} />
-                                                </Col>
-                                            </Row>
-                                        )}                               
-                            {/*----------------------------------------------------------------------------------- */}
+                {showComments && (
+                        <Row>
+                            <Col>
+                                <CommentSection trackId={track.id} comments={comments} />
+                            </Col>
+                        </Row>
+                    )}                               
+            {/*----------------------------------------------------------------------------------- */}
             </Card.Body>
         </Card>
       );
