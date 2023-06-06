@@ -7,6 +7,8 @@ const multer = require("multer")
 const path = require("path")
 const jwt = require("jsonwebtoken")
 const sequelize = require('../db')
+const fs = require('fs')
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(__dirname, "../public/userUploads/audio"))
@@ -29,7 +31,7 @@ async function uploadAudioFile (req, res) {
 
         const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
         const userMail = decoded.id
-
+        storage 
         const newAudioFile = await AudioFile.create({ 
             titulo: titulo,  
             id_user_cargas: userMail,
@@ -206,6 +208,45 @@ async function getUserTrackRating (req, res) {
 
 }
 
+async function getAudioFile(req, res) {
+    try {
+        const trackID = req.params.trackID
+        const track = await AudioFile.findOne({
+            where: {
+                id: trackID
+            }
+        })
+
+        const uploader = await User.findOne({
+            where: {
+                correo: track.id_user_cargas
+            }
+        })
+
+        const filename = track.titulo + "-" + uploader.username + ".mp3"
+        console.log(filename)
+        const filePath = path.join(__dirname, `../public/userUploads/audio/${filename}`)
+        fs.readFile(filePath, (err, data) => {
+            if(err) {
+                console.error(err)
+                return res.status(500).send("Error reading the file")
+            }
+            res.setHeader('Content-Type', 'audio/mpeg')
+            res.setHeader('Content-Disposition', 'attachment; filename=' + filename)
+
+            res.status(200).send(data)
+        })
+    }
+    catch (error) {
+        console.error("Error al obtener archivo de audio")
+        console.error(error.name)
+        console.error(error.message)
+        res.status(400).json({
+            error: error.name,
+            message: error.message
+        })
+    }
+}
 
 module.exports = {
     upload,
@@ -214,5 +255,6 @@ module.exports = {
     getUserTracks,
     getTrackTags,
     getStatistics,
-    getUserTrackRating
+    getUserTrackRating,
+    getAudioFile
 }

@@ -13,10 +13,9 @@ function MusicCard ({track}) {
     const [tags, setTags] = useState([])
     const [show, setShow] = useState(false);
     const [averageRating, setAverageRating] = useState(0);
+    const [audioUrl, setAudioUrl] = useState('')
     const target = useRef(null);
     const rating = useRef(0)
-    
-
 
     async function handleRating(rate) {
         rating.current = rate
@@ -116,8 +115,27 @@ function MusicCard ({track}) {
             }
         }
 
+        async function getAudioFile() {
+            try {
+                const response = await axios.get(
+                    `http://localhost:5000/audio/file/${track.id}`,
+                    {
+                        responseType: 'blob',
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                    }
+                );
+                setAudioUrl(URL.createObjectURL(response.blob()))
+                console.log(audioUrl)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
         getTrackTags()
         getUserRating()
+        getAudioFile()
     }, [track.id])
 
     return (
@@ -134,7 +152,7 @@ function MusicCard ({track}) {
                             <h4 style={{fontSize:"18px"}}>{track.titulo}</h4>
                             <h6 style={{fontSize:"14px"}}>{track.artista}</h6>
                             <audio controls className="mt-auto">
-                                <source src="http://localhost:5000/public/userUploads/audio/LAPRUEBA-ismapuntocom.mp3"/>
+                                <source src={audioUrl}/>
                             </audio>  
                         </Col>
                     </Row>
