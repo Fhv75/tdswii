@@ -8,7 +8,9 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios'
 
 //Para comentarios
-import CommentSection from '../CommentSection/CommentSection'
+/* import CommentSection from '../CommentSection/CommentSection' */
+import { useNavigate } from 'react-router-dom';
+
 
 
 function MusicCard ({track}) {
@@ -23,10 +25,15 @@ function MusicCard ({track}) {
     //para comentarios
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
-    
 
+    // Para mandarlo a otra pestaña
+    const navigate = useNavigate();
  //-----------------------------------------------------------
-
+    //Funcion para comentarios
+    function handleShowComments() {
+        navigate(`/track/${track.id}`);
+      }
+    //--------------------------------------------------------
 
     async function handleRating(rate) {
         rating.current = rate
@@ -150,7 +157,7 @@ function MusicCard ({track}) {
             }
           }
 // Para Obtener los comentarios
-          async function getComentarios() {
+      /*      async function getComentarios() {
             try {
               const response = await axios.post(
                 'http://localhost:5000/audio/getComentarios',
@@ -169,7 +176,7 @@ function MusicCard ({track}) {
             } catch (error) {
               console.log(error);
             }
-          }
+          }  */
 
      
    
@@ -178,7 +185,7 @@ function MusicCard ({track}) {
         getStatistics();
         getTrackTags();
         getUserRating();
-        getComentarios();
+        /* getComentarios(); */
         addComentario();
     }, [track.id]);
 
@@ -267,20 +274,20 @@ function MusicCard ({track}) {
                                         </Button>
                                     </Col>
                                     <Col>
-                                        <Button variant="secondary" onClick={getComentarios} style={{ marginTop: '15px' }}>
+                                        <Button variant="secondary" onClick={/* getComentarios */handleShowComments} style={{ marginTop: '15px' }}>
                                         Mostrar Comentarios
                                         </Button>
                                     </Col>
                                 </Row>
                                     {/* Resto del código */}
-                                    {
+                                  {/*   {
                                         comments.length > 0 && (
                                             <Row>
                                                 <Col>
                                                     <CommentSection trackId={track.id} comments={comments} />
                                                 </Col>
                                             </Row>
-                                    )} 
+                                    )}   */}
                                 
                             {/*----------------------------------------------------------------------------------- */}
               

@@ -13,6 +13,7 @@ import CompleteProfile from './components/CompleteProfile'
 import Contact from './Pages/Contact/Contact';
 import UploadAudioFile from './Pages/UploadAudio/UploadAudioFile'
 import MusicCard from './components/MusicCard/MusicCard'
+import CommentsPage from './components/CommentsPage/CommentsPage'
 
 const routes = [
     { 
@@ -54,10 +55,16 @@ const routes = [
     {
         path: '/edit-profile',
         component: <EditUserProfile />,
+        protection:  (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
     },
     {
         path: '/complete-profile',
-        component: <CompleteProfile />
+        component: <CompleteProfile />,
+        protection:  (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
     },
 
     {
@@ -70,7 +77,17 @@ const routes = [
     },
     {
         path: '/upload',
-        component: <UploadAudioFile/>
+        component: <UploadAudioFile/>, 
+        protection:  (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
+    },
+    {
+        path: '/track/:id',
+        component: <CommentsPage/>,
+        protection:  (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
     }
 ]
 
