@@ -8,7 +8,9 @@ const {
     rateTrack, 
     getUserTrackRating, 
     getStatistics, 
-    getAudioFile } = require('../controllers/audioController')
+    getAudioFile,
+    getComentarios,
+    addComentario } = require('../controllers/audioController')
 
 router.post('/upload/:trackData', upload.single('audioFile'), uploadAudioFile)
 router.post('/getUserTracks', getUserTracks )
@@ -17,4 +19,9 @@ router.post('/rateTrack', rateTrack)
 router.post('/getStatistics', getStatistics)
 router.post('/getUserRating', getUserTrackRating)
 router.get('/file/:trackID', getAudioFile)
+
+//para comentarios
+router.post('/getComentarios', getComentarios)
+router.post('/addComentario', addComentario)
+//-----------------------------------------------
 module.exports = router

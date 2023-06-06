@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken")
 const sequelize = require('../db')
 const fs = require('fs')
 
+const Comentarios = require("../models/Comentarios")
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(__dirname, "../public/userUploads/audio"))
@@ -247,6 +248,69 @@ async function getAudioFile(req, res) {
         })
     }
 }
+  
+//----------------------------------------------------------------------------------
+  //Añadir Comentarios
+  async function addComentario(req, res){
+    try {
+      const { token, comentario, id_pista/* , id_usuario */ } = req.body;
+      /* const id_usuario = req.user.id; */ // Utiliza el ID del usuario actual
+      //const token = req.headers.authorization;
+      // Verificar el token y realizar la validación de autenticación
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      // Verificar la autenticación del usuario si es necesario
+      const userMail = decoded.id 
+      // Crear el nuevo comentario
+      const newComment = await Comentarios.create({
+       /*  id_usuario, */
+        id_pista: id_pista,
+        comentario: comentario,
+        id_usuario: userMail,
+      });
+  
+      console.log('Comentario Creado:', newComment);
+  
+      res.status(201).json(newComment);
+    } catch (error) {
+      console.error('Error al crear un comentario:', error);
+      res.status(400).json({
+        error: error.name,
+        message: error.message,
+      });
+    }
+  };
+
+  //Obtener los comentarios de los usuarios
+
+    async function  getComentarios(req, res){
+    try {
+      const {token, trackID } = req.body;
+      
+      //const token = req.headers.authorization;
+      // Verificar el token y realizar la validación de autenticación
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      // Verificar la autenticación del usuario si es necesario
+  
+      // Obtener los comentarios de la pista especificada
+      const comentarios = await Comentarios.findAll({
+        where: {
+          id_pista: trackID,
+        },
+      });
+  
+      console.log('Comentarios obtenidos:', comentarios);
+  
+      res.status(200).json(comentarios);
+    } catch (error) {
+      console.error('Error al obtener los comentarios:', error);
+      res.status(400).json({
+        error: error.name,
+        message: error.message,
+      });
+    }
+  };
+
+//----------------------------------------------------------------------------
 
 module.exports = {
     upload,
@@ -256,5 +320,7 @@ module.exports = {
     getTrackTags,
     getStatistics,
     getUserTrackRating,
-    getAudioFile
+    getAudioFile,
+    getComentarios,
+    addComentario
 }
