@@ -15,6 +15,7 @@ import UploadAudioFile from './Pages/UploadAudio/UploadAudioFile'
 import MusicCard from './components/MusicCard/MusicCard'
 import './App.css'
 
+
 const routes = [
     { 
         path: '/', 
@@ -55,10 +56,16 @@ const routes = [
     {
         path: '/edit-profile',
         component: <EditUserProfile />,
+        protection:  (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
     },
     {
         path: '/complete-profile',
-        component: <CompleteProfile />
+        component: <CompleteProfile />,
+        protection:  (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
     },
 
     {
@@ -71,8 +78,18 @@ const routes = [
     },
     {
         path: '/upload',
-        component: <UploadAudioFile/>
+        component: <UploadAudioFile/>, 
+        protection:  (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
     }
+   /*  {
+        path: '/track/:id',
+        component: <CommentSection/>,
+        protection:  (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
+    } */
 ]
 
 function App() {

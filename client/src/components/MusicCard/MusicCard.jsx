@@ -7,6 +7,10 @@ import { faRotateLeft, faStar,faPlay } from '@fortawesome/free-solid-svg-icons'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios'
 
+//Para comentarios
+import CommentSection from '../CommentSection/CommentSection' 
+
+
 function MusicCard ({track}) {
 
     const [isHovering, setIsHovering] = useState(false)
@@ -15,8 +19,13 @@ function MusicCard ({track}) {
     const [averageRating, setAverageRating] = useState(0);
     const target = useRef(null);
     const rating = useRef(0)
-    
 
+    //para comentarios
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
+    const [showComments, setShowComments] = useState(false);
+
+    //--------------------------------------------------------
 
     async function handleRating(rate) {
         rating.current = rate
@@ -66,7 +75,7 @@ function MusicCard ({track}) {
         }
     }
 
-    useEffect(() => {
+    /* useEffect(() => { */
         async function getTrackTags (){
             try{
                 const response = await axios.post(
@@ -94,7 +103,7 @@ function MusicCard ({track}) {
             } catch (error) {                
             }            
         }
-        getStatistics()
+       /*  getStatistics() */
         async function getUserRating() {
             try {
                 const response = await axios.post(
@@ -116,9 +125,63 @@ function MusicCard ({track}) {
             }
         }
 
-        getTrackTags()
-        getUserRating()
-    }, [track.id])
+        // Para Añadir los comentarios de las pistas
+ 
+        async function addComentario() {
+            try {
+              const response = await axios.post(
+                'http://localhost:5000/audio/addComentario',
+                {
+                    token: localStorage.getItem("token"),
+                    comentario: newComment,
+                    id_pista: track.id
+                    /* id_usuario: userId   */ //Faltaria relacionarlo con id del usuario
+                },
+                {
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                  }
+              );
+              console.log(response);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+// Para Obtener los comentarios
+           async function getComentarios() {
+            try {
+              const response = await axios.post(
+                'http://localhost:5000/audio/getComentarios',
+                {
+                  token: localStorage.getItem("token"),
+                  trackID: track.id
+                },
+                {
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                  }
+              );
+              console.log(response.data);
+
+              setComments(response.data);
+              setShowComments(true);
+
+            } catch (error) {
+              console.log(error);
+            }
+          }  
+   
+//-------------------------------------------------------------------------------
+    useEffect (()=> {   
+        getStatistics();
+        getTrackTags();
+        getUserRating();
+       // getComentarios(); 
+        addComentario();
+    // eslint-disable-next-line
+    }, [track.id]);
 
     return (
         <Card style={{ width: '40rem' }} >
@@ -185,7 +248,47 @@ function MusicCard ({track}) {
                                >
                                  <FontAwesomeIcon icon={faPlay} style={{marginLeft:'40px', color: "peru", transform: "scale(1.85)"}}/>
                                </OverlayTrigger>
-                               <span style={{ marginLeft:'10px' }}>{track.plays}</span>
+                               <span style={{ marginLeft:'10px' }}>{track.plays}</span>  
+
+
+                            {/*-------------Para Comentarios---------------*/}
+                                <Row>
+                                    <Col>
+                                    <input
+                                        type="text"
+                                        value={newComment}
+                                        onChange={(e) => setNewComment(e.target.value)}
+                                        placeholder="Ingrese un comentario"
+                                    />
+                                    </Col>
+
+                                    <Col>
+                                        <Button variant="primary" onClick={addComentario} style={{ marginTop: '15px' }}>
+                                        Comentar
+                                        </Button>
+                                    </Col>
+                                    <hr/>
+                                    <Col>
+                                        <Button variant="secondary" onClick={getComentarios} style={{ marginTop: '15px' }}>
+                                        Mostrar
+                                        </Button>
+                                    </Col>
+                                    <Col>
+                                        <Button variant="secondary" onClick={() => setShowComments(false)} style={{ marginTop: '15px' }}>
+                                        Ocultar 
+                                        </Button>
+                                    </Col>
+                                </Row>
+
+                                    {showComments && (
+                                            <Row>
+                                                <Col>
+                                                    <CommentSection trackId={track.id} comments={comments} />
+                                                </Col>
+                                            </Row>
+                                        )}                               
+                            {/*----------------------------------------------------------------------------------- */}
+            
                         </Col>
                     </Row>
                 </Container>
@@ -194,4 +297,4 @@ function MusicCard ({track}) {
       );
 }
 
-export default MusicCard
+export default MusicCard;
