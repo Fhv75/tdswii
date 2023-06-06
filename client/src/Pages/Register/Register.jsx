@@ -47,7 +47,7 @@ function Register() {
             </div>
 
             <Form onSubmit={submitHandler}>
-                <Form.Group className="pt-3 mb-4" controlId="email">
+                <Form.Group className="pt-3 mb-4" controlId="username">
                     <Form.Label>Nombre de Usuario</Form.Label>
                     <Form.Control
                         type="username"
