@@ -5,8 +5,8 @@ import styles from "./uploadAudioFile.module.css";
 
 function UploadAudioFile() {
   const [fileData, setFileData] = useState({ titulo: "", tags: "" });
-  const [file, setFile] = useState("");
-  const [image, setImage] = useState(null);
+  const [audioFile, setAudioFile] = useState("");
+  const [imageFile, setImageFile] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastVariant, setToastVariant] = useState("");
@@ -27,7 +27,7 @@ function UploadAudioFile() {
   }
 
   function fileHandler(e) {
-    setFile(e.target.files[0]);
+    setAudioFile(e.target.files[0]);
   }
 
   async function submitHandler(e) {
@@ -39,7 +39,8 @@ function UploadAudioFile() {
     const formData = new FormData();
     const tagsArray = fileData.tags.split(",").map((tag) => tag.trim());
 
-    formData.append("audioFile", file);
+    formData.append("audioFile", audioFile);
+    formData.append("imageFile", imageFile);
     formData.append("titulo", fileData.titulo);
     formData.append("token", localStorage.getItem("token"));
     formData.append("tags", JSON.stringify(tagsArray));
@@ -67,10 +68,11 @@ function UploadAudioFile() {
   function resetForm() {
     setFormSubmitted(false);
     setFileData({ titulo: "", tags: "" });
-    setFile("");
+    setAudioFile("");
+    setImageFile("");
   }
   function imageHandler(e) {
-  setImage(e.target.files[0]);
+  setImageFile(e.target.files[0]);
 }
 
   if (formSubmitted) {
@@ -120,7 +122,7 @@ function UploadAudioFile() {
             value={fileData.tags}
           />
         </Form.Group>
-        <Form.Group controlId="image">
+        <Form.Group controlId="imageFile">
   <Form.Label>Imagen (Opcional)</Form.Label>
   <Form.Control type="file" onChange={imageHandler} />
 </Form.Group>

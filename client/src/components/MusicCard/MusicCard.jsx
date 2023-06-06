@@ -127,7 +127,7 @@ function MusicCard ({track}) {
                     <Row >
                         <Col md={6}>
                             <Card>                 
-                                <Card.Img src="C:\Users\ismao\Documents\GitHub\tdswii\server\public\userUploads\images" alt="Track Image" />
+                                <Card.Img src="C:/Users/ismao/Documents/GitHub/tdswii/server/public/userUploads/images" alt="Track Image" />
                             </Card>
                         </Col>
                         <Col md={6}>
