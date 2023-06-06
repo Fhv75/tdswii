@@ -9,8 +9,6 @@ import axios from 'axios'
 
 //Para comentarios
 import CommentSection from '../CommentSection/CommentSection' 
-/* import { useNavigate } from 'react-router-dom'; */
-
 
 
 function MusicCard ({track}) {
@@ -27,18 +25,6 @@ function MusicCard ({track}) {
     const [newComment, setNewComment] = useState('');
     const [showComments, setShowComments] = useState(false);
 
-    // Para mandarlo a otra pestaña
-    //const navigate = useNavigate();
- //-----------------------------------------------------------
-    //Funcion para comentarios
-    /* function handleShowComments() {
-        navigate(`/track/${track.id}`);
-      } */
-
-      /* function handleShowComments() {
-        setShowComments(prevShowComments => !prevShowComments);
-    } */
-    
     //--------------------------------------------------------
 
     async function handleRating(rate) {
@@ -293,35 +279,16 @@ function MusicCard ({track}) {
                                         </Button>
                                     </Col>
                                 </Row>
-                                    {/* Resto del código */}
-                                     {/*  {
-                                        comments.length > 0 && (
-                                            <Row>
-                                                <Col>
-                                                    <CommentSection trackId={track.id} comments={comments} />
-                                                </Col>
-                                            </Row>
-                                    )}     */}
 
-                                {/* {showComments && comments.length > 0 && (
-                                        <Row>
-                                        <Col>
-                                            <CommentSection trackId={track.id} comments={comments} />
-                                        </Col>
-                                        </Row>
-                                    )} */}
                                     {showComments && (
                                             <Row>
                                                 <Col>
                                                     <CommentSection trackId={track.id} comments={comments} />
                                                 </Col>
                                             </Row>
-                                        )}
-
-                                                                
+                                        )}                               
                             {/*----------------------------------------------------------------------------------- */}
-              
-
+            
                         </Col>
                     </Row>
                 </Container>
