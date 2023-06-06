@@ -8,8 +8,8 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios'
 
 //Para comentarios
-/* import CommentSection from '../CommentSection/CommentSection' */
-import { useNavigate } from 'react-router-dom';
+import CommentSection from '../CommentSection/CommentSection' 
+/* import { useNavigate } from 'react-router-dom'; */
 
 
 
@@ -25,14 +25,20 @@ function MusicCard ({track}) {
     //para comentarios
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+    const [showComments, setShowComments] = useState(false);
 
     // Para mandarlo a otra pestaña
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
  //-----------------------------------------------------------
     //Funcion para comentarios
-    function handleShowComments() {
+    /* function handleShowComments() {
         navigate(`/track/${track.id}`);
-      }
+      } */
+
+      /* function handleShowComments() {
+        setShowComments(prevShowComments => !prevShowComments);
+    } */
+    
     //--------------------------------------------------------
 
     async function handleRating(rate) {
@@ -157,7 +163,7 @@ function MusicCard ({track}) {
             }
           }
 // Para Obtener los comentarios
-      /*      async function getComentarios() {
+           async function getComentarios() {
             try {
               const response = await axios.post(
                 'http://localhost:5000/audio/getComentarios',
@@ -172,21 +178,23 @@ function MusicCard ({track}) {
                   }
               );
               console.log(response.data);
+
               setComments(response.data);
+              setShowComments(true);
+
             } catch (error) {
               console.log(error);
             }
-          }  */
-
-     
+          }  
    
 //-------------------------------------------------------------------------------
     useEffect (()=> {   
         getStatistics();
         getTrackTags();
         getUserRating();
-        /* getComentarios(); */
+       // getComentarios(); 
         addComentario();
+    // eslint-disable-next-line
     }, [track.id]);
 
     return (
@@ -270,25 +278,47 @@ function MusicCard ({track}) {
 
                                     <Col>
                                         <Button variant="primary" onClick={addComentario} style={{ marginTop: '15px' }}>
-                                        Ingresar Comentario
+                                        Comentar
+                                        </Button>
+                                    </Col>
+                                    <hr/>
+                                    <Col>
+                                        <Button variant="secondary" onClick={getComentarios} style={{ marginTop: '15px' }}>
+                                        Mostrar
                                         </Button>
                                     </Col>
                                     <Col>
-                                        <Button variant="secondary" onClick={/* getComentarios */handleShowComments} style={{ marginTop: '15px' }}>
-                                        Mostrar Comentarios
+                                        <Button variant="secondary" onClick={() => setShowComments(false)} style={{ marginTop: '15px' }}>
+                                        Ocultar 
                                         </Button>
                                     </Col>
                                 </Row>
                                     {/* Resto del código */}
-                                  {/*   {
+                                     {/*  {
                                         comments.length > 0 && (
                                             <Row>
                                                 <Col>
                                                     <CommentSection trackId={track.id} comments={comments} />
                                                 </Col>
                                             </Row>
-                                    )}   */}
-                                
+                                    )}     */}
+
+                                {/* {showComments && comments.length > 0 && (
+                                        <Row>
+                                        <Col>
+                                            <CommentSection trackId={track.id} comments={comments} />
+                                        </Col>
+                                        </Row>
+                                    )} */}
+                                    {showComments && (
+                                            <Row>
+                                                <Col>
+                                                    <CommentSection trackId={track.id} comments={comments} />
+                                                </Col>
+                                            </Row>
+                                        )}
+
+                                                                
                             {/*----------------------------------------------------------------------------------- */}
               
 

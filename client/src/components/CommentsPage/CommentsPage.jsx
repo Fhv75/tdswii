@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function CommentsPage({ match }) {
+function CommentsPage() {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    // Obtener los comentarios correspondientes al trackId de la URL
-    /* const trackId = match.params.trackId; */
-    getComments();
-  },);
-
-  async function getComments() {
-    try {
-      const response = await axios.post(
-        `http://localhost:5000/audio/getComments/`
-      );
-      setComments(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+    // Realizar solicitud GET para obtener todos los comentarios
+    axios.get('http://localhost:5000/audio/getComments')
+      .then(response => {
+        console.log(response.data); // Imprimir los comentarios obtenidos en la consola
+        // Almacenar los comentarios obtenidos en el estado
+        setComments(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <div>
-      <h2>Comentarios de la pista</h2>
-      {comments.map((comment) => (
+      <h5>Comentarios:</h5>
+      {comments.map(comment => (
         <p key={comment.id}>{comment.comentario}</p>
       ))}
     </div>
@@ -32,3 +28,4 @@ function CommentsPage({ match }) {
 }
 
 export default CommentsPage;
+
