@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Form, Container, Row, Col, Toast } from 'react-bootstrap';
-import axios from 'axios';
-import styles from './uploadAudioFile.module.css';
+import React, { useState, useEffect } from "react";
+import { Button, Form, Container, Row, Col, Toast } from "react-bootstrap";
+import axios from "axios";
+import styles from "./uploadAudioFile.module.css";
 
 function UploadAudioFile() {
-  const [fileData, setFileData] = useState({ titulo: '', tags: '' });
-  const [file, setFile] = useState('');
+  const [fileData, setFileData] = useState({ titulo: "", tags: "" });
+  const [file, setFile] = useState("");
+  const [image, setImage] = useState(null);
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
-  const [toastVariant, setToastVariant] = useState('');
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastVariant, setToastVariant] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   useEffect(() => {
@@ -36,26 +37,28 @@ function UploadAudioFile() {
 
   async function uploadFile() {
     const formData = new FormData();
-    const tagsArray = fileData.tags.split(',').map((tag) => tag.trim());
+    const tagsArray = fileData.tags.split(",").map((tag) => tag.trim());
 
-    formData.append('audioFile', file);
-    formData.append('titulo', fileData.titulo);
-    formData.append('token', localStorage.getItem('token'));
-    formData.append('tags', JSON.stringify(tagsArray));
+    formData.append("audioFile", file);
+    formData.append("titulo", fileData.titulo);
+    formData.append("token", localStorage.getItem("token"));
+    formData.append("tags", JSON.stringify(tagsArray));
     try {
       const response = await axios.post(
-        `http://localhost:5000/audio/upload/${fileData.titulo}-${localStorage.getItem('username')}`,
+        `http://localhost:5000/audio/upload/${
+          fileData.titulo
+        }-${localStorage.getItem("username")}`,
         formData,
-        { headers: { 'x-access-token': localStorage.getItem('token') } }
+        { headers: { "x-access-token": localStorage.getItem("token") } }
       );
-      setToastVariant('success');
-      setToastMessage('¡La pista se cargó exitosamente!');
+      setToastVariant("success");
+      setToastMessage("¡La pista se cargó exitosamente!");
       setShowToast(true);
       console.log(response);
-      setFormSubmitted(true); 
+      setFormSubmitted(true);
     } catch (error) {
-      setToastVariant('danger');
-      setToastMessage('Hubo un error al cargar la pista.');
+      setToastVariant("danger");
+      setToastMessage("Hubo un error al cargar la pista.");
       setShowToast(true);
       console.log(error);
     }
@@ -63,16 +66,19 @@ function UploadAudioFile() {
 
   function resetForm() {
     setFormSubmitted(false);
-    setFileData({ titulo: '', tags: '' });
-    setFile('');
+    setFileData({ titulo: "", tags: "" });
+    setFile("");
   }
+  function imageHandler(e) {
+  setImage(e.target.files[0]);
+}
 
   if (formSubmitted) {
     return (
       <Container fluid>
         <Row className="justify-content-center">
           <Col md={6}>
-            <div>¡La pista se cargó exitosamente!</div> 
+            <div>¡La pista se cargó exitosamente!</div>
             <Button variant="primary" onClick={resetForm}>
               Cargar otra pista
             </Button>
@@ -83,35 +89,42 @@ function UploadAudioFile() {
   }
 
   return (
-    <Container fluid>
-      <Row className="justify-content-center">
-        <Col md={6}>
-          <Form onSubmit={submitHandler}>
-            <Form.Group controlId="email">
-              <Form.Label>Pista</Form.Label>
-              <Form.Control type="file" onChange={fileHandler} />
-            </Form.Group>
-
-            <Form.Group controlId="titulo">
-              <Form.Label>Título de la pista</Form.Label>
-              <Form.Control
-                type="text"
-                onChange={inputHandler}
-                value={fileData.titulo}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="tags">
-              <Form.Label>
-		Etiquetas</Form.Label>
-	<Form.Control
-type="text"
-onChange={inputHandler}
-value={fileData.tags}
-placeholder="Ej: rock, pop, jazz, etc. Separadas por comas"
-/>
+    <Container
+      fluid
+      className={styles["upload-container"] + " p-5 bg-white mt-5"}
+    >
+      <div className="text-center mb-3">
+        <h1 className="px-sm-5">Cargar Pista</h1>
+        <hr />
+      </div>
+      <Form.Group className="mb-5" controlId="audioFile">
+        <Form.Label>Pista</Form.Label>
+        <Form.Control type="file" onChange={fileHandler} />
+      </Form.Group>
+      <Form onSubmit={submitHandler}>
+        <Form.Group controlId="titulo" className="pt-3 mb-2">
+          <Form.Label>Título de la pista</Form.Label>
+          <Form.Control
+            type="text"
+            onChange={inputHandler}
+            placeholder="Ingresa el título de la pista"
+            value={fileData.titulo}
+          />
+        </Form.Group>
+        <Form.Group controlId="tags" className="pt-3 mb-4">
+          <Form.Label>Etiquetas</Form.Label>
+          <Form.Control
+            type="text"
+            onChange={inputHandler}
+            placeholder="Ej: rock, pop, jazz, etc. Separadas por comas"
+            value={fileData.tags}
+          />
+        </Form.Group>
+        <Form.Group controlId="image">
+  <Form.Label>Imagen (Opcional)</Form.Label>
+  <Form.Control type="file" onChange={imageHandler} />
 </Form.Group>
- <Button variant="primary" type="submit">
+        <Button className="mb-3 w-100" variant="primary" type="submit">
           Subir
         </Button>
       </Form>
@@ -123,11 +136,8 @@ placeholder="Ej: rock, pop, jazz, etc. Separadas por comas"
       >
         <Toast.Body>{toastMessage}</Toast.Body>
       </Toast>
-    </Col>
-  </Row>
-</Container>
-);
+    </Container>
+  );
 }
 
 export default UploadAudioFile;
-
