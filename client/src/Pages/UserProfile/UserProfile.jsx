@@ -56,7 +56,7 @@ export default function UserProfile() {
 
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: '#9de2ff' }}>
-      <MDBContainer className="py-5 h-100">
+      <MDBContainer className="py-5 h-100 ">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="9" xl="7">
             <MDBCard>
