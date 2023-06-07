@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { Button, Container, Form, Spinner } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import styles from './login.module.css';
-import { useToast } from '@chakra-ui/react';
+import React, { useState } from 'react'
+import { Button, Container, Form, Spinner } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import styles from './login.module.css'
+import { useToast } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react';
 
 function Login() {
   const [data, setData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
-
+  
   function inputHandler(e) {
     const { id, value } = e.target;
     setData((prevData) => ({ ...prevData, [id]: value }));
@@ -22,37 +23,41 @@ function Login() {
   }
 
   async function loginUser() {
-    setIsLoading(true);
-    axios.defaults.headers.post['Access-Control-Allow-Origin'] = true;
-    try {
-      const response = await axios.post('http://localhost:5000/users/login', {
-        correo: data.email,
-        password: data.password,
-      });
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('username', response.data.username);
-      navigate(`../user/${response.data.username}`);
-      toast({
-        title: 'Inicio de sesión exitoso',
-        description: '¡Bienvenido/a!',
-        status: 'success',
-        colorScheme: 'green',
-        duration: 3000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: 'Los datos ingresados son incorrectos.',
-        status: 'success',
-        colorScheme: 'red',
-        duration: 3000,
-        isClosable: true,
-      });
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
+      setIsLoading(true);
+      axios.defaults.headers.post["Access-Control-Allow-Origin"] = true
+      try {
+          const response = await axios.post(
+              'http://localhost:5000/users/login',
+              { 
+                  correo: data.email, 
+                  password: data.password 
+              }, 
+          )
+          localStorage.setItem('token', response.data.token)
+          localStorage.setItem('username', response.data.username)
+          toast({
+                title: 'Inicio de sesión exitoso',
+                description: '¡Bienvenido/a!',
+                status: 'success',
+                colorScheme: 'green',
+                duration: 2000,
+          });
+          setTimeout(() => {
+            navigate(`../user/${response.data.username}`)
+          }, 1000)
+      } catch (error) {
+          toast({
+              title: 'Los datos ingresados son incorrectos.',
+              status: 'error',
+              colorScheme: 'red',
+              duration: 2000,
+          });
+          console.log(error)
+      } finally {
+        setIsLoading(false);
+      }
   }
+}
 
   return (
     <Container fluid className={styles['login-container'] + ' p-5 bg-white mt-5'}>
@@ -81,7 +86,6 @@ function Login() {
             value={data.password}
           />
         </Form.Group>
-
         <Button className="mb-3 w-100" variant="primary" type="submit" disabled={isLoading}>
           {isLoading ? (
             <>

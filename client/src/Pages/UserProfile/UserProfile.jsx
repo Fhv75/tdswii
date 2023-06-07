@@ -1,17 +1,19 @@
 import React from 'react';
-import MusicCard from "../../components/MusicCard/MusicCard";
-import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
-import { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom'
-import axios from "axios";
 import './userProfile.css';
+import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography } from 'mdb-react-ui-kit';
+import MusicCard from "../../components/MusicCard/MusicCard";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from 'react-router-dom'
+import { Spinner } from 'react-bootstrap';
 
 export default function UserProfile() {
 
+  const navigate = useNavigate()
   const { username } = useParams()
   const [tracksData, setTracksData] = useState([])
   const [profileData, setProfileData] = useState({})
-  const [responseStatus, setResponseStatus] = useState(0)
+  const [responseStatus, setResponseStatus] = useState()
 
 
   useEffect(() => {
@@ -26,9 +28,12 @@ export default function UserProfile() {
           )  
           console.log(response.data)
           setTracksData(response.data)
+          response.data != null ? 
+          setResponseStatus(200) : setResponseStatus(0)
         }
         catch(error){
           console.log(error)
+          setResponseStatus(404)
         }
       }
       
@@ -44,10 +49,8 @@ export default function UserProfile() {
             )
             console.log(response)
             setProfileData(response.data)                
-            setResponseStatus(response.status)
         } catch (error) {
             console.log("Error fetching user profile: ", error)
-            setResponseStatus(404)
         }
     }
     fetchUserProfile()
@@ -56,7 +59,7 @@ export default function UserProfile() {
 
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: '#9de2ff' }}>
-      <MDBContainer className="py-5 h-100" >
+      <MDBContainer className="py-5 h-100 ">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="9" xl="7" style={{ width:"900px" }}>
             <MDBCard>
@@ -64,9 +67,6 @@ export default function UserProfile() {
                 <div className="ms-4 mt-5 d-flex flex-column" style={{ width: '150px' }}>
                   <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
                     alt="Generic placeholder image" className="mt-4 mb-2 img-thumbnail" fluid style={{ width: '150px', zIndex: '1' }} />
-                  <MDBBtn outline color="dark" style={{height: '36px', overflow: 'visible'}}>
-                    Edit profile
-                  </MDBBtn>
                 </div>
                 <div className="ms-3" style={{ marginTop: '130px' }}>
                   <MDBTypography tag="h5">{username}</MDBTypography>
@@ -103,7 +103,7 @@ export default function UserProfile() {
                 </div>
                 <MDBRow>
                   {
-                    tracksData &&
+                    tracksData && responseStatus == 200 ?
                     tracksData.AudioFiles?.map(
                       (track)=>{
                         const trackData = {
@@ -116,7 +116,20 @@ export default function UserProfile() {
                           <MusicCard key={track.id} track={trackData} />
                         )
                       }
-                  )}
+                  ) : responseStatus == 0 ?
+                  <div className="text-center">
+                    <h2>No hay pistas</h2>
+                  </div>
+                  :  responseStatus == 404 ?
+                  <div className="text-center">
+                    <h2>Error al cargar las pistas</h2>
+                  </div>
+                  :
+                    <div className="text-center">
+                      <Spinner className="me-3"animation="border" role="status" />
+                      Cargando...  
+                    </div>
+                  }
                 </MDBRow>
               </MDBCardBody>
             </MDBCard>
