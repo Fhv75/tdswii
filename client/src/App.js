@@ -83,13 +83,6 @@ const routes = [
             <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
         ),
     }
-   /*  {
-        path: '/track/:id',
-        component: <CommentSection/>,
-        protection:  (
-            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
-        ),
-    } */
 ]
 
 function App() {

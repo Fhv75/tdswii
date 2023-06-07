@@ -1,13 +1,18 @@
 import React, { useState } from 'react'
-import { Button, Container, Form } from 'react-bootstrap'
+import { Button, Container, Form, Spinner } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import styles from './login.module.css'
+import { useToast } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react';
+
 
 function Login() {
 
     const [data, setData] = useState({email: "", password: ""})
     const navigate = useNavigate()
+    const toast = useToast()
+    const [isLoading, setIsLoading] = useState(false)
 
     function inputHandler(e) {
         const { id, value } = e.target
@@ -20,6 +25,7 @@ function Login() {
     }
 
     async function loginUser() {
+        setIsLoading(true);
         axios.defaults.headers.post["Access-Control-Allow-Origin"] = true
         try {
             const response = await axios.post(
@@ -31,9 +37,26 @@ function Login() {
             )
             localStorage.setItem('token', response.data.token)
             localStorage.setItem('username', response.data.username)
-            navigate(`../user/${response.data.username}`)
+            toast({
+                  title: 'Inicio de sesión exitoso',
+                  description: '¡Bienvenido/a!',
+                  status: 'success',
+                  colorScheme: 'green',
+                  duration: 2000,
+            });
+            setTimeout(() => {
+              navigate(`../user/${response.data.username}`)
+            }, 1000)
         } catch (error) {
+            toast({
+                title: 'Los datos ingresados son incorrectos.',
+                status: 'error',
+                colorScheme: 'red',
+                duration: 2000,
+            });
             console.log(error)
+        } finally {
+          setIsLoading(false);
         }
     }
     
@@ -52,6 +75,7 @@ function Login() {
                         type="email" 
                         placeholder="Ingresa tu Correo" 
                         value={data.email}
+                        required
                     />
                 </Form.Group>
 
@@ -62,10 +86,19 @@ function Login() {
                         placeholder="Contraseña"
                         onChange={inputHandler}
                         value={data.password}
+                        required
                     />
                 </Form.Group>
 
-                <Button className="mb-3 w-100" variant="primary" type="submit">Ingresar</Button>
+                <Button className="mb-3 w-100" variant="primary" type="submit" disabled={isLoading}>
+                    {isLoading ? (
+                        <>
+                            <Spinner animation="border" size="sm" role="status" /> Cargando...
+                        </>
+                    ) : (
+                       'Ingresar'
+                    )}
+                </Button>
             </Form>
 
             <div className="text-center text-secondary">

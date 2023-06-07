@@ -28,9 +28,7 @@ function MusicCard ({track}) {
     //--------------------------------------------------------
 
     async function handleRating(rate) {
-        rating.current = rate
-        console.log(rating)
-        
+        rating.current = rate        
         setTimeout(() => {
             setShow(!show)
         }, 500);
@@ -75,7 +73,6 @@ function MusicCard ({track}) {
         }
     }
 
-    /* useEffect(() => { */
         async function getTrackTags (){
             try{
                 const response = await axios.post(
@@ -103,7 +100,6 @@ function MusicCard ({track}) {
             } catch (error) {                
             }            
         }
-       /*  getStatistics() */
         async function getUserRating() {
             try {
                 const response = await axios.post(
@@ -205,7 +201,7 @@ function MusicCard ({track}) {
                         <Container>                 
                                 {
                                     tags.map((tag) => 
-                                        <Badge bg="" text="dark" style={{marginRight: '5px', backgroundColor:"#eeeeee"}}>{tag.Tag.TAG}</Badge>
+                                        <Badge key={tag.Tag.TAG} bg="" text="dark" style={{marginRight: '5px', backgroundColor:"#eeeeee"}}>{tag.Tag.TAG}</Badge>
                                     )
                                 }
                             

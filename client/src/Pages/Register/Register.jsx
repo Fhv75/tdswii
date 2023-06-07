@@ -1,43 +1,65 @@
 import React, { useState } from 'react'
-import { Button, Form, Container } from 'react-bootstrap'
+import { Button, Form, Container, Spinner } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
+import { useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import styles from './register.module.css'
 
 function Register() {
 
-    const [data, setData] = useState({email: "", username: "", password: "", confirmPw: ""})
-    const navigate = useNavigate()
+    const toast = useToast();
+
+    const [data, setData] = useState({
+        email: '',
+        username: '',
+        password: '',
+        confirmPw: '',
+    });
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     function inputHandler(e) {
-        const { id, value } = e.target
-        setData(prevData => ({ ...prevData, [id]: value}))
+        const { id, value } = e.target;
+        setData((prevData) => ({ ...prevData, [id]: value }));
     }
 
     async function submitHandler(e) {
-        e.preventDefault()
-        await registerUser()
+        e.preventDefault();
+        await registerUser();
     }
 
     async function registerUser() {
-        axios.defaults.headers.post["Access-Control-Allow-Origin"] = true
+        axios.defaults.headers.post['Access-Control-Allow-Origin'] = true;
         try {
-            
-            const response = await axios.post(
-                'http://localhost:5000/users/register',
-                { 
-                    correo: data.email, 
-                    username: data.username,
-                    password: data.password 
-                }, 
-            )
-            localStorage.setItem('token', response.data.token)
-            localStorage.setItem('username', response.data.username)
-            navigate(`/complete-profile`)
+            setIsLoading(true); // Activar el estado de carga
+
+            const response = await axios.post('http://localhost:5000/users/register', {
+                correo: data.email,
+                username: data.username,
+                password: data.password,
+            });
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('username', response.data.username);
+            navigate(`/complete-profile`);
+            toast({
+                title: 'Registro exitoso.',
+                status: 'success',
+                colorScheme: 'green',
+                duration: 2000,
+            });
         } catch (error) {
-            console.log(error)
+            toast({
+                title: 'Registro no exitoso.',
+                status: 'error',
+                colorScheme: 'red',
+                duration: 2000,
+            });
+            console.log(error);
+        } finally {
+            setIsLoading(false); // Desactivar el estado de carga
         }
     }
+
 
     return (
         <Container fluid className={styles["register-container"] + " p-5 bg-white mt-5"}>
@@ -103,8 +125,15 @@ function Register() {
                             Registrarse
                         </Button>
                     :
-                        <Button className="mb-3 w-100" variant="primary" type="submit">
-                            Registrarse
+                        
+                        <Button className="mb-3 w-100" variant="primary" type="submit" disabled={isLoading}>
+                            {isLoading ? (
+                                <>
+                                    <Spinner animation="border" size="sm" role="status" /> Cargando...
+                                </>
+                            ) : (
+                                'Registrarse'
+                            )}
                         </Button>
                 }
             </Form>

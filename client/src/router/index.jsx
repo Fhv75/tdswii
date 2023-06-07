@@ -1,8 +1,7 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { Routes, Route } from 'react-router-dom'
-import Page404 from '../Pages/Page404'
-import LogoutButton from '../components/LogoutButton';
+import Page404 from '../Pages/Page404/404'
 import NavBar from '../components/NavBar/NavBar';
 
 export default function Router(props) {
