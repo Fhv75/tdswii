@@ -57,7 +57,6 @@ function Login() {
         setIsLoading(false);
       }
   }
-}
 
   return (
     <Container fluid className={styles['login-container'] + ' p-5 bg-white mt-5'}>

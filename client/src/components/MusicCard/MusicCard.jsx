@@ -181,18 +181,18 @@ function MusicCard ({track}) {
     }, [track.id]);
 
     return (
-        <Card style={{ padding: 0 }} >
-            <Card.Body >
-                <Row>
-                    <Col md={3} className="d-flex">
-                        <Card className="my-auto" style={{ width: '150px'}} >                 
+        <Card className="mx-auto my-3" style={{width: "85%"}}>
+            <Card.Body className="d-flex flex-column">
+                <Row className="d-flex align-items-center">
+                    <Col md={4} className="d-flex">
+                        <Card className="my-auto" style={{ maxWidth: '180px'}} >                 
                             <Card.Img src="/images/logomelorit.png" alt="Melorit Logo" />
                         </Card>
                     </Col>
-                    <Col md={9} className="d-flex flex-column">
-                        <h4 style={{fontSize:"18px"}}>{track.titulo}</h4>
-                        <h6 style={{fontSize:"14px"}}>{track.artista}</h6>
-                        <audio controls className="mt-auto">
+                    <Col md={8} className="d-flex flex-column">
+                        <h4 style={{fontSize:"22px"}}>{track.titulo}</h4>
+                        <h6 style={{fontSize:"18px"}}>{track.artista}</h6>
+                        <audio controls className="mt-auto w-100">
                             <source src="http://localhost:5000/public/userUploads/audio/LAPRUEBA-ismapuntocom.mp3"/>
                         </audio>  
                     </Col>
