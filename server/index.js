@@ -13,7 +13,7 @@ app.use(cors())
 app.use(express.json())
 app.use("/users", usersRoutes)
 app.use("/audio", audioRoutes)
-
+app.use(express.static('public'))
 
 app.listen(PORT, () => {
     console.log(`Example app listening at http://localhost:${PORT}`)

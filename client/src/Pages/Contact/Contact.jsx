@@ -1,91 +1,90 @@
 import React from 'react'
 import { useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Container, Form, Button } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 import axios from "axios"
+import styles from './contact.module.css'
 
 
-const ContactForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+function ContactForm () {
+	const [data, setData] = useState({name: "", email: "", message: ""})
+	const [name, setName] = useState('')
+	const [email, setEmail] = useState('')
+	const [message, setMessage] = useState('')
+	const navigate = useNavigate()
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
+	function inputHandler(event) {
+		const { id, value } = event.target
+		setData(prevData => ({ ...prevData, [id]: value}))
+	}
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
+	async function submitHandler (event) {
+		event.preventDefault();		
+		setName('');
+		setEmail('');
+		setMessage('');
+		await sendData();
+	};
 
-  const handleMessageChange = (event) => {
-    setMessage(event.target.value);
-  };
+	async function sendData() {
+		axios.defaults.headers.post["Access-Control-Allow-Origin"] = true
+		try {
+			const response = await axios.post(
+				`http://localhost:5000/users/contact`,
+				{ 
+					name: data.name,
+					mail: data.email,
+					message: data.message
+				}
+			)
+			console.log(response)
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    // Aquí puedes realizar alguna acción con los datos del formulario, como enviarlos a un servidor o realizar una acción en el cliente.
-    console.log('Nombre:', name);
-    console.log('Email:', email);
-    console.log('Mensaje:', message);
-    // También puedes reiniciar los valores del formulario después de enviarlo
-    setName('');
-    setEmail('');
-    setMessage('');
-    await sendData();
-  };
+		} catch (error) {   
+			console.log(error)
+		}
+	}
 
-  async function sendData() {
-    axios.defaults.headers.post["Access-Control-Allow-Origin"] = true
-    try {
-        const response = await axios.post(
-            `http://localhost:5000/users/contact`,
-            { 
-                name: name,
-                mail: email,
-                message: message
-            }
-        )
-        console.log(response)
+	return (
+		<Container fluid className={styles["contact-container"] + " p-5 bg-white mt-5"}>
+			<div className="text-center mb-3">
+				<h1 className="px-sm-5">Contacto</h1>
+				<hr />
+			</div>
 
-    } catch (error) {   
-        console.log(error)
-    }
-}
+			<Form onSubmit={submitHandler}>
+				<Form.Group className="pt-3 mb-2" controlId="email">
+					<Form.Label>Nombre</Form.Label>
+					<Form.Control
+						onChange={inputHandler}
+						placeholder="Ingresa tu Nombre"
+						value={data.name}
+					/>
+				</Form.Group>
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Nombre:</label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          onChange={handleNameChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={handleEmailChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="message">Mensaje:</label>
-        <textarea
-          id="message"
-          value={message}
-          onChange={handleMessageChange}
-          required
-        />
-      </div>
-      <button type="submit">Enviar</button>
-    </form>
-  );
+				<Form.Group className="pt-3 mb-4" controlId="email">
+					<Form.Label>Correo Electrónico</Form.Label>
+					<Form.Control
+						onChange={inputHandler}
+						type="email"
+						placeholder="Ingresa tu Correo"
+						value={data.email}
+					/>
+				</Form.Group>
+
+				<Form.Group className="mb-5" controlId="password">
+					<Form.Label>Contraseña</Form.Label>
+					<Form.Control
+						as="textarea"
+						placeholder="Tu mensaje"
+						onChange={inputHandler}
+						value={data.password}
+					/>
+				</Form.Group>
+
+				<Button className="mb-3 w-100" variant="primary" type="submit">Enviar</Button>
+			</Form>
+		</Container>
+	);
 };
 
 export default ContactForm;

@@ -1,26 +1,28 @@
 const { DataTypes } = require('sequelize')
 const sequelize = require('../db')
-const Tag = require('../models/Tag')
 
-const AudioFileTags = sequelize.define('AudioFileTags', {
+const TrackUserRating = sequelize.define('TrackUserRating', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
     },
-    id_etiqueta: {
-        type: DataTypes.INTEGER,
+    id_usuario: {
+        type: DataTypes.STRING(100),
         allowNull: false
     },
     id_pista: {
         type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    valoracion: {
+        type: DataTypes.DECIMAL,
         allowNull: false
     }
-}, {
-    tableName: "pista_etiqueta",
-    timestamps: false
+}, { 
+    // Trabaja en la tabla "pista_musica"
+    tableName: "valoracion_pista_usuario",
 })
-AudioFileTags.belongsTo(Tag, {foreignKey: 'id_etiqueta'})
 
-module.exports = AudioFileTags
+module.exports = TrackUserRating
