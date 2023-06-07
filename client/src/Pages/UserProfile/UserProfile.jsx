@@ -51,6 +51,8 @@ export default function UserProfile() {
             setProfileData(response.data)                
         } catch (error) {
             console.log("Error fetching user profile: ", error)
+            if (error.response.status === 404)
+             navigate('/404')
         }
     }
     fetchUserProfile()
