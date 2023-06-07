@@ -52,12 +52,13 @@ function ContactForm () {
 			</div>
 
 			<Form onSubmit={submitHandler}>
-				<Form.Group className="pt-3 mb-2" controlId="email">
+				<Form.Group className="pt-3 mb-2" controlId="name">
 					<Form.Label>Nombre</Form.Label>
 					<Form.Control
 						onChange={inputHandler}
 						placeholder="Ingresa tu Nombre"
 						value={data.name}
+						required
 					/>
 				</Form.Group>
 
@@ -68,16 +69,18 @@ function ContactForm () {
 						type="email"
 						placeholder="Ingresa tu Correo"
 						value={data.email}
+						required
 					/>
 				</Form.Group>
 
-				<Form.Group className="mb-5" controlId="password">
-					<Form.Label>Contraseña</Form.Label>
+				<Form.Group className="mb-5" controlId="message">
+					<Form.Label>Mensaje</Form.Label>
 					<Form.Control
 						as="textarea"
 						placeholder="Tu mensaje"
 						onChange={inputHandler}
-						value={data.password}
+						value={data.message}
+						required
 					/>
 				</Form.Group>
 
