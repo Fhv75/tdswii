@@ -1,9 +1,9 @@
 import React from 'react'
-import { Card, Container, Row, Col, Button, Overlay, Popover } from 'react-bootstrap'
+import { Card, Container, Row, Col, Button, Overlay, Popover, Badge } from 'react-bootstrap'
 import { useEffect, useState, useRef } from 'react'
 import { Rating } from 'react-simple-star-rating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRotateLeft, faStar,faPlay } from '@fortawesome/free-solid-svg-icons'
+import { faRotateLeft, faStar, faPlay, faComment } from '@fortawesome/free-solid-svg-icons'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios'
 
@@ -28,9 +28,7 @@ function MusicCard ({track}) {
     //--------------------------------------------------------
 
     async function handleRating(rate) {
-        rating.current = rate
-        console.log(rating)
-        
+        rating.current = rate        
         setTimeout(() => {
             setShow(!show)
         }, 500);
@@ -75,7 +73,6 @@ function MusicCard ({track}) {
         }
     }
 
-    /* useEffect(() => { */
         async function getTrackTags (){
             try{
                 const response = await axios.post(
@@ -103,7 +100,6 @@ function MusicCard ({track}) {
             } catch (error) {                
             }            
         }
-       /*  getStatistics() */
         async function getUserRating() {
             try {
                 const response = await axios.post(
@@ -184,114 +180,119 @@ function MusicCard ({track}) {
     }, [track.id]);
 
     return (
-        <Card style={{ width: '40rem' }} >
+        <Card style={{ padding: 0 }} >
             <Card.Body >
-                <Container>
-                    <Row >
-                        <Col md={6}>
-                            <Card>                 
-                                <Card.Img src="/images/logomelorit.png" alt="Melorit Logo" />
-                            </Card>
-                        </Col>
-                        <Col md={6}>
-                            <h4>{track.titulo}</h4>
-                            <h6>{track.artista}</h6>
-                            <audio controls>
-                                <source src="http://localhost:5000/public/userUploads/audio/LAPRUEBA-ismapuntocom.mp3"/>
-                            </audio>                            
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}>
-                            <Card style={{marginTop: '15px' }}>                 
-                                <Card.Text>
-                                    Etiquetas: {tags.map((tag) => tag.Tag.TAG).join(', ')}
-                                </Card.Text>
-                            </Card>
-                        </Col>
-                        <Col>
-                            <Button variant="a" ref={target} onClick={() => setShow(!show)}>
-                                <OverlayTrigger
-                                    placement="top"
-                                    overlay={<Tooltip>Total Ratings</Tooltip>}
-                                >
-                                    <FontAwesomeIcon icon={faStar} style={{ color: "orange", height: "32px" }} />    
-                                </OverlayTrigger>
-                                                       
-                            </Button>
-                            <Overlay target={target.current} show={show}  
-                                placement='top'>
-                                    <Popover id="rating">
-                                        <Rating
-                                            onClick={handleRating}
-                                            initialValue={rating.current}
-                                            transition
-                                            allowHover={false}
-                                            fillColor={isHovering ? 'red' : 'orange'}
-                                            allowFraction
-                                            disableFillHover={true}
-                                            onPointerEnter={onPointerEnter}
-                                            onPointerLeave={onPointerLeave}
-                                            readonly={localStorage.getItem("token") ? false : true}
-                                            
-                                        />
-                                    <Button variant="" onClick={resetRate}>
-                                            <FontAwesomeIcon icon={faRotateLeft} style={{ color: "#c0c0c0", }} />
-                                            
-                                        </Button>
-                                    </Popover>
-                                </Overlay>
-                               <span>{averageRating}</span>
-                               <OverlayTrigger
-                                    placement="top"
-                                    overlay={<Tooltip>Total plays</Tooltip>}
-                               >
-                                 <FontAwesomeIcon icon={faPlay} style={{marginLeft:'40px', color: "peru", transform: "scale(1.85)"}}/>
-                               </OverlayTrigger>
-                               <span style={{ marginLeft:'10px' }}>{track.plays}</span>  
-
-
-                            {/*-------------Para Comentarios---------------*/}
-                                <Row>
-                                    <Col>
-                                    <input
-                                        type="text"
-                                        value={newComment}
-                                        onChange={(e) => setNewComment(e.target.value)}
-                                        placeholder="Ingrese un comentario"
+                <Row>
+                    <Col md={3} className="d-flex">
+                        <Card className="my-auto" style={{ width: '150px'}} >                 
+                            <Card.Img src="/images/logomelorit.png" alt="Melorit Logo" />
+                        </Card>
+                    </Col>
+                    <Col md={9} className="d-flex flex-column">
+                        <h4 style={{fontSize:"18px"}}>{track.titulo}</h4>
+                        <h6 style={{fontSize:"14px"}}>{track.artista}</h6>
+                        <audio controls className="mt-auto">
+                            <source src="http://localhost:5000/public/userUploads/audio/LAPRUEBA-ismapuntocom.mp3"/>
+                        </audio>  
+                    </Col>
+                </Row>
+                <Row className="mt-3">
+                    <Col md={6  } className="my-auto">
+                        <Container>                 
+                                {
+                                    tags.map((tag) => 
+                                        <Badge key={tag.Tag.TAG} bg="" text="dark" style={{marginRight: '5px', backgroundColor:"#eeeeee"}}>{tag.Tag.TAG}</Badge>
+                                    )
+                                }
+                            
+                        </Container>
+                    </Col>
+                    <Col className="mt-auto">
+                        <Button variant="a" ref={target} onClick={() => setShow(!show)}>
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={<Tooltip>Total Ratings</Tooltip>}
+                            >
+                                <FontAwesomeIcon icon={faStar} style={{ color: "orange", height: "32px" }} />    
+                            </OverlayTrigger>                 
+                        </Button>
+                        <Overlay target={target.current} show={show}  
+                            placement='top'>
+                                <Popover id="rating">
+                                    <Rating
+                                        onClick={handleRating}
+                                        initialValue={rating.current}
+                                        transition
+                                        allowHover={false}
+                                        fillColor={isHovering ? 'red' : 'orange'}
+                                        allowFraction
+                                        disableFillHover={true}
+                                        onPointerEnter={onPointerEnter}
+                                        onPointerLeave={onPointerLeave}
+                                        readonly={localStorage.getItem("token") ? false : true}
+                                        
                                     />
-                                    </Col>
+                                <Button variant="" onClick={resetRate}>
+                                    <FontAwesomeIcon icon={faRotateLeft} style={{ color: "#c0c0c0", }} />   
+                                </Button>
+                                </Popover>
+                            </Overlay>
+                            <span>{averageRating}</span>
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={<Tooltip>Total plays</Tooltip>}
+                            >
+                                <FontAwesomeIcon icon={faPlay} style={{marginLeft:'40px', color: "peru", transform: "scale(1.85)"}}/>
+                            </OverlayTrigger>
+                            <span style={{ marginLeft:'17px' }}>{track.plays}</span>
 
-                                    <Col>
-                                        <Button variant="primary" onClick={addComentario} style={{ marginTop: '15px' }}>
-                                        Comentar
-                                        </Button>
-                                    </Col>
-                                    <hr/>
-                                    <Col>
-                                        <Button variant="secondary" onClick={getComentarios} style={{ marginTop: '15px' }}>
-                                        Mostrar
-                                        </Button>
-                                    </Col>
-                                    <Col>
-                                        <Button variant="secondary" onClick={() => setShowComments(false)} style={{ marginTop: '15px' }}>
-                                        Ocultar 
-                                        </Button>
-                                    </Col>
-                                </Row>
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={<Tooltip>Total comments</Tooltip>}
+                            >
+                                <FontAwesomeIcon icon={faComment} style={{color: "#b0b6bf", marginLeft:'36px', transform: "scale(1.85)"}} />
+                            </OverlayTrigger>
 
-                                    {showComments && (
-                                            <Row>
-                                                <Col>
-                                                    <CommentSection trackId={track.id} comments={comments} />
-                                                </Col>
-                                            </Row>
-                                        )}                               
-                            {/*----------------------------------------------------------------------------------- */}
-            
-                        </Col>
-                    </Row>
-                </Container>
+                            <span style={{ marginLeft:'17px' }}>13</span>
+                    </Col>
+                </Row>
+                {/*-------------Para Comentarios---------------*/}
+                <Row className="my-4">
+                    <Col className="mt-3">
+                    <input
+                        type="text"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder="Ingrese un comentario"
+                        
+                    />
+                    </Col>
+
+                    <Col>
+                        <Button variant="primary" onClick={addComentario} style={{ marginTop: '15px' }}>
+                        Comentar
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button variant="secondary" onClick={getComentarios} style={{ marginTop: '15px' }}>
+                        Mostrar
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button variant="secondary" onClick={() => setShowComments(false)} style={{ marginTop: '15px' }}>
+                        Ocultar 
+                        </Button>
+                    </Col>
+                </Row>
+
+                {showComments && (
+                        <Row>
+                            <Col>
+                                <CommentSection trackId={track.id} comments={comments} />
+                            </Col>
+                        </Row>
+                    )}                               
+            {/*----------------------------------------------------------------------------------- */}
             </Card.Body>
         </Card>
       );
