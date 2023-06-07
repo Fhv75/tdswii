@@ -6,7 +6,6 @@ import axios from 'axios'
 import styles from './register.module.css'
 
 function Register() {
-
     const toast = useToast();
 
     const [data, setData] = useState({
@@ -60,7 +59,6 @@ function Register() {
         }
     }
 
-
     return (
         <Container fluid className={styles["register-container"] + " p-5 bg-white mt-5"}>
             <div className="text-center mb-4">
@@ -80,45 +78,41 @@ function Register() {
                     />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="email">
-                    <Form.Label>Correo Electrónico</Form.Label>
-                    <Form.Control
-                        type="email"
-                        placeholder="Ingresa tu Correo"
-                        onChange={inputHandler}
-                        value={data.email}
-                        required
-                    />
-                </Form.Group>
+        <Form.Group className="mb-3" controlId="email">
+          <Form.Label>Correo Electrónico</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Ingresa tu Correo"
+            onChange={inputHandler}
+            value={data.email}
+            required
+          />
+        </Form.Group>
 
-                <Form.Group className="mb-3" controlId="password">
-                    <Form.Label>Contraseña</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Contraseña"
-                        onChange={inputHandler}
-                        value={data.password}
-                        required
-                    />
-                </Form.Group>
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>Contraseña</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Contraseña"
+            onChange={inputHandler}
+            value={data.password}
+            required
+          />
+        </Form.Group>
 
-                <Form.Group className="mb-5" controlId="confirmPw">
-                    <Form.Label>Confirmar Contraseña</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Contraseña"
-                        onChange={inputHandler}
-                        value={data.confirmPw}
-                        required
-                    />
-                    {
-                        data.password !== data.confirmPw &&
-                        <p className="text-danger">
-                            Las contraseñas no coinciden
-                        </p>
-                    }
-                </Form.Group>
-
+        <Form.Group className="mb-5" controlId="confirmPw">
+          <Form.Label>Confirmar Contraseña</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Contraseña"
+            onChange={inputHandler}
+            value={data.confirmPw}
+            required
+          />
+          {data.password !== data.confirmPw && (
+            <p className="text-danger">Las contraseñas no coinciden</p>
+          )}
+        </Form.Group>
                 {
                     data.password !== data.confirmPw ?
                         <Button className="mb-3 w-100" variant="primary" type="submit" disabled>
@@ -138,20 +132,20 @@ function Register() {
                 }
             </Form>
 
-            <div className="text-center text-secondary">
-                <p>O</p>
+      <div className="text-center text-secondary">
+        <p>O</p>
 
-                <Button
-                    className="mb-3 w-100"
-                    variant="dark"
-                    type="button"
-                    onClick={() => navigate("../login")}
-                >
-                    Inicia Sesión
-                </Button>
-            </div>
-        </Container>
-    )
+        <Button
+          className="mb-3 w-100"
+          variant="dark"
+          type="button"
+          onClick={() => navigate('../login')}
+        >
+          Inicia Sesión
+        </Button>
+      </div>
+    </Container>
+  );
 }
 
-export default Register
+export default Register;
