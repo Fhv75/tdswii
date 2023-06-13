@@ -14,6 +14,7 @@ import Contact from './Pages/Contact/Contact';
 import UploadAudioFile from './Pages/UploadAudio/UploadAudioFile'
 import MusicCard from './components/MusicCard/MusicCard'
 import './App.css'
+import UploadProduct from './Pages/UploadProduct/UploadProduct'
 
 
 const routes = [
@@ -79,6 +80,13 @@ const routes = [
     {
         path: '/upload',
         component: <UploadAudioFile/>, 
+        protection:  (
+            <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
+        ),
+    },
+    {
+        path: '/uploadProduct',
+        component: <UploadProduct/>,
         protection:  (
             <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
         ),
