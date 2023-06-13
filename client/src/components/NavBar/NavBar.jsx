@@ -17,7 +17,6 @@ function NavBar() {
   function navigateToProfile() {
     navigate(`/user/${localStorage.getItem("username")}`);
   }
-  console.log(location.pathname)
   return (
     <Navbar bg="light" expand="lg" className={location.pathname == "/dashboard" && "d-none"}>
       <Container fluid>

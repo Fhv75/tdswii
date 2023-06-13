@@ -1,22 +1,31 @@
 import React from 'react'
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Navbar, Nav, Image, Button } from 'react-bootstrap';
+import styles from './sidebar.module.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 function SideBar() {
     return (
-        <Navbar bg="light" expand="lg" className="flex-column h-100">
-            <Navbar.Brand>Dashboard Logo</Navbar.Brand>
-            <Navbar.Toggle aria-controls="sidebar-nav" />
-            <Navbar.Collapse id="sidebar-nav">
-                <Nav className="flex-column">
-                    <Nav.Link href="#dashboard">Dashboard</Nav.Link>
-                    <Nav.Link href="#user-requests">User Requests</Nav.Link>
-                    <Nav.Link href="#notifications">Notifications</Nav.Link>
-                    <Nav.Link href="#analytics">Analytics</Nav.Link>
-                    <Nav.Link href="#settings">Settings</Nav.Link>
-                    <Nav.Link href="#help">Help/Support</Nav.Link>
-                </Nav>
-            </Navbar.Collapse>
-            <Nav.Link href="#logout" className="mt-auto">Logout</Nav.Link>
+        <Navbar bg="light" className={`${styles["sidebar"]} flex-column h-100 px-4`}>
+            <Navbar.Brand className="me-0">
+                <Image
+                    src="/images/logomelorit.png"
+                    alt="Melorit Logo"
+                    width="50"
+                    height="50"
+                    onClick={() => console.log("hello")}
+                    className={`${styles["brand-icon"]}`}
+                />
+            </Navbar.Brand>
+            <Nav className={`${styles["links"]} flex-column mt-4`}>
+                <Nav.Link href="/upload-products" className="mb-3">Cargar Productos</Nav.Link>
+                <Nav.Link href="/track-approval" className="mb-3">Aprobación de Pistas</Nav.Link>
+                <Nav.Link href="/statistcs" className="mb-3">Estadísticas</Nav.Link>
+            </Nav>
+            <Button href="/logout" variant="dark" className="mt-auto mb-5">
+                Cerrar Sesión
+                <FontAwesomeIcon icon={faRightFromBracket} />
+            </Button>
         </Navbar>
     );
 }

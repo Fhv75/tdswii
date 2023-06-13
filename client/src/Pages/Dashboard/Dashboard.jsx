@@ -6,11 +6,11 @@ import styles from './dashboard.module.css'
 function Dashboard() {
     return (
         <Row className="gx-0 min-vh-100 bg-white">
-            <Col md={2}>
+            <Col style={{maxWidth: "max-content"}}>
                 <SideBar />
             </Col>
             <Col>
-                <Container className={'py-4 px-5'}>
+                <Container className="py-4 px-5">
                     <h1>Dashboard</h1>
                 </Container>
             </Col>
