@@ -4,11 +4,11 @@ import styles from './uploadProduct.module.css'
 
 function UploadProduct() {
     return (
-        <>
-            <Container className={`d-flex flex-column ${styles["dashboard-container"]}`}>
-                <h1>Hola</h1>
-            </Container>
-        </>      
+        <div className={`${styles["dashboard-background"]} py-5`}>
+                <Container className={'d-flex flex-column'}>
+                    <h1>Upload Product</h1>
+                </Container>
+        </div>      
     )
 }
 
