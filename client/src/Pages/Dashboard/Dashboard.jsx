@@ -4,21 +4,24 @@ import SideBar from '../../components/SideBar/SideBar'
 import styles from './dashboard.module.css'
 import UploadProduct from '../UploadProduct/UploadProduct'
 
+//TODO: Hacer que este componente solo sea accesible por administradores
+//TODO: Arreglar el breakpoint entre la sidebar y el contenido
+
 function Dashboard() {
-    const [path, setPath] = useState("/dashboard")
+    const [screen, setScreen] = useState("dashboard")
     
     return (
         <Row className="gx-0 min-vh-100 bg-white">
-            <Col style={{maxWidth: "max-content"}}>
-                <SideBar onScreenChange={setPath}/>
+            <Col className="d-none d-sm-block" style={{maxWidth: "max-content"}}>
+                <SideBar onScreenChange={setScreen}/>
             </Col>
             <Col>
-                <Container className="py-4 px-5">
+                <Container className="py-4">
                     {
-                        path === "/dashboard" ? <h1>Dashboard</h1> : 
-                        path === "/upload-products" ? <UploadProduct/> : 
-                        path === "/track-approval" ? <h1>Track Approval</h1> :
-                        path === "/ranking" ? <h1>Ranking</h1> : null
+                        screen === "dashboard" ? <h1>Dashboard</h1> : 
+                        screen === "uploadProducts" ? <UploadProduct/> : 
+                        screen === "trackApproval" ? <h1>Track Approval</h1> :
+                        screen === "ranking" ? <h1>Ranking</h1> : null
                     }
                 </Container>
             </Col>
