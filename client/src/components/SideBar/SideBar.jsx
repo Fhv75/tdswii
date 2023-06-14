@@ -4,7 +4,7 @@ import styles from './sidebar.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
-function SideBar() {
+function SideBar({onScreenChange}) {
     return (
         <Navbar bg="light" className={`${styles["sidebar"]} flex-column h-100 px-4`}>
             <Navbar.Brand className="me-0">
@@ -18,9 +18,9 @@ function SideBar() {
                 />
             </Navbar.Brand>
             <Nav className={`${styles["links"]} flex-column mt-4`}>
-                <Nav.Link href="/upload-products" className="mb-3">Cargar Productos</Nav.Link>
-                <Nav.Link href="/track-approval" className="mb-3">Aprobación de Pistas</Nav.Link>
-                <Nav.Link href="/statistcs" className="mb-3">Estadísticas</Nav.Link>
+                <Nav.Link onClick={() => onScreenChange('/upload-products')} className="mb-3">Cargar Productos</Nav.Link>
+                <Nav.Link onClick={() => onScreenChange('/track-approval')} className="mb-3">Aprobación de Pistas</Nav.Link>
+                <Nav.Link onClick={() => onScreenChange('/ranking')} className="mb-3">Ranking de Usuarios</Nav.Link>
             </Nav>
             <Button href="/logout" variant="dark" className="mt-auto mb-5">
                 Cerrar Sesión

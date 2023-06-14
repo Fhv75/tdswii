@@ -22,8 +22,3 @@
     opacity: 1;
 }
 
-.links:hover {
-    opacity: 0;
-    width: 0;
-    visibility: hidden;
-}
