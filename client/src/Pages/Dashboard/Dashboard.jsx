@@ -11,12 +11,12 @@ function Dashboard() {
     const [screen, setScreen] = useState("dashboard")
     
     return (
-        <Row className="gx-0 min-vh-100 bg-white">
+        <Row className={`${styles['dashboard-background']} gx-0 min-vh-100`}>
             <Col className="d-none d-sm-block" style={{maxWidth: "max-content"}}>
                 <SideBar onScreenChange={setScreen}/>
             </Col>
             <Col>
-                <Container className="py-4">
+                <Container className="py-4 py-xl-5">
                     {
                         screen === "dashboard" ? <h1>Dashboard</h1> : 
                         screen === "uploadProducts" ? <UploadProduct/> : 
