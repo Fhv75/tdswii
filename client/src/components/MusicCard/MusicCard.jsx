@@ -51,8 +51,6 @@ function MusicCard ({track}) {
         await rateTrack()
     }
     
-// hello this is a test that
-// should do something lol
     async function rateTrack() {
         try {
             const response = await axios.post(
@@ -193,7 +191,8 @@ function MusicCard ({track}) {
                         <h4 style={{fontSize:"22px"}}>{track.titulo}</h4>
                         <h6 style={{fontSize:"18px"}}>{track.artista}</h6>
                         <audio controls className="mt-3 w-100">
-                            <source src="http://localhost:5000/public/userUploads/audio/LAPRUEBA-ismapuntocom.mp3"/>
+                            <source src={"http://localhost:5000/public/userUploads/audio/" + track.src}/>
+                            
                         </audio>  
                     </Col>
                 </Row>

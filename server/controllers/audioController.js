@@ -29,6 +29,7 @@ async function uploadAudioFile (req, res) {
         const titulo = req.body.titulo
         const token = req.body.token
         const tags = JSON.parse(req.body.tags)
+        const username = req.body.username
 
         const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
         const userMail = decoded.id
@@ -36,7 +37,7 @@ async function uploadAudioFile (req, res) {
         const newAudioFile = await AudioFile.create({ 
             titulo: titulo,  
             id_user_cargas: userMail,
-            nombre_archivo: titulo + "-" + userMail
+            nombre_archivo: titulo + "-" + username
         })
 
         await newAudioFile.setTags(tags)

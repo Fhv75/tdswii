@@ -5,6 +5,7 @@ import RecoveryRequest from './Pages/PwRecovery/RecoveryRequest'
 import ResetPw from './Pages/PwRecovery/ResetPw'
 import Register from './Pages/Register/Register'
 import UserProfile from './Pages/UserProfile/UserProfile'
+import Test from './Pages/Test/Test'
 import EditUserProfile from './Pages/EditUserProfile/EditUserProfile'
 import Router from './router/index'
 import AnonymousProtectedRoute from './routing/AnonymousProtectedRoute'
@@ -87,6 +88,10 @@ const routes = [
     {
         path: '/dashboard',
         component: <Dashboard/>,
+    },
+    {
+        path: '/test',
+        component: <Test />
     }
 ]
 
