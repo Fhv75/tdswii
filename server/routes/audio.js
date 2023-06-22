@@ -12,6 +12,7 @@
         getComentarios,
         addComentario } = require('../controllers/audioController')
     const { searchTracks } = require('../controllers/searchController')
+    const { searchTags } = require('../controllers/searchController')
 
     router.post('/upload/:trackData', upload.single('audioFile'), uploadAudioFile)
     router.post('/getUserTracks', getUserTracks )
@@ -20,6 +21,7 @@
     router.post('/getStatistics', getStatistics)
     router.post('/getUserRating', getUserTrackRating)
     router.post('/searchTracks', searchTracks)
+    router.post('/searchTags', searchTags)
     router.get('/file/:trackID', getAudioFile)
 
     //para comentarios

@@ -25,13 +25,19 @@ const SearchBar = () => {
         searchTerm: searchTerm,
       });
 
-      const userResponse = await axios.post("http://localhost:5000/users/searchUsers", {
+      const userResponse = await axios.post("http://localhost:5000/user/searchUsers", {
         searchTerm: searchTerm,
+       
+      });
+      const tagResponse = await axios.post("http://localhost:5000/audio/searchTags", {
+        searchTerm: searchTerm,
+       
       });
 
       
       console.log("Audio Results:", audioResponse.data);
       console.log("User Results:", userResponse.data);
+      console.log("Tags results", tagResponse.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -59,8 +65,8 @@ const SearchBar = () => {
   };
 
   return (
-    <div>
-      <Form className="d-flex ms-auto align-items-center" onSubmit={handleSubmit}>
+    <div className="search-bar-container">
+      <Form className="d-flex align-items-center" onSubmit={handleSubmit}>
         <Form.Control
           type="search"
           placeholder="Search"

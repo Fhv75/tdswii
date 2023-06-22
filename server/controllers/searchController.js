@@ -1,4 +1,6 @@
 const AudioFile = require('../models/AudioFile');
+const Tag = require('../models/Tag')
+const AudioFileTags = require('../models/AudioFileTags')
 const User = require('../models/User')
 const { Op } = require('sequelize');
 
@@ -31,6 +33,25 @@ const { Op } = require('sequelize');
       } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'An error occurred while searching for users.' });
+      }
+    };
+    exports.searchTags = async (req, res) => {
+      const searchTerm = req.body.searchTerm;
+    
+      try {
+        const searchResults = await Tag.findAll({
+          where: {
+            TAG: {
+              [Op.iLike]: `%${searchTerm}%`
+            },
+          },
+          
+        });
+    
+        res.json(searchResults);
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'An error occurred while searching for tags.' });
       }
     };
     
