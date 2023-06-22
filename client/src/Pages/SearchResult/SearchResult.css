@@ -1,0 +1,47 @@
+.search-result-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.result-section-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.tab-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-weight: bold;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.tab.active {
+  background-color: #2d454b;
+  color: #ffffff;
+}
+
+.result-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.result-list li {
+  margin-bottom: 10px;
+}
+
+.no-results {
+  font-style: italic;
+  color: #777;
+}
