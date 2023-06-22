@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 const SearchResult = () => {
@@ -83,14 +84,16 @@ const SearchResult = () => {
               <h2>Usuarios:</h2>
               <ul>
                 {userResults.map((result) => (
-                  <li key={result.id}>{result.username}</li>
+                  <li key={result.id}>
+                      <Link to={`/user/${result.username}`}>{result.username}</Link>
+                  </li>
                 ))}
               </ul>
             </>
           )}
           {tagResults.length > 0 && (
             <>
-              <h2>Tags:</h2>
+              <h2>Géneros:</h2>
               <ul>
                 {tagResults.map((result) => (
                   <li key={result.id}>{result.TAG}</li>
