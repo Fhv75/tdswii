@@ -310,6 +310,39 @@ async function getAudioFile(req, res) {
     }
   };
 
+  // ...----------------------------------------------------------
+
+// Variable para almacenar el estado de compra de las pistas (en memoria)
+const purchasedTracks = {};
+
+// Controlador para comprar una pista musical
+async function purchaseTrack(req, res) {
+  const { trackID } = req.body;
+  const userID = req.user ? req.user.id : null; // Obtener el ID del usuario (si está autenticado)
+
+  try {
+    // Verificar si la pista ya ha sido comprada por el usuario y obtener la cantidad de compras
+    const purchaseCount = purchasedTracks[trackID] && purchasedTracks[trackID][userID]
+      ? purchasedTracks[trackID][userID]
+      : 0;
+
+    // Realizar cualquier lógica adicional para validar la compra (por ejemplo, verificar saldo, disponibilidad, etc.)
+
+    // Incrementar la cantidad de compras del usuario para la pista
+    if (!purchasedTracks[trackID]) {
+      purchasedTracks[trackID] = {};
+    }
+    purchasedTracks[trackID][userID] = purchaseCount + 1;
+
+    // Responder con un mensaje de éxito
+    res.json({ message: 'Pista comprada exitosamente.' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Error al procesar la compra.' });
+  }
+}
+ 
+
 //----------------------------------------------------------------------------
 
 module.exports = {
@@ -322,5 +355,6 @@ module.exports = {
     getUserTrackRating,
     getAudioFile,
     getComentarios,
-    addComentario
+    addComentario,
+    purchaseTrack
 }

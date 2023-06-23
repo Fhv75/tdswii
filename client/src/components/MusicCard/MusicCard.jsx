@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Container, Row, Col, Button, Overlay, Popover, Badge } from 'react-bootstrap'
+import { Card, Container, Row, Col, Button, Overlay, Popover, Badge, Modal, Form } from 'react-bootstrap'
 import { useEffect, useState, useRef } from 'react'
 import { Rating } from 'react-simple-star-rating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -26,6 +26,37 @@ function MusicCard ({track}) {
     const [showComments, setShowComments] = useState(false);
 
     //--------------------------------------------------------
+
+    //Para compras
+    const [showModal, setShowModal] = useState(false);
+
+    const [paymentMethod, setPaymentMethod] = useState('');
+    const [cardNumber, setCardNumber] = useState('');
+    const [expirationDate, setExpirationDate] = useState('');
+    const [cvv, setCvv] = useState('');
+
+    const [isPurchasing, setIsPurchasing] = useState(false);
+    const [purchaseSuccess, setPurchaseSuccess] = useState(false);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+      
+        // Obtener los datos de la tarjeta
+        console.log('Número de tarjeta:', cardNumber);
+        console.log('Fecha de expiración:', expirationDate);
+        console.log('CVV:', cvv);
+      
+        // Realizar cualquier lógica adicional necesaria para validar la compra
+      
+        // Marcar la pista como comprada para el usuario
+      
+        // Actualizar los estados de compra
+        setIsPurchasing(false);
+        setPurchaseSuccess(true);
+      };
+
+  
+    //------------------------------------
 
     async function handleRating(rate) {
         rating.current = rate        
@@ -169,7 +200,38 @@ function MusicCard ({track}) {
               console.log(error);
             }
           }  
-   
+
+//Para Comprar
+
+            const handlePurchase = async () => {
+                try {
+                // Validar los campos del formulario antes de realizar la compra
+                if (!paymentMethod || !cardNumber || !expirationDate || !cvv) {
+                    console.log('Por favor, completa todos los campos');
+                    return;
+                }
+
+                const response = await axios.post(
+                    'http://localhost:5000/audio/purchaseTrack',
+                    {
+                    trackID: track.id,
+                    paymentMethod,
+                    cardNumber,
+                    expirationDate,
+                    cvv,
+                    }
+                );
+                console.log(response.data);
+
+                // Realizar cualquier lógica adicional necesaria después de la compra (por ejemplo, mostrar un mensaje de éxito)
+
+                // Cerrar el modal de compra
+                setShowModal(false);
+                } catch (error) {
+                console.log(error);
+                // Mostrar mensaje de error si ocurre algún problema durante la compra
+                }
+            };
 //-------------------------------------------------------------------------------
     useEffect (()=> {   
         getStatistics();
@@ -294,6 +356,76 @@ function MusicCard ({track}) {
                         </Row>
                     )}                               
             {/*----------------------------------------------------------------------------------- */}
+
+             {/* Botón de compra */}
+                    <Button variant="primary" onClick={() => setShowModal(true)}>
+                    Comprar
+                    </Button>
+
+                    {/* Modal de compra */}
+                    <Modal show={showModal} onHide={() => setShowModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Formulario de Compra</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        
+                        {/*Formulario de compra */}
+                    <Form>
+                        <Form.Group controlId="paymentMethod">
+                            <Form.Label>Método de Pago</Form.Label>
+                            <Form.Control
+                            as="select"
+                            value={paymentMethod}
+                            onChange={(e) => setPaymentMethod(e.target.value)}
+                            >
+                            <option value="">Seleccionar método de pago</option>
+                            <option value="creditCard">Tarjeta de crédito</option>
+                            <option value="paypal">PayPal</option>
+                            {/* Agrega más opciones de método de pago si es necesario */}
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group controlId="cardNumber">
+                            <Form.Label>Número de Tarjeta</Form.Label>
+                            <Form.Control
+                            type="text"
+                            value={cardNumber}
+                            onChange={(e) => setCardNumber(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="expirationDate">
+                            <Form.Label>Fecha de Expiración</Form.Label>
+                            <Form.Control
+                            type="text"
+                            value={expirationDate}
+                            onChange={(e) => setExpirationDate(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="cvv">
+                            <Form.Label>CVV</Form.Label>
+                            <Form.Control
+                            type="text"
+                            value={cvv}
+                            onChange={(e) => setCvv(e.target.value)}
+                            />
+                        </Form.Group>
+                </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowModal(false)}>
+                             Cancelar
+                        </Button>
+                        <Button variant="primary" onClick={handlePurchase}>
+                             Comprar
+                        </Button>
+                    </Modal.Footer>
+                    </Modal>
+                   
+                    {/* Mensaje de compra exitosa */}
+                    {purchaseSuccess && (
+                        <div className="mt-3 alert alert-success" role="alert">
+                        ¡Compra exitosa!
+                        </div>
+                    )}
             </Card.Body>
         </Card>
       );
