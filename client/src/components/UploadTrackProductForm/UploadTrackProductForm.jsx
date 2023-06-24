@@ -33,11 +33,13 @@ function UploadTrackProductForm() {
         const formData = new FormData();
         const tagsArray = fileData.tags.split(',').map((tag) => tag.trim());
     
-        formData.append('audioFile', files.audio);
-        formData.append('coverFile', files.cover);
+        formData.append('audio', files.audio);
+        formData.append('image', files.cover);
         formData.append('titulo', fileData.titulo);
         formData.append('artist', fileData.artista);
-        formData.append('token', localStorage.getItem('token'));
+        formData.append('token', localStorage.getItem('token')); // TODO: Verificar si esto es necesario
+        // Añadir el precio de venta
+        formData.append()
         formData.append('tags', JSON.stringify(tagsArray));
         
         try {

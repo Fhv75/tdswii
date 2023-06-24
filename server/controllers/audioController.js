@@ -12,7 +12,10 @@ const fs = require('fs')
 const Comentarios = require("../models/Comentarios")
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, "../public/userUploads/audio"))
+        if(file.fieldname === 'image')
+            cb(null, path.join(__dirname, "../public/userUploads/images"))
+        else
+            cb(null, path.join(__dirname, "../public/userUploads/audio"))
     },
     filename: function (req, file, cb) {
         const ext = path.extname(file.originalname)
@@ -20,7 +23,7 @@ const storage = multer.diskStorage({
 
         cb(null, `${trackData}${ext}`)
     }
-})  
+})
 
 const upload = multer({ storage: storage })
 

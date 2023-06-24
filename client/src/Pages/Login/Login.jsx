@@ -35,6 +35,7 @@ function Login() {
           )
           localStorage.setItem('token', response.data.token)
           localStorage.setItem('username', response.data.username)
+
           toast({
                 title: 'Inicio de sesión exitoso',
                 description: '¡Bienvenido/a!',
@@ -42,6 +43,7 @@ function Login() {
                 colorScheme: 'green',
                 duration: 2000,
           });
+          
           setTimeout(() => {
             navigate(`../user/${response.data.username}`)
           }, 1000)

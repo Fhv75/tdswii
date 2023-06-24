@@ -5,7 +5,7 @@ import styles from './uploadAudioFile.module.css';
 
 function UploadAudioFile() {
   const [fileData, setFileData] = useState({ titulo: '', tags: '' });
-  const [file, setFile] = useState('');
+  const [files, setFiles] = useState({ image: null, audio: null })
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastVariant, setToastVariant] = useState('');
@@ -25,8 +25,9 @@ function UploadAudioFile() {
     setFileData((prevData) => ({ ...prevData, [id]: value }));
   }
 
-  function fileHandler(e) {
-    setFile(e.target.files[0]);
+  function fileHandler(event, fileType) {
+    const file = event.target.files[0]
+    setFiles(prevFiles => ({ ...prevFiles, [fileType]: file }))
   }
 
   async function submitHandler(e) {
@@ -38,7 +39,8 @@ function UploadAudioFile() {
     const formData = new FormData();
     const tagsArray = fileData.tags.split(',').map((tag) => tag.trim());
 
-    formData.append('audioFile', file);
+    formData.append('image', files.image);
+    formData.append('audio', files.audio);
     formData.append('titulo', fileData.titulo);
     formData.append('token', localStorage.getItem('token'));
     formData.append('username', localStorage.getItem('username'));
@@ -53,7 +55,7 @@ function UploadAudioFile() {
       setToastMessage('¡La pista se cargó exitosamente!');
       setShowToast(true);
       console.log(response);
-      setFormSubmitted(true); 
+      setFormSubmitted(true);
     } catch (error) {
       setToastVariant('danger');
       setToastMessage('Hubo un error al cargar la pista.');
@@ -65,7 +67,7 @@ function UploadAudioFile() {
   function resetForm() {
     setFormSubmitted(false);
     setFileData({ titulo: '', tags: '' });
-    setFile('');
+    setFiles({ image: null, audio: null });
   }
 
   if (formSubmitted) {
@@ -73,7 +75,7 @@ function UploadAudioFile() {
       <Container fluid>
         <Row className="justify-content-center">
           <Col md={6}>
-            <div>¡La pista se cargó exitosamente!</div> 
+            <div>¡La pista se cargó exitosamente!</div>
             <Button variant="primary" onClick={resetForm}>
               Cargar otra pista
             </Button>
@@ -84,13 +86,11 @@ function UploadAudioFile() {
   }
 
   return (
-    <Container fluid>
-      <Row className="justify-content-center">
-        <Col md={6}>
-          <Form onSubmit={submitHandler}>
+    <Container className="bg-light my-4 rounded shadow-sm" style={{ maxWidth: "max-content" }}>
+      <Form onSubmit={submitHandler} className="px-5 py-4">
             <Form.Group controlId="email">
               <Form.Label>Pista</Form.Label>
-              <Form.Control type="file" onChange={fileHandler} />
+              <Form.Control type="file" onChange={(event) => { fileHandler(event, 'audio') }} />
             </Form.Group>
 
             <Form.Group controlId="titulo">
@@ -104,30 +104,37 @@ function UploadAudioFile() {
 
             <Form.Group controlId="tags">
               <Form.Label>
-		Etiquetas</Form.Label>
-	<Form.Control
-type="text"
-onChange={inputHandler}
-value={fileData.tags}
-placeholder="Ej: rock, pop, jazz, etc. Separadas por comas"
-/>
-</Form.Group>
- <Button variant="primary" type="submit">
-          Subir
-        </Button>
-      </Form>
+                Etiquetas</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={inputHandler}
+                value={fileData.tags}
+                placeholder="Ej: rock, pop, jazz, etc. Separadas por comas"
+              />
+            </Form.Group>
 
-      <Toast
-        show={showToast}
-        onClose={() => setShowToast(false)}
-        className={`mt-3 bg-${toastVariant}`}
-      >
-        <Toast.Body>{toastMessage}</Toast.Body>
-      </Toast>
-    </Col>
-  </Row>
-</Container>
-);
+            <Form.Group
+              controlId="formFile"
+              className="mb-3"
+              onChange={(event) => { fileHandler(event, 'image') }}
+            >
+              <Form.Label>Portada</Form.Label>
+              <Form.Control type="file" />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Subir
+            </Button>
+          </Form>
+
+          <Toast
+            show={showToast}
+            onClose={() => setShowToast(false)}
+            className={`mt-3 bg-${toastVariant}`}
+          >
+            <Toast.Body>{toastMessage}</Toast.Body>
+          </Toast>
+    </Container>
+  );
 }
 
 export default UploadAudioFile;
