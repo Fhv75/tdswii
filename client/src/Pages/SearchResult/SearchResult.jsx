@@ -82,7 +82,7 @@ const SearchResult = () => {
 
   return (
          <div className="search-result-container">
-        <h1 className="result-section-title">Resultados para {searchTerm}</h1>
+        <h1 className="result-section-title">Resultados para: "{searchTerm}"</h1>
         <div className="tab-container">
           <button
             className={`tab ${activeTab === "tracks" ? "active" : ""}`}
