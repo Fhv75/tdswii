@@ -8,6 +8,7 @@ import UserProfile from './Pages/UserProfile/UserProfile'
 import Test from './Pages/Test/Test'
 import EditUserProfile from './Pages/EditUserProfile/EditUserProfile'
 import Router from './router/index'
+import SearchResult from './Pages/SearchResult/SearchResult'
 import AnonymousProtectedRoute from './routing/AnonymousProtectedRoute'
 import AuthenticationProtectedRoute from './routing/AuthenticationProtectedRoute'
 import CompleteProfile from './components/CompleteProfile'
@@ -22,6 +23,10 @@ const routes = [
     { 
         path: '/', 
         component: <Feed />,
+    },
+    { 
+        path: '/search-results/:searchTerm', 
+        component: <SearchResult />,
     },
     { 
         path: '/login', 

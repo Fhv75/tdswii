@@ -19,4 +19,5 @@ const Tag = sequelize.define('Tag', {
     timestamps: false
 })
 
+
 module.exports = Tag
