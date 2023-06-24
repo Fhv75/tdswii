@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Container, Row, Col, Button, Overlay, Popover, Badge, Modal, Form } from 'react-bootstrap'
+import { Card, Container, Row, Col, Button, Overlay, Popover, Badge, Modal, Form, Alert } from 'react-bootstrap'
 import { useEffect, useState, useRef } from 'react'
 import { Rating } from 'react-simple-star-rating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -35,27 +35,11 @@ function MusicCard ({track}) {
     const [expirationDate, setExpirationDate] = useState('');
     const [cvv, setCvv] = useState('');
 
-    const [isPurchasing, setIsPurchasing] = useState(false);
-    const [purchaseSuccess, setPurchaseSuccess] = useState(false);
+    /* const [isPurchasing, setIsPurchasing] = useState(false); */
+    const [purchaseSuccess, setPurchaseSuccess] = useState(false); 
+    const [isPurchased, setIsPurchased] = useState(false);
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        // Obtener los datos de la tarjeta
-        console.log('Número de tarjeta:', cardNumber);
-        console.log('Fecha de expiración:', expirationDate);
-        console.log('CVV:', cvv);
-      
-        // Realizar cualquier lógica adicional necesaria para validar la compra
-      
-        // Marcar la pista como comprada para el usuario
-      
-        // Actualizar los estados de compra
-        setIsPurchasing(false);
-        setPurchaseSuccess(true);
-      };
-
-  
     //------------------------------------
 
     async function handleRating(rate) {
@@ -208,6 +192,7 @@ function MusicCard ({track}) {
                 // Validar los campos del formulario antes de realizar la compra
                 if (!paymentMethod || !cardNumber || !expirationDate || !cvv) {
                     console.log('Por favor, completa todos los campos');
+                    setShowErrorMessage(true);
                     return;
                 }
 
@@ -225,8 +210,13 @@ function MusicCard ({track}) {
 
                 // Realizar cualquier lógica adicional necesaria después de la compra (por ejemplo, mostrar un mensaje de éxito)
 
+                setShowErrorMessage(false);
+
+
                 // Cerrar el modal de compra
                 setShowModal(false);
+                setIsPurchased(true);
+
                 } catch (error) {
                 console.log(error);
                 // Mostrar mensaje de error si ocurre algún problema durante la compra
@@ -363,7 +353,12 @@ function MusicCard ({track}) {
                     </Button>
 
                     {/* Modal de compra */}
-                    <Modal show={showModal} onHide={() => setShowModal(false)}>
+                    {/* <Modal show={showModal} onHide={() => setShowModal(false)}> */}
+                    <Modal show={showModal} onHide={() => {
+                        setShowModal(false);
+                        setPurchaseSuccess(false); // Restablecer el estado al cerrar el modal
+                    }}>
+
                     <Modal.Header closeButton>
                         <Modal.Title>Formulario de Compra</Modal.Title>
                     </Modal.Header>
@@ -408,12 +403,17 @@ function MusicCard ({track}) {
                             onChange={(e) => setCvv(e.target.value)}
                             />
                         </Form.Group>
+                          {/* Mensaje de error */}
+                            {showErrorMessage && (
+                                <Alert variant="danger">Por favor, completa todos los campos.</Alert>
+              )}
                 </Form>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => setShowModal(false)}>
                              Cancelar
                         </Button>
+
                         <Button variant="primary" onClick={handlePurchase}>
                              Comprar
                         </Button>
@@ -421,10 +421,10 @@ function MusicCard ({track}) {
                     </Modal>
                    
                     {/* Mensaje de compra exitosa */}
-                    {purchaseSuccess && (
-                        <div className="mt-3 alert alert-success" role="alert">
+                    {isPurchased && (
+                    <div className="mt-3 alert alert-success" role="alert">
                         ¡Compra exitosa!
-                        </div>
+                    </div>
                     )}
             </Card.Body>
         </Card>
