@@ -12,7 +12,10 @@ const fs = require('fs')
 const Comentarios = require("../models/Comentarios")
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, "../public/userUploads/audio"))
+        if(file.fieldname === 'image')
+            cb(null, path.join(__dirname, "../public/userUploads/images"))
+        else
+            cb(null, path.join(__dirname, "../public/userUploads/audio"))
     },
     filename: function (req, file, cb) {
         const ext = path.extname(file.originalname)
@@ -20,7 +23,7 @@ const storage = multer.diskStorage({
 
         cb(null, `${trackData}${ext}`)
     }
-})  
+})
 
 const upload = multer({ storage: storage })
 
@@ -29,6 +32,7 @@ async function uploadAudioFile (req, res) {
         const titulo = req.body.titulo
         const token = req.body.token
         const tags = JSON.parse(req.body.tags)
+        const username = req.body.username
 
         const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
         const userMail = decoded.id
@@ -36,7 +40,7 @@ async function uploadAudioFile (req, res) {
         const newAudioFile = await AudioFile.create({ 
             titulo: titulo,  
             id_user_cargas: userMail,
-            nombre_archivo: titulo + "-" + userMail
+            nombre_archivo: titulo + "-" + username
         })
 
         await newAudioFile.setTags(tags)

@@ -17,7 +17,7 @@ const Comentarios = sequelize.define('Comentarios', {
     },
     id_pista: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false    
     },
     id_usuario: {
         type: DataTypes.STRING,
@@ -25,7 +25,6 @@ const Comentarios = sequelize.define('Comentarios', {
     }
 }, {
     tableName: "comentario_pista",
-    timestamps: false
 })
 Comentarios.belongsTo(User, {foreignKey: 'id_usuario', targetKey: 'correo' }); // Relación con la tabla User usando el campo 'correo'
 Comentarios.belongsTo(AudioFile, { foreignKey: 'id_pista' , targetKey: 'id'});// Lo mismo

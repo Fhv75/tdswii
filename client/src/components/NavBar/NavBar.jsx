@@ -6,19 +6,19 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Image } from "react-bootstrap";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 
 function NavBar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   function navigateToProfile() {
     navigate(`/user/${localStorage.getItem("username")}`);
   }
-
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="light" expand="lg" className={location.pathname == "/dashboard" && "d-none"}>
       <Container fluid>
         <Navbar.Brand as={Link} to="/">
           <Image

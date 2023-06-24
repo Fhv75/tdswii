@@ -1,0 +1,19 @@
+.dashboard {
+    min-height: 100vh;
+    max-height: 100vh;
+}
+
+.sidebar {
+    box-shadow: 0px 0px 36px 15px rgba(0, 0, 0, 0.09);
+    border-radius: 10px;
+}
+
+.brand-icon {
+    cursor: pointer;
+    transition: 0.6s;
+}
+
+.brand-icon:hover {
+    opacity: 0.7;
+}
+
