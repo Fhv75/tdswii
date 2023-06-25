@@ -27,7 +27,12 @@
     border: none;
     cursor: pointer;
   }
-  
+  .container {
+    margin-top: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+  }
   .reject-button {
     background-color: #fa3426;
   }

@@ -57,8 +57,9 @@ const TrackApproval = () => {
   };
 
   return (
-    <div className="track-approval-container">
-      <h1>Track Approval</h1>
+    <div className="track-approval-container">        
+      <div className='container'>
+      <h1>Aprobar o Rechazar contenido</h1>
       <table className="track-table">
         <thead>
           <tr>
@@ -73,13 +74,14 @@ const TrackApproval = () => {
               <td>{track.titulo}</td>
               <td>{track.id_user_cargas}</td>
               <td>
-                <button className="approve-button" onClick={() => approveTrack(track.id)}>Approve</button>
-                <button className="reject-button" onClick={() => rejectTrack(track.id)}>Reject</button>
+                <button className="approve-button" onClick={() => approveTrack(track.id)}>Aprobar</button>
+                <button className="reject-button" onClick={() => rejectTrack(track.id)}>Rechazar</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 };
