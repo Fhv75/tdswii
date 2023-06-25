@@ -30,6 +30,10 @@ const AudioFile = sequelize.define('AudioFile', {
         type: DataTypes.STRING(200),
         allowNull: false
     },
+    isapproved: { 
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    }
 }, { 
     // Trabaja en la tabla "pista_musica"
     tableName: "pista_musica",

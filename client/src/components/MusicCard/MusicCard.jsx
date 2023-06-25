@@ -178,6 +178,10 @@ function MusicCard ({track}) {
     // eslint-disable-next-line
     }, [track.id]);
 
+  // if (!track.isApproved) {
+    //  return null;
+    //}
+
     return (
         <Card className="mx-auto my-3" style={{width: "85%"}}>
             <Card.Body className="d-flex flex-column">
