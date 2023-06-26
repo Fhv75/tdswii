@@ -13,6 +13,7 @@ import CompleteProfile from './components/CompleteProfile'
 import Contact from './Pages/Contact/Contact';
 import UploadAudioFile from './Pages/UploadAudio/UploadAudioFile'
 import MusicCard from './components/MusicCard/MusicCard'
+import BarChart from './components/BarChart/BarChart'
 import './App.css'
 
 
@@ -82,6 +83,10 @@ const routes = [
         protection:  (
             <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
         ),
+    },
+    {
+        path: '/BarChart',
+        component: <BarChart/>
     }
 ]
 

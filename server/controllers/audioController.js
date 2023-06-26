@@ -8,8 +8,8 @@ const path = require("path")
 const jwt = require("jsonwebtoken")
 const sequelize = require('../db')
 const fs = require('fs')
-
 const Comentarios = require("../models/Comentarios")
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(__dirname, "../public/userUploads/audio"))
@@ -79,6 +79,7 @@ async function getUserTracks(req, res){
         })
     }
 }
+
 async function getStatistics(req, res) {
     try {
         const trackId = req.body.trackId;
@@ -90,10 +91,7 @@ async function getStatistics(req, res) {
         const averageRating = parseFloat(ratings[0].dataValues.average_rating) || 0;  
         console.log(averageRating);      
         console.log('####################################');     
-        res.status(200).json({ averageRating });
-        
-          
-        
+        res.status(200).json({ averageRating });      
     } catch (error) {
         console.error('Error', error);
         console.error(error.name)
@@ -249,40 +247,36 @@ async function getAudioFile(req, res) {
     }
 }
   
-//----------------------------------------------------------------------------------
-  //Añadir Comentarios
-  async function addComentario(req, res){
-    try {
-      const { token, comentario, id_pista/* , id_usuario */ } = req.body;
-      /* const id_usuario = req.user.id; */ // Utiliza el ID del usuario actual
-      //const token = req.headers.authorization;
-      // Verificar el token y realizar la validación de autenticación
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      // Verificar la autenticación del usuario si es necesario
-      const userMail = decoded.id 
-      // Crear el nuevo comentario
-      const newComment = await Comentarios.create({
-       /*  id_usuario, */
-        id_pista: id_pista,
-        comentario: comentario,
-        id_usuario: userMail,
-      });
-  
-      console.log('Comentario Creado:', newComment);
-  
-      res.status(201).json(newComment);
-    } catch (error) {
-      console.error('Error al crear un comentario:', error);
-      res.status(400).json({
-        error: error.name,
-        message: error.message,
-      });
-    }
-  };
+async function addComentario(req, res){
+try {
+    const { token, comentario, id_pista/* , id_usuario */ } = req.body;
+    /* const id_usuario = req.user.id; */ // Utiliza el ID del usuario actual
+    //const token = req.headers.authorization;
+    // Verificar el token y realizar la validación de autenticación
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Verificar la autenticación del usuario si es necesario
+    const userMail = decoded.id 
+    // Crear el nuevo comentario
+    const newComment = await Comentarios.create({
+    /*  id_usuario, */
+    id_pista: id_pista,
+    comentario: comentario,
+    id_usuario: userMail,
+    });
 
-  //Obtener los comentarios de los usuarios
+    console.log('Comentario Creado:', newComment);
 
-    async function  getComentarios(req, res){
+    res.status(201).json(newComment);
+} catch (error) {
+    console.error('Error al crear un comentario:', error);
+    res.status(400).json({
+    error: error.name,
+    message: error.message,
+    });
+}
+};
+
+async function  getComentarios(req, res){
     try {
       const {token, trackID } = req.body;
       
@@ -308,10 +302,55 @@ async function getAudioFile(req, res) {
         message: error.message,
       });
     }
-  };
+};
 
-//----------------------------------------------------------------------------
+async function getReproduccionesUsuario(req, res) {
+    try {
+        const username = req.body.username
+        const user = await User.findOne(
+            {
+                where: 
+                {
+                    username: username
+                }
+            }
+        )
+        const reproducciones = await sequelize.query(
+            `SELECT SUM(cant_reprod) AS total_reproducciones 
+            FROM pista_musica 
+            WHERE id_user_cargas = :userId`,
+            {
+            replacements: { userId: user.correo },
+            type: sequelize.QueryTypes.SELECT
+            }
+        );
+        const valoraciones = await sequelize.query(
+            ``,
+            {
+            replacements: { userId: user.correo },
+            type: sequelize.QueryTypes.SELECT
+            }
+        );
 
+        const comentarios = await sequelize.query(
+            `SELECT COUNT()`,
+            {
+            replacements: { userId: user.correo },
+            type: sequelize.QueryTypes.SELECT
+            }
+        );
+        const totalReproducciones = reproducciones[0].total_reproducciones || 0;
+        console.log(totalReproducciones)
+        res.status(200).json({ totalReproducciones }); //res.status(200).json({ totalReproducciones, promedioValoraciones, totalComentarios })
+    } catch (error) {
+      console.error('Error al obtener las reproducciones del usuario:', error);
+      res.status(500).json({
+        error: 'Error del servidor',
+        message: error.message
+      });
+    }
+}
+  
 module.exports = {
     upload,
     uploadAudioFile,
@@ -322,5 +361,6 @@ module.exports = {
     getUserTrackRating,
     getAudioFile,
     getComentarios,
+    getReproduccionesUsuario,
     addComentario
 }
