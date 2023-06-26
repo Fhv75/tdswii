@@ -75,6 +75,7 @@ function Login() {
             type="email"
             placeholder="Ingresa tu Correo"
             value={data.email}
+            required
           />
         </Form.Group>
 
@@ -85,6 +86,7 @@ function Login() {
             placeholder="Contraseña"
             onChange={inputHandler}
             value={data.password}
+            required
           />
         </Form.Group>
         <Button className="mb-3 w-100" variant="primary" type="submit" disabled={isLoading}>

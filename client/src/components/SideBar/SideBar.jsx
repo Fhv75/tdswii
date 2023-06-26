@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navbar, Nav, Image, Button, Row, Col } from 'react-bootstrap';
+import { Navbar, Nav, Image, Button, Col } from 'react-bootstrap';
 import styles from './sidebar.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightFromBracket, faRecordVinyl, faListCheck, faRankingStar } from '@fortawesome/free-solid-svg-icons'

@@ -11,6 +11,7 @@ import Router from './router/index'
 import SearchResult from './Pages/SearchResult/SearchResult'
 import AnonymousProtectedRoute from './routing/AnonymousProtectedRoute'
 import AuthenticationProtectedRoute from './routing/AuthenticationProtectedRoute'
+import AdminProtectedRoute from './routing/AdminProtectedRoute'
 import CompleteProfile from './components/CompleteProfile'
 import Contact from './Pages/Contact/Contact';
 import UploadAudioFile from './Pages/UploadAudio/UploadAudioFile'
@@ -93,6 +94,8 @@ const routes = [
     {
         path: '/dashboard',
         component: <Dashboard/>,
+        protection: <AdminProtectedRoute></AdminProtectedRoute>
+        
     },
     {
         path: '/test',

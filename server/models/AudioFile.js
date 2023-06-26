@@ -36,7 +36,6 @@ const AudioFile = sequelize.define('AudioFile', {
 })
 
 AudioFile.hasMany(AudioFileTags, { foreignKey: 'id_pista' })
-
 AudioFile.prototype.setTags = async function (tags) {
 
      const tagPromises = tags.map((tag) => 

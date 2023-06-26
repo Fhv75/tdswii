@@ -258,6 +258,19 @@ async function resetUserPasswordResponse(req, res) {
     }
 }
 
+async function isUserAdmin(req, res) {
+    const { token } = req.body
+    const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
+    const userMail = decoded.id
+    const user = await User.findByPk(userMail)
+    console.log(user.tipo_user)
+    if (user.tipo_user === 'admin') {
+        res.status(200).json({ message: "User is an admin" })
+    } else {
+        res.status(404).json({ message: "User is not an admin" })
+    }
+}   
+
 module.exports = {
     registerUser,
     loginUser,
@@ -266,5 +279,6 @@ module.exports = {
     getUserData,
     updateProfile,
     updatePassword,
-    sendUserMessage
+    sendUserMessage,
+    isUserAdmin
 }
