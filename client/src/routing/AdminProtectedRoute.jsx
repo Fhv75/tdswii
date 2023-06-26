@@ -12,7 +12,7 @@ function AuthenticationProtectedRoute() {
     useEffect(() => {
         async function isAdmin() {
             try {
-                const response = await axios.post(
+                await axios.post(
                     'http://localhost:5000/users/isAdmin', 
                     { token: token },
                     { headers: { 'x-access-token': token } }
@@ -20,7 +20,7 @@ function AuthenticationProtectedRoute() {
                     setFlag(true)
                 } catch (error) {
                     console.log(error)
-                    if(error.response.status === 404)
+                    if(error.status !== 200)
                         navigate('/')
             }
         }

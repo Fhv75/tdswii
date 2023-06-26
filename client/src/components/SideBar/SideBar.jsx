@@ -2,10 +2,13 @@ import React from 'react'
 import { Navbar, Nav, Image, Button, Col } from 'react-bootstrap';
 import styles from './sidebar.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRightFromBracket, faRecordVinyl, faListCheck, faRankingStar } from '@fortawesome/free-solid-svg-icons'
+import { faRightFromBracket, faRecordVinyl, faListCheck, faRankingStar, faHome } from '@fortawesome/free-solid-svg-icons'
+import { useNavigate } from 'react-router-dom'
 import 'bootstrap/dist/js/bootstrap.bundle.js'
 
-function SideBar({onScreenChange}) {
+function SideBar({ onScreenChange }) {
+    const navigate = useNavigate()
+
     return (
         <Navbar bg="light" className={`${styles["sidebar"]} flex-column h-100 px-4 affix`}>
             <Navbar.Brand className="mx-0 mb-4 d-flex" data-bs-toggle="collapse" data-bs-target=".content" aria-expanded="false" aria-controls="content">
@@ -42,16 +45,34 @@ function SideBar({onScreenChange}) {
                         Ranking de Usuarios
                     </Col>
                 </Nav.Link>
+                
             </Nav>
-                <Button variant="dark" className="mt-auto mb-5 d-flex">
+            <div className="mt-auto">
+                <Button variant="secondary" className="mb-4 d-flex w-100" onClick={() => {
+                    navigate('/')
+                }}>
+                    <Col className="mx-auto mt-auto" style={{ maxWidth: "max-content" }}>
+                        <FontAwesomeIcon icon={faHome} />
+                    </Col>
+                    <Col className="content collapse collapse-horizontal ms-3">
+                        Volver al Inicio
+                    </Col>
+
+                </Button>
+                <Button variant="dark" className="mb-5 d-flex w-100" onClick={() => {
+                    localStorage.removeItem('token')
+                    localStorage.removeItem('username')
+                    navigate('/')
+                }}>
                     <Col className="mx-auto my-auto" style={{ maxWidth: "max-content" }}>
                         <FontAwesomeIcon icon={faRightFromBracket} />
                     </Col>
                     <Col className="content collapse collapse-horizontal ms-3">
                         Cerrar Sesión
                     </Col>
-                    
+
                 </Button>
+            </div>
         </Navbar>
     );
 }
