@@ -3,6 +3,8 @@ const TrackUserRating = require("../models/TrackUserRating")
 const User = require("../models/User")
 const Tag = require("../models/Tag")
 const AudioFileTags = require("../models/AudioFileTags")
+const Album = require("../models/Album")
+const TrackAlbum = require("../models/TrackAlbum")
 const multer = require("multer")
 const path = require("path")
 const jwt = require("jsonwebtoken")
@@ -19,9 +21,13 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         const ext = path.extname(file.originalname)
-        const trackData = req.params.trackData
-
-        cb(null, `${trackData}${ext}`)
+        if (req.params.trackData !== undefined) {
+            const trackData = req.params.trackData
+            cb(null, `${trackData}${ext}`)
+        } else {
+            const albumData = req.params.albumData
+            cb(null, `${albumData}-album${ext}`)
+        }
     }
 })
 
@@ -33,14 +39,16 @@ async function uploadAudioFile (req, res) {
         const token = req.body.token
         const tags = JSON.parse(req.body.tags)
         const username = req.body.username
-
+        const precio = req.body.precio
         const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
         const userMail = decoded.id
-        storage 
-        const newAudioFile = await AudioFile.create({ 
-            titulo: titulo,  
+
+        const newAudioFile = await AudioFile.create({
+            titulo: titulo,
             id_user_cargas: userMail,
-            nombre_archivo: titulo + "-" + username
+            nombre_archivo: titulo + "-" + username,
+            precio: precio,
+            imagen_pista: titulo + "-" + username
         })
 
         await newAudioFile.setTags(tags)
@@ -60,7 +68,6 @@ async function uploadAudioFile (req, res) {
 async function getUserTracks(req, res){
     try{
         const username = req.body.username
-        console.log(username)
         const tracks = await User.findOne(
             {
                 include: { model: AudioFile, required: true},
@@ -90,13 +97,8 @@ async function getStatistics(req, res) {
             where: { id_pista: trackId },
             attributes: [[sequelize.fn('AVG', sequelize.col('valoracion')), 'average_rating']],
           });   
-        console.log(ratings); 
         const averageRating = parseFloat(ratings[0].dataValues.average_rating) || 0;  
-        console.log(averageRating);      
-        console.log('####################################');     
         res.status(200).json({ averageRating });
-        
-          
         
     } catch (error) {
         console.error('Error', error);
@@ -155,7 +157,6 @@ async function rateTrack(req, res) {
             }
             trackUserRating.valoracion = rating
             await trackUserRating.save()
-            console.log('Track rating updated in database:', trackUserRating.dataValues);
             res.status(201).json(trackUserRating)
         } else {
             console.log("does not exist")
@@ -169,7 +170,6 @@ async function rateTrack(req, res) {
                 id_pista: trackID,
                 valoracion: rating
             })
-            console.log('Track rating saved to database:', newTrackUserRating.dataValues);
             res.status(201).json(newTrackUserRating)
         }
     } 
@@ -229,7 +229,6 @@ async function getAudioFile(req, res) {
         })
 
         const filename = track.titulo + "-" + uploader.username + ".mp3"
-        console.log(filename)
         const filePath = path.join(__dirname, `../public/userUploads/audio/${filename}`)
         fs.readFile(filePath, (err, data) => {
             if(err) {
@@ -271,9 +270,7 @@ async function getAudioFile(req, res) {
         comentario: comentario,
         id_usuario: userMail,
       });
-  
-      console.log('Comentario Creado:', newComment);
-  
+    
       res.status(201).json(newComment);
     } catch (error) {
       console.error('Error al crear un comentario:', error);
@@ -302,8 +299,6 @@ async function getAudioFile(req, res) {
         },
       });
   
-      console.log('Comentarios obtenidos:', comentarios);
-  
       res.status(200).json(comentarios);
     } catch (error) {
       console.error('Error al obtener los comentarios:', error);
@@ -316,8 +311,68 @@ async function getAudioFile(req, res) {
 
 //----------------------------------------------------------------------------
 
+async function getAdminTracks(req, res) {
+    try {
+        const adminUsers = await User.findAll({
+            where: {tipo_user: "admin"}
+        })
+        const tracks = await AudioFile.findAll({
+            where: {id_user_cargas: 
+                adminUsers.map(user => user.correo)}
+        })
+        res.status(200).json(tracks)
+    } catch(error) {
+        console.error(error)
+        res.status(500).json({
+            error: error.name,
+            message: error.message
+        })
+    }
+}
+
+async function uploadAlbum(req, res) {
+    const username = req.body.username
+    const titulo = req.body.titulo
+    const artista = req.body.artista
+    const precio = req.body.precio
+    const tags = JSON.parse(req.body.tags)
+    const pistas = JSON.parse(req.body.pistas)
+
+    try {
+        const newAlbum = await Album.create({
+            titulo: titulo,
+            artista: artista,
+            url_portada: titulo + "-" + username,
+            precio: precio
+        })
+        const albumID = newAlbum.id
+        
+        for (let i = 0; i < pistas.length; i++) {
+            const trackID = pistas[i].id
+            console.log(trackID)
+            await TrackAlbum.create({
+                idalbum: albumID,
+                idpista: trackID
+            })
+        }
+
+        await newAlbum.setTags(tags)
+
+        res.status(201).json(newAlbum)
+    }
+    catch (error) {
+        console.error(error)
+        res.status(400).json({
+            error: error.name,
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     upload,
+    uploadAlbum,
+    getAdminTracks,
     uploadAudioFile,
     rateTrack,
     getUserTracks,

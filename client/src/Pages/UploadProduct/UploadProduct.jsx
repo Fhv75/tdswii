@@ -13,7 +13,7 @@ function UploadProduct() {
         <div>
             <h1>Cargar Productos</h1>
             <Row className="mt-4 mt-xl-5">
-                <Col>
+                <Col xl={8} >
                     <div className="bg-light me-xl-4 px-5 rounded shadow-sm">
                         {
                             flag ?

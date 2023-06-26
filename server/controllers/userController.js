@@ -54,7 +54,7 @@ async function loginUser (req, res) {
             {
                 const token = generateUserToken(correo)
                 
-                res.json({ token, username: user.username })
+                res.json({ token: token, username: user.username })
             }
     } 
     catch (error) {
@@ -258,6 +258,24 @@ async function resetUserPasswordResponse(req, res) {
     }
 }
 
+async function isUserAdmin(req, res) {
+    try {
+        const { token } = req.body
+        const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
+        const userMail = decoded.id
+        const user = await User.findByPk(userMail)
+        console.log(user.tipo_user)
+        if (user.tipo_user === 'admin') {
+            res.status(200).json({ message: "User is an admin" })
+        } else {
+            res.status(204).json({ message: "User is not an admin" })
+        }
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: "Server error" })
+    }
+}   
+
 module.exports = {
     registerUser,
     loginUser,
@@ -266,5 +284,6 @@ module.exports = {
     getUserData,
     updateProfile,
     updatePassword,
-    sendUserMessage
+    sendUserMessage,
+    isUserAdmin
 }

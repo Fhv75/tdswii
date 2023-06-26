@@ -26,7 +26,6 @@ export default function UserProfile() {
                 username : username
             }, 
           )  
-          console.log(response.data)
           setTracksData(response.data)
           response.data != null ? 
           setResponseStatus(200) : setResponseStatus(0)
@@ -47,7 +46,6 @@ export default function UserProfile() {
                     username: username
                 }
             )
-            console.log(response)
             setProfileData(response.data)                
         } catch (error) {
             console.log("Error fetching user profile: ", error)
@@ -56,6 +54,7 @@ export default function UserProfile() {
         }
     }
     fetchUserProfile()
+    console.log(localStorage.getItem('username'))
 }, [username])
 
 
@@ -113,7 +112,8 @@ export default function UserProfile() {
                           titulo: track.titulo,
                           artista: tracksData.username,
                           plays: track.cant_reprod,
-                          src: track.nombre_archivo
+                          src: track.nombre_archivo,
+                          cover: track.imagen_pista === null ? "logomelorit" : track.nombre_archivo,
                         }
                         return(
                           <MusicCard key={track.id} track={trackData} />

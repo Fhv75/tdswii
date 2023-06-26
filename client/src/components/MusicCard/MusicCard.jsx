@@ -66,7 +66,6 @@ function MusicCard ({track}) {
                     },
                 }
             );
-            console.log(response);
         } catch (error) {
             console.log(error);
         }
@@ -94,7 +93,6 @@ function MusicCard ({track}) {
                         trackId : track.id
                     },                    
                 )
-                console.log(response.data.averageRating)
                 setAverageRating(response.data.averageRating || 0);
             } catch (error) {                
             }            
@@ -113,7 +111,6 @@ function MusicCard ({track}) {
                         },
                     }
                 );
-                console.log(response.data);
                 rating.current = response.data.valoracion
             } catch (error) {
                 console.log(error);
@@ -138,7 +135,6 @@ function MusicCard ({track}) {
                     },
                   }
               );
-              console.log(response);
             } catch (error) {
               console.log(error);
             }
@@ -158,7 +154,6 @@ function MusicCard ({track}) {
                     },
                   }
               );
-              console.log(response.data);
 
               setComments(response.data);
               setShowComments(true);
@@ -174,7 +169,6 @@ function MusicCard ({track}) {
         getTrackTags();
         getUserRating();
        // getComentarios(); 
-        addComentario();
     // eslint-disable-next-line
     }, [track.id]);
 
@@ -184,15 +178,14 @@ function MusicCard ({track}) {
                 <Row className="d-flex align-items-center">
                     <Col md={4} className="d-flex">
                         <Card className="my-auto" style={{ maxWidth: '180px'}} >                 
-                            <Card.Img src="/images/logomelorit.png" alt="Melorit Logo" />
+                            <Card.Img src={"http://localhost:5000/public/userUploads/images/" + track.cover + ".jpg"} alt="Cover" />
                         </Card>
                     </Col>
                     <Col md={8} className="d-flex flex-column">
                         <h4 style={{fontSize:"22px"}}>{track.titulo}</h4>
                         <h6 style={{fontSize:"18px"}}>{track.artista}</h6>
                         <audio controls className="mt-3 w-100">
-                            <source src={"http://localhost:5000/public/userUploads/audio/" + track.src}/>
-                            
+                            <source src={"http://localhost:5000/public/userUploads/audio/" + track.src + '.mp3'}/>
                         </audio>  
                     </Col>
                 </Row>

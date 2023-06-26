@@ -1,0 +1,18 @@
+@media only screen and (max-width: 648px) {
+    .upload-album-form-tracks-container {
+        width: 254px;
+        background-color: black;
+        margin: auto;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .upload-album-form-tracks-container {
+        width: 100%;
+        background-color: black;
+    }
+}
+
+.upload-album-form-tracks-container {
+    max-height: 150px;        
+}
