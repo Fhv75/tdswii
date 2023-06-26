@@ -5,7 +5,6 @@ import RecoveryRequest from './Pages/PwRecovery/RecoveryRequest'
 import ResetPw from './Pages/PwRecovery/ResetPw'
 import Register from './Pages/Register/Register'
 import UserProfile from './Pages/UserProfile/UserProfile'
-import Test from './Pages/Test/Test'
 import EditUserProfile from './Pages/EditUserProfile/EditUserProfile'
 import Router from './router/index'
 import SearchResult from './Pages/SearchResult/SearchResult'
@@ -74,7 +73,6 @@ const routes = [
             <AuthenticationProtectedRoute></AuthenticationProtectedRoute>
         ),
     },
-
     {
         path: '/contact-Form',
         component: <Contact/>
@@ -94,10 +92,6 @@ const routes = [
         path: '/dashboard',
         component: <Dashboard/>,
     },
-    {
-        path: '/test',
-        component: <Test />
-    }
 ]
 
 function App() {
