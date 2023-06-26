@@ -78,6 +78,7 @@ async function getUserTracks(req, res){
                 }
             }
         )
+
         res.status(201).json(tracks)
     }
     catch(error){
@@ -98,7 +99,16 @@ async function getStatistics(req, res) {
             attributes: [[sequelize.fn('AVG', sequelize.col('valoracion')), 'average_rating']],
           });   
         const averageRating = parseFloat(ratings[0].dataValues.average_rating) || 0;  
-        res.status(200).json({ averageRating });
+        const comments = await sequelize.query(
+            `SELECT COUNT(*) AS total_comentarios FROM comentario_pista WHERE id_pista = :id_pista`, {
+                replacements: {
+                    id_pista: trackId
+                },
+                type: sequelize.QueryTypes.SELECT
+            }
+        );
+
+        res.status(200).json({ averageRating, comments: comments[0].total_comentarios });
         
     } catch (error) {
         console.error('Error', error);
@@ -390,8 +400,58 @@ async function addReproduccion(req, res) {
     }
 }
 
+async function getEstadisticasUsuario(req, res) {
+    try {
+        const username = req.body.username
+        const user = await User.findOne({
+            where: {
+                username: username
+            }
+        })
+        const reproducciones = await sequelize.query(
+            `SELECT SUM(cant_reprod) AS total_reproducciones 
+            FROM pista_musica 
+            WHERE id_user_cargas = :userId`, {
+                replacements: {
+                    userId: user.correo
+                },
+                type: sequelize.QueryTypes.SELECT
+            }
+        );
+        const valoraciones = await sequelize.query(
+            ``, {
+                replacements: {
+                    userId: user.correo
+                },
+                type: sequelize.QueryTypes.SELECT
+            }
+        );
+
+        const comentarios = await sequelize.query(
+            `SELECT COUNT()`, {
+                replacements: {
+                    userId: user.correo
+                },
+                type: sequelize.QueryTypes.SELECT
+            }
+        );
+        const totalReproducciones = reproducciones[0].total_reproducciones || 0;
+        console.log(totalReproducciones)
+        res.status(200).json({
+            totalReproducciones
+        }); //res.status(200).json({ totalReproducciones, promedioValoraciones, totalComentarios })
+    } catch (error) {
+        console.error('Error al obtener las reproducciones del usuario:', error);
+        res.status(500).json({
+            error: 'Error del servidor',
+            message: error.message
+        });
+    }
+}
+
 module.exports = {
     upload,
+    getEstadisticasUsuario,
     addReproduccion,
     uploadAlbum,
     getAdminTracks,

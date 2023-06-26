@@ -17,6 +17,7 @@ function MusicCard ({track}) {
     const [tags, setTags] = useState([])
     const [show, setShow] = useState(false);
     const [averageRating, setAverageRating] = useState(0);
+    const [totalComments, setTotalComments] = useState(0)
     const target = useRef(null);
     const rating = useRef(0)
 
@@ -53,7 +54,7 @@ function MusicCard ({track}) {
     
     async function rateTrack() {
         try {
-            const response = await axios.post(
+            await axios.post(
                 "http://localhost:5000/audio/rateTrack",
                 {
                     token: localStorage.getItem("token"),
@@ -94,6 +95,7 @@ function MusicCard ({track}) {
                     },                    
                 )
                 setAverageRating(response.data.averageRating || 0);
+                setTotalComments(response.data.comments || 0)
             } catch (error) {                
             }            
         }
@@ -260,7 +262,7 @@ function MusicCard ({track}) {
                                 <FontAwesomeIcon icon={faComment} style={{color: "#b0b6bf", marginLeft:'36px', transform: "scale(1.85)"}} />
                             </OverlayTrigger>
 
-                            <span style={{ marginLeft:'17px' }}>{track.comments}</span>
+                            <span style={{ marginLeft:'17px' }}>{totalComments}</span>
                     </Col>
                 </Row>
                 {/*-------------Para Comentarios---------------*/}

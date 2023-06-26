@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { 
     upload, 
+    getEstadisticasUsuario,
     addReproduccion,
     uploadAlbum,
     uploadAudioFile, 
@@ -32,6 +33,7 @@ router.post('/getStatistics', getStatistics)
 router.post('/getUserRating', getUserTrackRating)
 router.post('/searchTracks', searchTracks)
 router.post('/searchTags', searchTags)
+router.post('/getEstadisticasUsuario', getEstadisticasUsuario)
 router.get('/file/:trackID', getAudioFile)
 router.get('/getAdminTracks', getAdminTracks)
 router.get('/addReproduccion/:trackID', addReproduccion)

@@ -14,55 +14,70 @@ export default function UserProfile() {
   const [tracksData, setTracksData] = useState([])
   const [profileData, setProfileData] = useState({})
   const [responseStatus, setResponseStatus] = useState()
+  const [estadisticas, setEstadisticas] = useState({ reproducciones: 0, valoraciones: 0, comentarios: 0 })
 
 
   useEffect(() => {
-      async function getTracks (){
-        axios.defaults.headers.post["Access-Control-Allow-Origin"] = true
-        try{
-          const response = await axios.post(
-            'http://localhost:5000/audio/getUserTracks',
-            { 
-                username : username
-            }, 
-          )  
-          setTracksData(response.data)
-          response.data != null ? 
+    async function getTracks() {
+      axios.defaults.headers.post["Access-Control-Allow-Origin"] = true
+      try {
+        const response = await axios.post(
+          'http://localhost:5000/audio/getUserTracks',
+          {
+            username: username
+          },
+        )
+        setTracksData(response.data)
+        response.data != null ?
           setResponseStatus(200) : setResponseStatus(0)
-        }
-        catch(error){
-          console.log(error)
-          setResponseStatus(404)
-        }
       }
-      
-      getTracks()
+      catch (error) {
+        console.log(error)
+        setResponseStatus(404)
+      }
+    }
 
-      async function fetchUserProfile() {
-        try {
-            const response = await axios.post(
-                `http://localhost:5000/users/getUserData`,
-                { 
-                    username: username
-                }
-            )
-            setProfileData(response.data)                
-        } catch (error) {
-            console.log("Error fetching user profile: ", error)
-            if (error.response.status === 404)
-             navigate('/404')
-        }
+    getTracks()
+
+    async function fetchUserProfile() {
+      try {
+        const response = await axios.post(
+          `http://localhost:5000/users/getUserData`,
+          {
+            username: username
+          }
+        )
+        setProfileData(response.data)
+      } catch (error) {
+        console.log("Error fetching user profile: ", error)
+        if (error.response.status === 404)
+          navigate('/404')
+      }
     }
     fetchUserProfile()
     console.log(localStorage.getItem('username'))
-}, [username])
+
+    async function getEstadisticasUsuario() {
+      try {
+        const response = await axios.post(
+          'http://localhost:5000/audio/getEstadisticasUsuario',
+          {
+            username: username
+          },
+        )
+        setEstadisticas({ reproducciones: response.data.totalReproducciones, valoraciones: response.data.promedioValoraciones, comentarios: response.data.totalComentarios })
+      } catch (error) {
+      }
+    }
+    getEstadisticasUsuario()
+  }, [username])
 
 
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: '#9de2ff' }}>
       <MDBContainer className="py-5 h-100 ">
         <MDBRow className="justify-content-center align-items-center h-100">
-          <MDBCol lg="9" xl="7" style={{ width:"900px" }}>
+          <MDBCol lg="9" xl="7" style={{ width: "900px" }}>
             <MDBCard>
               <div className="rounded-top text-white d-flex flex-row" style={{ backgroundColor: '#000', height: '200px' }}>
                 <div className="ms-4 mt-5 d-flex flex-column" style={{ width: '150px' }}>
@@ -77,16 +92,16 @@ export default function UserProfile() {
               <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
                 <div className="d-flex justify-content-end text-center py-1">
                   <div>
-                    <MDBCardText className="mb-1 h5">253</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">start</MDBCardText>
-                  </div>
-                  <div className="px-3">
-                    <MDBCardText className="mb-1 h5">1026</MDBCardText>
+                    <MDBCardText className="mb-1 h5">{estadisticas.reproducciones}</MDBCardText>
                     <MDBCardText className="small text-muted mb-0">Reproducciones</MDBCardText>
                   </div>
+                  <div className="px-3">
+                    <MDBCardText className="mb-1 h5">{estadisticas.valoraciones} </MDBCardText>
+                    <MDBCardText className="small text-muted mb-0">Valoraciones</MDBCardText>
+                  </div>
                   <div>
-                    <MDBCardText className="mb-1 h5">478</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0"></MDBCardText>
+                    <MDBCardText className="mb-1 h5">{estadisticas.comentarios}</MDBCardText>
+                    <MDBCardText className="small text-muted mb-0"> Comentarios</MDBCardText>
                   </div>
                 </div>
               </div>
@@ -95,7 +110,7 @@ export default function UserProfile() {
                   <p className="lead fw-normal mb-1">Acerca de mí</p>
                   <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
                     <MDBCardText className="font-italic mb-1">{profileData.biografia}</MDBCardText>
-                    
+
                   </div>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-4">
@@ -105,34 +120,34 @@ export default function UserProfile() {
                 <MDBRow>
                   {
                     tracksData && responseStatus == 200 ?
-                    tracksData.AudioFiles?.map(
-                      (track)=>{
-                        const trackData = {
-                          id: track.id,
-                          titulo: track.titulo,
-                          artista: tracksData.username,
-                          plays: track.cant_reprod,
-                          comments: 12,
-                          src: track.nombre_archivo,
-                          cover: track.imagen_pista === null ? "logomelorit" : track.nombre_archivo,
+                      tracksData.AudioFiles?.map(
+                        (track) => {
+                          const trackData = {
+                            id: track.id,
+                            titulo: track.titulo,
+                            artista: tracksData.username,
+                            plays: track.cant_reprod,
+                            comments: 12,
+                            src: track.nombre_archivo,
+                            cover: track.imagen_pista === null ? "logomelorit" : track.nombre_archivo,
+                          }
+                          return (
+                            <MusicCard key={track.id} track={trackData} />
+                          )
                         }
-                        return(
-                          <MusicCard key={track.id} track={trackData} />
-                        )
-                      }
-                  ) : responseStatus == 0 ?
-                  <div className="text-center">
-                    <h2>No hay pistas</h2>
-                  </div>
-                  :  responseStatus == 404 ?
-                  <div className="text-center">
-                    <h2>Error al cargar las pistas</h2>
-                  </div>
-                  :
-                    <div className="text-center">
-                      <Spinner className="me-3"animation="border" role="status" />
-                      Cargando...  
-                    </div>
+                      ) : responseStatus == 0 ?
+                        <div className="text-center">
+                          <h2>No hay pistas</h2>
+                        </div>
+                        : responseStatus == 404 ?
+                          <div className="text-center">
+                            <h2>Error al cargar las pistas</h2>
+                          </div>
+                          :
+                          <div className="text-center">
+                            <Spinner className="me-3" animation="border" role="status" />
+                            Cargando...
+                          </div>
                   }
                 </MDBRow>
               </MDBCardBody>
