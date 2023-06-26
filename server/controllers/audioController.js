@@ -369,8 +369,30 @@ async function uploadAlbum(req, res) {
     }
 }
 
+async function addReproduccion(req, res) {
+    try {
+        const trackID = req.params.trackID
+        const track = await AudioFile.findOne({
+            where: {
+                id: trackID
+            }
+        })
+        track.cant_reprod += 1
+        await track.save()
+        res.status(201).json(track)
+    }
+    catch (error) {
+        console.error(error)
+        res.status(400).json({
+            error: error.name,
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     upload,
+    addReproduccion,
     uploadAlbum,
     getAdminTracks,
     uploadAudioFile,

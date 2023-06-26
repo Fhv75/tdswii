@@ -112,6 +112,7 @@ export default function UserProfile() {
                           titulo: track.titulo,
                           artista: tracksData.username,
                           plays: track.cant_reprod,
+                          comments: 12,
                           src: track.nombre_archivo,
                           cover: track.imagen_pista === null ? "logomelorit" : track.nombre_archivo,
                         }

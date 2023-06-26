@@ -163,6 +163,20 @@ function MusicCard ({track}) {
             }
           }  
    
+          async function addReproduccion() {
+            try {
+                await axios.get(
+                    `http://localhost:5000/audio/addReproduccion/${track.id}`,
+                    {
+                        headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                    }
+                );
+            } catch (error) {
+                console.log(error);
+            }
+          }
 //-------------------------------------------------------------------------------
     useEffect (()=> {   
         getStatistics();
@@ -184,7 +198,7 @@ function MusicCard ({track}) {
                     <Col md={8} className="d-flex flex-column">
                         <h4 style={{fontSize:"22px"}}>{track.titulo}</h4>
                         <h6 style={{fontSize:"18px"}}>{track.artista}</h6>
-                        <audio controls className="mt-3 w-100">
+                        <audio controls className="mt-3 w-100" onEnded={addReproduccion}>
                             <source src={"http://localhost:5000/public/userUploads/audio/" + track.src + '.mp3'}/>
                         </audio>  
                     </Col>
@@ -246,7 +260,7 @@ function MusicCard ({track}) {
                                 <FontAwesomeIcon icon={faComment} style={{color: "#b0b6bf", marginLeft:'36px', transform: "scale(1.85)"}} />
                             </OverlayTrigger>
 
-                            <span style={{ marginLeft:'17px' }}>13</span>
+                            <span style={{ marginLeft:'17px' }}>{track.comments}</span>
                     </Col>
                 </Row>
                 {/*-------------Para Comentarios---------------*/}
