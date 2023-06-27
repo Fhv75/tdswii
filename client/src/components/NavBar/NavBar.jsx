@@ -64,20 +64,20 @@ function NavBar() {
                 id="navbarScrollingDropdown"
               >
                 {
-                  flag ? (
+                  flag && (
                     <NavDropdown.Item href="">
                       <Button onClick={() => navigate("/dashboard")} variant="link">
                         Dashboard
                       </Button>
                     </NavDropdown.Item>
-                  ) : (
-                      <NavDropdown.Item href="">
-                        <Button onClick={() => navigate("/upload")} variant="link">
-                          Cargar
-                        </Button>
-                      </NavDropdown.Item>
                   )
+                  
                 }
+                  <NavDropdown.Item href="">
+                    <Button onClick={() => navigate("/upload")} variant="link">
+                      Cargar
+                    </Button>
+                  </NavDropdown.Item>
                   <NavDropdown.Divider />
                 {
                   !localStorage.getItem("token") && (

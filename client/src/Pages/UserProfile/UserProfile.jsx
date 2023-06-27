@@ -5,7 +5,7 @@ import MusicCard from "../../components/MusicCard/MusicCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom'
-import { Spinner } from 'react-bootstrap';
+import { Spinner, Button } from 'react-bootstrap';
 
 export default function UserProfile() {
 
@@ -15,9 +15,14 @@ export default function UserProfile() {
   const [profileData, setProfileData] = useState({})
   const [responseStatus, setResponseStatus] = useState()
   const [estadisticas, setEstadisticas] = useState({ reproducciones: 0, valoraciones: 0, comentarios: 0 })
+  const [isLoading, setIsLoading] = useState(true)
+  const storedUsername = localStorage.getItem('username');
+  const isCurrentUser = storedUsername === username; // Verifica si el usuario es el mismo que está logeado
+  const hasTracks = responseStatus === 200; // Verifica si hubo éxito en la obtención de pistas
 
 
   useEffect(() => {
+
     async function getTracks() {
       axios.defaults.headers.post["Access-Control-Allow-Origin"] = true
       try {
@@ -27,6 +32,7 @@ export default function UserProfile() {
             username: username
           },
         )
+        console.log(response.data)
         setTracksData(response.data)
         response.data != null ?
           setResponseStatus(200) : setResponseStatus(0)
@@ -47,6 +53,7 @@ export default function UserProfile() {
             username: username
           }
         )
+        console.log(response)
         setProfileData(response.data)
       } catch (error) {
         console.log("Error fetching user profile: ", error)
@@ -55,7 +62,6 @@ export default function UserProfile() {
       }
     }
     fetchUserProfile()
-    console.log(localStorage.getItem('username'))
 
     async function getEstadisticasUsuario() {
       try {
@@ -65,11 +71,13 @@ export default function UserProfile() {
             username: username
           },
         )
-        setEstadisticas({ reproducciones: response.data.totalReproducciones, valoraciones: response.data.promedioValoraciones, comentarios: response.data.totalComentarios })
+        console.log(response.data.totalReproducciones)
+        setEstadisticas({ reproducciones: response.data.totalReproducciones, valoraciones: response.data.promedioValoraciones, comentarios: response.data.totalComentarios });
+        setIsLoading(false)
       } catch (error) {
       }
     }
-    getEstadisticasUsuario()
+    getEstadisticasUsuario();
   }, [username])
 
 
@@ -92,15 +100,22 @@ export default function UserProfile() {
               <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
                 <div className="d-flex justify-content-end text-center py-1">
                   <div>
-                    <MDBCardText className="mb-1 h5">{estadisticas.reproducciones}</MDBCardText>
+                    {isCurrentUser && !hasTracks && (
+                      <div style={{ paddingTop: "6px", paddingRight: "38px" }}>
+                        <Button onClick={() => navigate("/upload")} variant='dark' className="mb-1 h6">¡Sube tu primera canción y observa cómo crecen tus estadísticas!</Button>
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <MDBCardText className="mb-1 h5">{!isLoading ? estadisticas.reproducciones : <Spinner animation="border" size="sm" role="status" />}</MDBCardText>
                     <MDBCardText className="small text-muted mb-0">Reproducciones</MDBCardText>
                   </div>
                   <div className="px-3">
-                    <MDBCardText className="mb-1 h5">{estadisticas.valoraciones} </MDBCardText>
+                    <MDBCardText className="mb-1 h5">{!isLoading ? estadisticas.valoraciones : <Spinner animation="border" size="sm" role="status" />} </MDBCardText>
                     <MDBCardText className="small text-muted mb-0">Valoraciones</MDBCardText>
                   </div>
                   <div>
-                    <MDBCardText className="mb-1 h5">{estadisticas.comentarios}</MDBCardText>
+                    <MDBCardText className="mb-1 h5">{!isLoading ? estadisticas.comentarios : <Spinner animation="border" size="sm" role="status" />}</MDBCardText>
                     <MDBCardText className="small text-muted mb-0"> Comentarios</MDBCardText>
                   </div>
                 </div>
@@ -110,7 +125,6 @@ export default function UserProfile() {
                   <p className="lead fw-normal mb-1">Acerca de mí</p>
                   <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
                     <MDBCardText className="font-italic mb-1">{profileData.biografia}</MDBCardText>
-
                   </div>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-4">

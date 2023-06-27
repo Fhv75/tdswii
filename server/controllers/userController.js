@@ -2,35 +2,44 @@ const User = require("../models/User")
 const jwt = require("jsonwebtoken")
 const dotenv = require("dotenv")
 const transporter = require("../utils/email")
+const sequelize = require('../db')
 
 dotenv.config()
 
 function generateUserToken(email) {
-    const token = jwt.sign(
-        {id: email}, 
-        `${process.env.JWT_SECRET}`, 
-        { expiresIn: "6h" }
+    const token = jwt.sign({
+            id: email
+        },
+        `${process.env.JWT_SECRET}`, {
+            expiresIn: "6h"
+        }
     )
 
     return token
 }
 
-async function registerUser (req, res) {
+async function registerUser(req, res) {
     try {
-        const { correo, username, password } = req.body
-        const newUser = await User.create({ correo: correo, username: username, password: password, tipo_user: "usuario"})
+        const {
+            correo,
+            username,
+            password
+        } = req.body
+        const newUser = await User.create({
+            correo: correo,
+            username: username,
+            password: password,
+            tipo_user: "usuario"
+        })
 
         const token = generateUserToken(correo)
 
-        res.status(201).json(
-            {
-                token,
-                correo: newUser.email,
-                username: newUser.username,
-            }
-        )
-    } 
-    catch (error) {
+        res.status(201).json({
+            token,
+            correo: newUser.email,
+            username: newUser.username,
+        })
+    } catch (error) {
         console.error(error)
         res.status(400).json({
             error: error.name,
@@ -39,25 +48,32 @@ async function registerUser (req, res) {
     }
 }
 
-async function loginUser (req, res) {
+async function loginUser(req, res) {
     try {
-        const { correo, password } = req.body
-        const user = await User.findOne(
-            { where: {
-                correo: correo, 
+        const {
+            correo,
+            password
+        } = req.body
+        const user = await User.findOne({
+            where: {
+                correo: correo,
                 password: password
-            }})
-        
-            if( user === null ) {
-                res.status(401).json({message: "Email or password incorrect"})
-            } else 
-            {
-                const token = generateUserToken(correo)
-                
-                res.json({ token: token, username: user.username })
             }
-    } 
-    catch (error) {
+        })
+
+        if (user === null) {
+            res.status(401).json({
+                message: "Email or password incorrect"
+            })
+        } else {
+            const token = generateUserToken(correo)
+
+            res.json({
+                token: token,
+                username: user.username
+            })
+        }
+    } catch (error) {
         console.error(error)
         res.status(400).json({
             error: error.name,
@@ -67,18 +83,24 @@ async function loginUser (req, res) {
 }
 
 async function resetUserPasswordRequest(req, res) {
-    const { email } = req.body
+    const {
+        email
+    } = req.body
     try {
         const user = await User.findByPk(email)
 
         if (user === null) {
-            return res.status(404).json({message: "User not found"})
+            return res.status(404).json({
+                message: "User not found"
+            })
         }
 
-        const token = jwt.sign(
-            { id: user.correo }, 
-            `${process.env.JWT_SECRET}`,
-            { expiresIn: "1h" }
+        const token = jwt.sign({
+                id: user.correo
+            },
+            `${process.env.JWT_SECRET}`, {
+                expiresIn: "1h"
+            }
         )
 
         const resetUrl = `http://localhost:3000/reset-password/${token}`
@@ -90,54 +112,80 @@ async function resetUserPasswordRequest(req, res) {
         }
 
         await transporter.sendMail(mailOptions)
-        
-        res.status(200).json({ message: "Pw reset mail sent" })
+
+        res.status(200).json({
+            message: "Pw reset mail sent"
+        })
 
     } catch (error) {
         console.error(error)
-        res.status(500).json({ message: "Server error" })
+        res.status(500).json({
+            message: "Server error"
+        })
     }
 }
 
 async function resetUserPasswordResponse(req, res) {
-    const { token } = req.params
-    const { newPassword } = req.body
+    const {
+        token
+    } = req.params
+    const {
+        newPassword
+    } = req.body
     try {
         const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
         const userMail = decoded.id
 
         const user = await User.findByPk(userMail)
 
-        if(user === null) {
-            return res.status(404).json({ message: "User not found" })
+        if (user === null) {
+            return res.status(404).json({
+                message: "User not found"
+            })
         }
 
         user.password = newPassword
         await user.save()
 
-        res.status(200).json({ message: "Password updated succesfully"})
+        res.status(200).json({
+            message: "Password updated succesfully"
+        })
 
     } catch (error) {
         console.error(error)
 
         if (error instanceof jwt.TokenExpiredError) {
-            res.status(400).json( {message: "Password reset token has expired "})
+            res.status(400).json({
+                message: "Password reset token has expired "
+            })
         } else if (error instanceof jwt.JsonWebTokenError) {
-            res.status(400).json({ message: "Invalid password reset token" })
+            res.status(400).json({
+                message: "Invalid password reset token"
+            })
         } else {
-            res.status(500).json({ message: "Server error" })
+            res.status(500).json({
+                message: "Server error"
+            })
         }
     }
 }
 
- async function getUserData (req, res) {
-    const { username } = req.body
+async function getUserData(req, res) {
+    const {
+        username
+    } = req.body
     console.log(username)
     try {
-        const user = await User.findOne({ where: {username: username} })
+        const user = await User.findOne({
+            where: {
+                username: username
+            }
+        })
 
-        if(user === null) {
-            return res.status(404).json({ message: "User not found" })
+        if (user === null) {
+            return res.status(404).json({
+                message: "User not found"
+            })
         }
 
         res.status(200).json({
@@ -154,53 +202,59 @@ async function resetUserPasswordResponse(req, res) {
             message: error.message
         })
     }
- }
+}
 
- async function updateProfile(req, res) {
-    const { token, username, ciudad, biografia } = req.body
+async function updateProfile(req, res) {
+    const {
+        token,
+        username,
+        ciudad,
+        biografia
+    } = req.body
     try {
-        // Converting token to email
-
         const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
         const userMail = decoded.id
-
-        // Searching user by email
-
         const user = await User.findByPk(userMail)
 
-        if(user === null) {
-            return res.status(404).json({ message: "User not found" })
+        if (user === null) {
+            return res.status(404).json({
+                message: "User not found"
+            })
         }
 
         // If any value from the body is blank or it's the same as the one the user object holds, don't update it.
 
-        if(username !== "" || username !== user.username) {
+        if (username !== "" || username !== user.username) {
             user.username = username
         }
 
-        if(ciudad !== "" || ciudad !== user.ciudad) {
+        if (ciudad !== "" || ciudad !== user.ciudad) {
             user.ciudad = ciudad
         }
 
-        if(biografia !== "" || biografia !== user.biografia) {
+        if (biografia !== "" || biografia !== user.biografia) {
             user.biografia = biografia
         }
 
         await user.save()
 
-        res.status(200).json({ message: "Profile updated succesfully"})
-        
-
-       
+        res.status(200).json({
+            message: "Profile updated succesfully"
+        })
 
     } catch (error) {
         console.error(error)
-        res.status(500).json({ message: "Server error" })
+        res.status(500).json({
+            message: "Server error"
+        })
     }
- }
+}
 
- async function updatePassword(req, res) {
-    const { token, password } = req.body
+async function updatePassword(req, res) {
+    const {
+        token,
+        password
+    } = req.body
     try {
         // Converting token to email
 
@@ -211,22 +265,28 @@ async function resetUserPasswordResponse(req, res) {
 
         const user = await User.findByPk(userMail)
 
-        if(user === null) {
-            return res.status(404).json({ message: "User not found" })
+        if (user === null) {
+            return res.status(404).json({
+                message: "User not found"
+            })
         }
 
         user.password = password
         await user.save()
 
-        res.status(200).json({ message: "Password updated succesfully"})
+        res.status(200).json({
+            message: "Password updated succesfully"
+        })
 
     } catch (error) {
         console.error(error)
-        res.status(500).json({ message: "Server error" })
+        res.status(500).json({
+            message: "Server error"
+        })
     }
- }
+}
 
- async function sendUserMessage(req, res) {
+async function sendUserMessage(req, res) {
     try {
         const {
             name,
@@ -260,21 +320,81 @@ async function resetUserPasswordResponse(req, res) {
 
 async function isUserAdmin(req, res) {
     try {
-        const { token } = req.body
+        const {
+            token
+        } = req.body
         const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`)
         const userMail = decoded.id
         const user = await User.findByPk(userMail)
         console.log(user.tipo_user)
         if (user.tipo_user === 'admin') {
-            res.status(200).json({ message: "User is an admin" })
+            res.status(200).json({
+                message: "User is an admin"
+            })
         } else {
-            res.status(204).json({ message: "User is not an admin" })
+            res.status(204).json({
+                message: "User is not an admin"
+            })
         }
     } catch (error) {
         console.error(error)
-        res.status(500).json({ message: "Server error" })
+        res.status(500).json({
+            message: "Server error"
+        })
     }
-}   
+}
+
+async function getUserStats(req, res) {
+    try {
+        const userData = await sequelize.query(
+            `SELECT DISTINCT
+                pista_musica.id_user_cargas AS correo,
+                usuario.username,
+                reproducciones.total_reproducciones AS total_reproducciones,
+                valoraciones.promedio_total AS promedio_total,
+                comentarios.total_comentarios AS total_comentarios
+            FROM pista_musica
+            INNER JOIN (
+                SELECT
+                    id_user_cargas,
+                    SUM(cant_reprod) AS total_reproducciones
+                FROM pista_musica
+                GROUP BY id_user_cargas
+            ) AS reproducciones ON pista_musica.id_user_cargas = reproducciones.id_user_cargas
+            INNER JOIN (
+                SELECT
+                    pista_musica.id_user_cargas,
+                    AVG(valoracion) AS promedio_total
+                FROM valoracion_pista_usuario
+                FULL OUTER JOIN pista_musica ON pista_musica.id = valoracion_pista_usuario.id_pista
+                GROUP BY pista_musica.id_user_cargas
+            ) AS valoraciones ON pista_musica.id_user_cargas = valoraciones.id_user_cargas
+            INNER JOIN (
+                SELECT
+                    pista_musica.id_user_cargas,
+                    COUNT(*) AS total_comentarios
+                FROM comentario_pista
+                FULL OUTER JOIN pista_musica ON pista_musica.id = comentario_pista.id_pista
+                GROUP BY pista_musica.id_user_cargas
+            ) AS comentarios ON pista_musica.id_user_cargas = comentarios.id_user_cargas
+            INNER JOIN usuario ON pista_musica.id_user_cargas = usuario.correo;
+            `, {
+                type: sequelize.QueryTypes.SELECT
+            }
+        );
+        userData.forEach(element => {
+            element.promedio_total = Math.trunc(element.promedio_total * Math.pow(10, 3)) / Math.pow(10, 3)
+        });
+        res.status(200).json(userData)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: error.message
+        })
+    }
+
+
+}
 
 module.exports = {
     registerUser,
@@ -285,5 +405,6 @@ module.exports = {
     updateProfile,
     updatePassword,
     sendUserMessage,
-    isUserAdmin
+    isUserAdmin,
+    getUserStats
 }

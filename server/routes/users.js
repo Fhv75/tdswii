@@ -13,7 +13,6 @@ router.post("/update-password", userController.updatePassword)
 router.post("/contact", userController.sendUserMessage)
 router.post('/searchUsers', searchController.searchUsers);
 router.post('/isAdmin', userController.isUserAdmin)
-
-
+router.get('/getUserStats', userController.getUserStats)
 
 module.exports = router
