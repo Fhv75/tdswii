@@ -10,7 +10,7 @@ const {
     getStatistics, 
     getAudioFile,
     getComentarios,
-    getReproduccionesUsuario,
+    getStatisticsUser,
     addComentario } = require('../controllers/audioController');
 
 router.post('/upload/:trackData', upload.single('audioFile'), uploadAudioFile);
@@ -24,6 +24,6 @@ router.get('/file/:trackID', getAudioFile);
 // Para comentarios
 router.post('/getComentarios', getComentarios);
 router.post('/addComentario', addComentario);
-router.post('/getReproduccionesUsuario', getReproduccionesUsuario);
+router.post('/getStatisticsUser', getStatisticsUser);
 
 module.exports = router;

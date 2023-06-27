@@ -5,8 +5,7 @@ import MusicCard from "../../components/MusicCard/MusicCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom'
-import { Spinner } from 'react-bootstrap';
-
+import { Spinner,Button } from 'react-bootstrap';
 export default function UserProfile() {
 
   const navigate = useNavigate()
@@ -15,8 +14,12 @@ export default function UserProfile() {
   const [profileData, setProfileData] = useState({})
   const [responseStatus, setResponseStatus] = useState()
   const [estadisticas, setEstadisticas] = useState({ reproducciones: 0, valoraciones: 0, comentarios: 0})
-
+  const [isLoading, setIsLoading] = useState(true)
+  const storedUsername = localStorage.getItem('username');
+  const isCurrentUser = storedUsername === username; // Verifica si el usuario es el mismo que está logeado
+  const hasTracks = responseStatus === 200; // Verifica si hubo éxito en la obtención de pistas
   useEffect(() => {
+      
       async function getTracks (){
         axios.defaults.headers.post["Access-Control-Allow-Origin"] = true
         try{
@@ -57,20 +60,21 @@ export default function UserProfile() {
     }
     fetchUserProfile()
   
-    async function getReproduccionesUsuario() {
+    async function getEstadisticasUsuario() {
       try {
         const response = await axios.post(
-            'http://localhost:5000/audio/getReproduccionesUsuario',
+            'http://localhost:5000/audio/getStatisticsUser',
             {
               username : username
             },                    
         )
         console.log(response.data.totalReproducciones)
-        setEstadisticas({reproducciones: response.data.totalReproducciones, valoraciones: 0, comentarios: 0});
-    } catch (error) {                
+        setEstadisticas({reproducciones: response.data.totalReproducciones, valoraciones: response.data.promedioValoraciones, comentarios: response.data.totalComentarios});
+        setIsLoading(false)
+      } catch (error) {                
     }            
   }
-  getReproduccionesUsuario();
+  getEstadisticasUsuario();
 }, [username])
 
 
@@ -93,15 +97,22 @@ export default function UserProfile() {
               <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
                 <div className="d-flex justify-content-end text-center py-1">
                   <div>
-                    <MDBCardText className="mb-1 h5">{estadisticas.reproducciones}</MDBCardText>
+                    {isCurrentUser && !hasTracks && (
+                      <div style={{paddingTop: "6px", paddingRight: "38px"}}>
+                        <Button onClick={() => navigate("/upload")} variant='Light' style={{backgroundColor:"#08D5E0"}} className="mb-1 h6">¡Sube tu primera canción y observa cómo crecen tus estadísticas!</Button>
+                      </div>
+                    )}  
+                  </div>
+                  <div>
+                    <MDBCardText className="mb-1 h5">{!isLoading ? estadisticas.reproducciones : <Spinner animation="border" size="sm" role="status" /> }</MDBCardText>
                     <MDBCardText className="small text-muted mb-0">Reproducciones</MDBCardText>
                   </div>
                   <div className="px-3">
-                    <MDBCardText className="mb-1 h5">{estadisticas.valoraciones} </MDBCardText>
+                    <MDBCardText className="mb-1 h5">{!isLoading ? estadisticas.valoraciones : <Spinner animation="border" size="sm" role="status" /> } </MDBCardText>
                     <MDBCardText className="small text-muted mb-0">Valoraciones</MDBCardText>
                   </div>
                   <div>
-                    <MDBCardText className="mb-1 h5">{estadisticas.comentarios}</MDBCardText>
+                    <MDBCardText className="mb-1 h5">{!isLoading ? estadisticas.comentarios : <Spinner animation="border" size="sm" role="status" /> }</MDBCardText>
                     <MDBCardText className="small text-muted mb-0"> Comentarios</MDBCardText>
                   </div>
                 </div>
@@ -136,6 +147,7 @@ export default function UserProfile() {
                   ) : responseStatus == 0 ?
                   <div className="text-center">
                     <h2>No hay pistas</h2>
+                    
                   </div>
                   :  responseStatus == 404 ?
                   <div className="text-center">

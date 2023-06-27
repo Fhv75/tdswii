@@ -16,9 +16,6 @@ function NavBar() {
   function navigateToProfile() {
     navigate(`/user/${localStorage.getItem("username")}`);
   }
-  function navigateToBarChart(){
-    navigate(`/BarChart`)
-  }
 
   return (
     <Navbar bg="light" expand="lg">
@@ -90,11 +87,6 @@ function NavBar() {
                       <NavDropdown.Item href="">
                         <Button onClick={navigateToProfile} variant="link">
                           Ir a perfil
-                        </Button>
-                      </NavDropdown.Item>
-                      <NavDropdown.Item href="">
-                        <Button onClick={navigateToBarChart} variant="link">
-                          Mis estadísticas
                         </Button>
                       </NavDropdown.Item>
                       <NavDropdown.Item href="">  

@@ -304,7 +304,7 @@ async function  getComentarios(req, res){
     }
 };
 
-async function getReproduccionesUsuario(req, res) {
+async function getStatisticsUser(req, res) {
     try {
         const username = req.body.username
         const user = await User.findOne(
@@ -325,23 +325,29 @@ async function getReproduccionesUsuario(req, res) {
             }
         );
         const valoraciones = await sequelize.query(
-            ``,
+            `SELECT AVG(valoracion) AS promedio_total
+            FROM valoracion_pista_usuario
+            WHERE id_pista IN (SELECT id FROM pista_musica WHERE id_user_cargas = :userId)`,
             {
             replacements: { userId: user.correo },
             type: sequelize.QueryTypes.SELECT
             }
         );
-
         const comentarios = await sequelize.query(
-            `SELECT COUNT()`,
+            `SELECT COUNT(*) AS total_comentarios 
+            FROM comentario_pista 
+            WHERE id_pista IN (SELECT id FROM pista_musica WHERE id_user_cargas = :userId)`,
             {
             replacements: { userId: user.correo },
             type: sequelize.QueryTypes.SELECT
             }
         );
         const totalReproducciones = reproducciones[0].total_reproducciones || 0;
-        console.log(totalReproducciones)
-        res.status(200).json({ totalReproducciones }); //res.status(200).json({ totalReproducciones, promedioValoraciones, totalComentarios })
+        const totalComentarios = comentarios[0].total_comentarios || 0;
+        const promedioValoraciones = Math.trunc(valoraciones[0].promedio_total * Math.pow(10, 1)) / Math.pow(10, 1)
+        console.log(promedioValoraciones)
+        console.log(valoraciones)
+        res.status(200).json({ totalReproducciones, promedioValoraciones, totalComentarios })
     } catch (error) {
       console.error('Error al obtener las reproducciones del usuario:', error);
       res.status(500).json({
@@ -361,6 +367,6 @@ module.exports = {
     getUserTrackRating,
     getAudioFile,
     getComentarios,
-    getReproduccionesUsuario,
+    getStatisticsUser,
     addComentario
 }
