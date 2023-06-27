@@ -12,12 +12,16 @@ function AuthenticationProtectedRoute() {
     useEffect(() => {
         async function isAdmin() {
             try {
-                await axios.post(
+                const response = await axios.post(
                     'http://localhost:5000/users/isAdmin', 
                     { token: token },
                     { headers: { 'x-access-token': token } }
                 )                    
-                    setFlag(true)
+                    if (response.status === 200) {
+                        setFlag(true)
+                    } else {
+                        navigate('/')
+                    }
                 } catch (error) {
                     console.log(error)
                     if(error.status !== 200)

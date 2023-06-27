@@ -1,0 +1,39 @@
+.track-approval-container {
+    padding: 20px;
+  }
+  
+  .track-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .track-table th,
+  .track-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .track-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .approve-button,
+  .reject-button {
+    padding: 5px 10px;
+    margin-right: 5px;
+    background-color: #2dc432;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  .container {
+    margin-top: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  .reject-button {
+    background-color: #fa3426;
+  }
+  

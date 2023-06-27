@@ -17,6 +17,7 @@ const {
     getAdminTracks } = require('../controllers/audioController')
 const { searchTracks } = require('../controllers/searchController')
 const { searchTags } = require('../controllers/searchController')
+const { getPendingTracks, approveTrack, rejectTrack } = require('../controllers/approvalController')
 
 router.post('/upload/:trackData', upload.fields([{
     name: 'image',
@@ -25,6 +26,9 @@ router.post('/upload/:trackData', upload.fields([{
     name: 'audio',
     maxCount: 1
 }]), uploadAudioFile)
+router.get("/pendingTracks", getPendingTracks);
+router.put("/approveTrack/:trackId", approveTrack);
+router.put("/rejectTrack/:trackId", rejectTrack);
 router.post('/uploadAlbum/:albumData', upload.single("image"), uploadAlbum)
 router.post('/getUserTracks', getUserTracks )
 router.post('/getTrackTags', getTrackTags )

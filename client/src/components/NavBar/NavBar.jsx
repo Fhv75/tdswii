@@ -23,12 +23,14 @@ function NavBar() {
   useEffect(() => {
     async function isAdmin() {
       try {
-        await axios.post(
+        const response = await axios.post(
           'http://localhost:5000/users/isAdmin',
           { token: localStorage.getItem("token") },
           { headers: { 'x-access-token': localStorage.getItem("token") } }
         )
-        setFlag(true)
+        if (response.status === 200) {
+          setFlag(true)
+        } 
       } catch (error) {
         console.log(error)
         if (error.status !== 200)

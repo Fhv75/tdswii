@@ -2,10 +2,9 @@ import React from 'react'
 import { useState } from 'react'
 import { Button, Row, Col, Form, Spinner } from 'react-bootstrap'
 import { useToast } from '@chakra-ui/react'
-import styles from './uploadAlbumForm.module.css'
 import axios from 'axios'
 import { useEffect } from 'react'
-
+import styles from './uploadAlbumForm.module.css'
 
 function UploadAlbumForm() {
     const toast = useToast()

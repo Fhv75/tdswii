@@ -42,8 +42,8 @@ function Ranking() {
         <div>
             <h1>Ranking de Usuarios</h1>
             <Container className="bg-white py-4 px-4 mt-4 mt-xl-5">
-                <Row className="mx-5 pe-5">
-                    <Col className="col-10 col-lg-8 col-md-7 col-sm-4">
+                <Row className="mx-5 pe-md-5 text-center">
+                    <Col className="col-10 col-lg-8 col-md-7 col-sm-12 text-center">
                         Ordenar Por:
                     </Col>
                     <Col>
@@ -57,34 +57,36 @@ function Ranking() {
                     </Col>
                 </Row>
                 <hr />
-                <Table striped className="mt-4">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Correo Electrónico</th>
-                            <th>Usuario</th>
-                            <th>Reproducciones Totales</th>
-                            <th>Valoraciones Promedio</th>
-                            <th>Comentarios Totales</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            userData.map((user, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{user.correo}</td>
-                                        <td>{user.username}</td>
-                                        <td>{user.total_reproducciones}</td>
-                                        <td>{user.promedio_total}</td>
-                                        <td>{user.total_comentarios}</td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </Table>
+                <div className="overflow-auto">
+                    <Table striped reponsive className="mt-4 overflow-auto">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Correo Electrónico</th>
+                                <th>Usuario</th>
+                                <th>Reproducciones Totales</th>
+                                <th>Valoraciones Promedio</th>
+                                <th>Comentarios Totales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                userData.map((user, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{user.correo}</td>
+                                            <td>{user.username}</td>
+                                            <td>{user.total_reproducciones}</td>
+                                            <td>{user.promedio_total}</td>
+                                            <td>{user.total_comentarios}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </Table>
+                </div>
             </Container>
         </div>
     )
