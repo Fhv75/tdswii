@@ -375,7 +375,7 @@ function MusicCard ({track}) {
             {/*----------------------------------------------------------------------------------- */}
              {/* Botón de compra */}
              <Button variant="primary" onClick={() => setShowModal(true)}>
-                    Comprar
+                    Comprar Pista Musical
                     </Button>
 
                     {/* Modal de compra */}
