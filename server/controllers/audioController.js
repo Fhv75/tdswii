@@ -412,38 +412,33 @@ async function getEstadisticasUsuario(req, res) {
             }
         })
         const reproducciones = await sequelize.query(
-            `SELECT SUM(cant_reprod) AS total_reproducciones 
-            FROM pista_musica 
-            WHERE id_user_cargas = :userId`, {
+            `CALL getTotalReproducciones(:userId, :out)`, {
                 replacements: {
-                    userId: user.correo
+                    userId: user.correo,
+                    out: ''
                 },
-                type: sequelize.QueryTypes.SELECT
             }
-        );
+        )
+
         const valoraciones = await sequelize.query(
-            `SELECT AVG(valoracion) AS promedio_total
-            FROM valoracion_pista_usuario
-            WHERE id_pista IN (SELECT id FROM pista_musica WHERE id_user_cargas = :userId)`, {
+            `CALL getValoracionPromedio(:userId, :out)`, {
                 replacements: {
-                    userId: user.correo
+                    userId: user.correo,
+                    out: ''
                 },
-                type: sequelize.QueryTypes.SELECT
             }
         );
         const comentarios = await sequelize.query(
-            `SELECT COUNT(*) AS total_comentarios 
-            FROM comentario_pista 
-            WHERE id_pista IN (SELECT id FROM pista_musica WHERE id_user_cargas = :userId)`, {
+            `CALL getTotalComentarios(:userId, :out)`, {
                 replacements: {
-                    userId: user.correo
+                    userId: user.correo,
+                    out: ''
                 },
-                type: sequelize.QueryTypes.SELECT
             }
         );
-        const totalReproducciones = reproducciones[0].total_reproducciones || 0;
-        const totalComentarios = comentarios[0].total_comentarios || 0;
-        const promedioValoraciones = Math.trunc(valoraciones[0].promedio_total * Math.pow(10, 1)) / Math.pow(10, 1)
+        const totalReproducciones = reproducciones[0][0].res || 0;
+        const totalComentarios = comentarios[0][0].res || 0;
+        const promedioValoraciones = Math.trunc(valoraciones[0][0].res * Math.pow(10, 1)) / Math.pow(10, 1)
         console.log(promedioValoraciones)
         console.log(valoraciones)
         res.status(200).json({

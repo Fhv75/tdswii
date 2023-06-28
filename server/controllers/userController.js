@@ -347,37 +347,7 @@ async function isUserAdmin(req, res) {
 async function getUserStats(req, res) {
     try {
         const userData = await sequelize.query(
-            `SELECT DISTINCT
-                pista_musica.id_user_cargas AS correo,
-                usuario.username,
-                reproducciones.total_reproducciones AS total_reproducciones,
-                valoraciones.promedio_total AS promedio_total,
-                comentarios.total_comentarios AS total_comentarios
-            FROM pista_musica
-            INNER JOIN (
-                SELECT
-                    id_user_cargas,
-                    SUM(cant_reprod) AS total_reproducciones
-                FROM pista_musica
-                GROUP BY id_user_cargas
-            ) AS reproducciones ON pista_musica.id_user_cargas = reproducciones.id_user_cargas
-            INNER JOIN (
-                SELECT
-                    pista_musica.id_user_cargas,
-                    AVG(valoracion) AS promedio_total
-                FROM valoracion_pista_usuario
-                FULL OUTER JOIN pista_musica ON pista_musica.id = valoracion_pista_usuario.id_pista
-                GROUP BY pista_musica.id_user_cargas
-            ) AS valoraciones ON pista_musica.id_user_cargas = valoraciones.id_user_cargas
-            INNER JOIN (
-                SELECT
-                    pista_musica.id_user_cargas,
-                    COUNT(*) AS total_comentarios
-                FROM comentario_pista
-                FULL OUTER JOIN pista_musica ON pista_musica.id = comentario_pista.id_pista
-                GROUP BY pista_musica.id_user_cargas
-            ) AS comentarios ON pista_musica.id_user_cargas = comentarios.id_user_cargas
-            INNER JOIN usuario ON pista_musica.id_user_cargas = usuario.correo;
+            `SELECT * FROM getEstadisticasGenerales()
             `, {
                 type: sequelize.QueryTypes.SELECT
             }
