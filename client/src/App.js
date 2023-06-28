@@ -5,7 +5,6 @@ import RecoveryRequest from './Pages/PwRecovery/RecoveryRequest'
 import ResetPw from './Pages/PwRecovery/ResetPw'
 import Register from './Pages/Register/Register'
 import UserProfile from './Pages/UserProfile/UserProfile'
-import Test from './Pages/Test/Test'
 import EditUserProfile from './Pages/EditUserProfile/EditUserProfile'
 import Router from './router/index'
 import SearchResult from './Pages/SearchResult/SearchResult'
@@ -18,6 +17,7 @@ import UploadAudioFile from './Pages/UploadAudio/UploadAudioFile'
 import MusicCard from './components/MusicCard/MusicCard'
 import './App.css'
 import Dashboard from './Pages/Dashboard/Dashboard'
+import TrackPage from './Pages/TrackPage/TrackPage'
 
 
 const routes = [
@@ -98,8 +98,8 @@ const routes = [
         
     },
     {
-        path: '/test',
-        component: <Test />
+        path: '/track/:trackId',
+        component: <TrackPage />
     }
 ]
 

@@ -62,7 +62,7 @@ function NavBar() {
             <div>
               <NavDropdown
                 align="end"
-                title="Link"
+                title="Menu"
                 id="navbarScrollingDropdown"
               >
                 {

@@ -96,6 +96,9 @@ export default function UserProfile() {
                   <MDBTypography tag="h5">{username}</MDBTypography>
                   <MDBCardText>{profileData.ciudad}</MDBCardText>
                 </div>
+                <div className="ms-auto me-5" style={{ marginTop: '130px' }}>
+                  <Button variant="light" onClick={() => navigate("/edit-profile")}>Editar Perfil</Button>
+                </div>
               </div>
               <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
                 <div className="d-flex justify-content-end text-center py-1">
@@ -112,7 +115,7 @@ export default function UserProfile() {
                   </div>
                   <div className="px-3">
                     <MDBCardText className="mb-1 h5">{!isLoading ? estadisticas.valoraciones : <Spinner animation="border" size="sm" role="status" />} </MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">Valoraciones</MDBCardText>
+                    <MDBCardText className="small text-muted mb-0">Valoración</MDBCardText>
                   </div>
                   <div>
                     <MDBCardText className="mb-1 h5">{!isLoading ? estadisticas.comentarios : <Spinner animation="border" size="sm" role="status" />}</MDBCardText>
@@ -146,7 +149,8 @@ export default function UserProfile() {
                             cover: track.imagen_pista === null ? "logomelorit" : track.nombre_archivo,
                           }
                           return (
-                            <MusicCard key={track.id} track={trackData} />
+                            track.isapproved ? 
+                            <MusicCard key={track.id} track={trackData} /> : <></>
                           )
                         }
                       ) : responseStatus == 0 ?

@@ -108,6 +108,8 @@ async function getStatistics(req, res) {
             }
         );
 
+
+
         res.status(200).json({ averageRating, comments: comments[0].total_comentarios });
         
     } catch (error) {
@@ -457,8 +459,34 @@ async function getEstadisticasUsuario(req, res) {
     }
 }
 
+async function getTrack(req, res) {
+    try {
+        const trackId = req.body.trackId
+        const track = await AudioFile.findOne({ 
+            where: {
+                id: trackId
+            }
+        })
+        const uploader = await User.findOne({
+            where: {
+                correo: track.id_user_cargas
+            }
+        })
+        track.dataValues.artista = uploader.username
+        track.dataValues.nombre_archivo = "http://localhost:5000/public/userUploads/audio/" + track.nombre_archivo + ".mp3"
+        track.dataValues.imagen_pista = "http://localhost:5000/public/userUploads/images/" + track.imagen_pista ? track.imagen_pista : 'logomelorit' + ".jpg"
+        console.log(track)
+        res.status(200).json(track)
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error.message)
+    }
+}
+
 module.exports = {
     upload,
+    getTrack,
     getEstadisticasUsuario,
     addReproduccion,
     uploadAlbum,

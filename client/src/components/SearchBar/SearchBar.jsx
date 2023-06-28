@@ -65,11 +65,11 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="search-bar-container">
+    <div className="search-bar-container ms-lg-auto">
       <Form className="d-flex align-items-center" onSubmit={handleSubmit}>
         <Form.Control
           type="search"
-          placeholder="Search"
+          placeholder="Busca por nombre, artista o genero"
           className="me-2"
           aria-label="Search"
           value={searchTerm}
@@ -78,7 +78,7 @@ const SearchBar = () => {
           isInvalid={isInvalidSearch}
         />
         <Form.Control.Feedback type="invalid">
-          Please enter a search term.
+          Ingresa un término de busqueda.
         </Form.Control.Feedback>
         <Button variant="outline-success" type="submit" disabled={isLoading}>
           {isLoading ? (
@@ -90,10 +90,10 @@ const SearchBar = () => {
                 role="status"
                 aria-hidden="true"
               />
-              <span className="visually-hidden">Loading...</span>
+              <span className="visually-hidden">Cargando...</span>
             </>
           ) : (
-            "Search"
+            "Buscar"
           )}
         </Button>
       </Form>

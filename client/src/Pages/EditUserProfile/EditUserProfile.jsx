@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Button, Col, Form, Row, Spinner } from 'react-bootstrap'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
@@ -8,6 +8,7 @@ function EditUserProfile() {
 
     const [updatedData, setUpdatedData] = useState({ username: "", biografia: "", ciudad: "" })
     const [updatedPw, setUpdatedPw] = useState({ password: "", confirmPw: "" })
+    const [isLoading, setIsLoading] = useState(false)
 
     const navigate = useNavigate()
 
@@ -23,6 +24,7 @@ function EditUserProfile() {
 
     async function profileSubmitHandler(e) {
         e.preventDefault()
+        setIsLoading(true)
         try {
             const response = await axios.post(
                 'http://localhost:5000/users/update-profile',
@@ -36,14 +38,17 @@ function EditUserProfile() {
             )
             console.log(response)
             localStorage.setItem('username', updatedData.username)
+            setIsLoading(false)
             navigateToProfile()
         } catch (error) {
             console.log(error)
         }
+
     }
 
     async function passwordSubmitHandler(e) {
         e.preventDefault()
+        setIsLoading(true)
         try {
             const response = await axios.post(
                 'http://localhost:5000/users/update-password',
@@ -54,6 +59,7 @@ function EditUserProfile() {
                 { headers: { 'x-access-token': localStorage.getItem('token') } }
             )
             console.log(response)
+            setIsLoading(false)
             navigateToProfile()
         } catch (error) {
             console.log(error)
@@ -65,8 +71,9 @@ function EditUserProfile() {
     }
 
     return (
-        <div className="bg-white m-5 px-5 py-4">
-            <h2 className="mb-4 pt-3">Editar Perfil</h2>
+        <div className="bg-white my-5 px-5 py-4 mx-auto rounded shadow-sm" style={{maxWidth: "max-content"}}>
+            <h2 className="pt-3">Editar Perfil</h2>
+            <hr />
             <Form onSubmit={profileSubmitHandler}>
                 <Row>
                     <Col>Nombre de Usuario</Col>
@@ -108,14 +115,21 @@ function EditUserProfile() {
                         value={updatedData.biografia}
                     />
                 </Form.Group>
-
-                <Button variant="primary" type="submit">
-                    Actualizar
+                
+                <Button variant="primary" type="submit" disabled={isLoading}>
+                    {
+                        isLoading ?
+                            <Spinner animation="border" role="status" size="sm">
+                                <span className="visually-hidden">Cargando...</span>
+                            </Spinner> :
+                            "Actualizar"
+                    }
                 </Button>
             </Form>
             <br />
             <Form onSubmit={passwordSubmitHandler}>
-                <h3>Cambiar Contraseña</h3>
+                <h3 className="">Cambiar Contraseña</h3>
+                <hr />
                 <Form.Group className="mb-3" controlId="password">
                     <Form.Label>Contraseña</Form.Label>
                     <Form.Control
@@ -149,8 +163,14 @@ function EditUserProfile() {
                                 </>
                             ) :
 
-                            <Button variant="primary" type="submit" className="mt-3">
-                                Actualizar
+                            <Button variant="primary" type="submit" disabled={isLoading}>
+                            {
+                                isLoading ?
+                                    <Spinner animation="border" role="status" size="sm">
+                                        <span className="visually-hidden">Cargando...</span>
+                                    </Spinner> :
+                                    "Actualizar"
+                            }
                             </Button>
                     }
                 </Form.Group>

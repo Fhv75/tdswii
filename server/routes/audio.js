@@ -14,7 +14,9 @@ const {
     getAudioFile,
     getComentarios,
     addComentario,
-    getAdminTracks } = require('../controllers/audioController')
+    getAdminTracks,
+    getTrack
+ } = require('../controllers/audioController')
 const { searchTracks } = require('../controllers/searchController')
 const { searchTags } = require('../controllers/searchController')
 const { getPendingTracks, approveTrack, rejectTrack } = require('../controllers/approvalController')
@@ -38,6 +40,7 @@ router.post('/getUserRating', getUserTrackRating)
 router.post('/searchTracks', searchTracks)
 router.post('/searchTags', searchTags)
 router.post('/getEstadisticasUsuario', getEstadisticasUsuario)
+router.post('/getTrack', getTrack)
 router.get('/file/:trackID', getAudioFile)
 router.get('/getAdminTracks', getAdminTracks)
 router.get('/addReproduccion/:trackID', addReproduccion)
