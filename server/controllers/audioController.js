@@ -487,7 +487,6 @@ async function getTrack(req, res) {
 async function getAllTracks(req,res){
     try {
     const tracks = await AudioFile.findAll()
-    console.log(tracks)
     res.status(200).json(tracks)
     } catch (error) {
         console.error(error)
