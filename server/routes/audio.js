@@ -16,7 +16,8 @@ const {
     addComentario,
     getAdminTracks,
     getTrack,
-    getAllTracks
+    getAllTracks,
+    purchaseTrack 
  } = require('../controllers/audioController')
 const { searchTracks } = require('../controllers/searchController')
 const { searchTags } = require('../controllers/searchController')
@@ -49,5 +50,8 @@ router.get('/getAllTracks',getAllTracks)
 //para comentarios
 router.post('/getComentarios', getComentarios)
 router.post('/addComentario', addComentario)
+
+//Para comprar
+router.post('/purchaseTrack', purchaseTrack);
 //-----------------------------------------------
 module.exports = router
