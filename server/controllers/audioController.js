@@ -48,7 +48,8 @@ async function uploadAudioFile (req, res) {
             id_user_cargas: userMail,
             nombre_archivo: titulo + "-" + username,
             precio: precio,
-            imagen_pista: titulo + "-" + username
+            imagen_pista: titulo + "-" + username,
+            isapproved: false
         })
 
         await newAudioFile.setTags(tags)
@@ -483,7 +484,17 @@ async function getTrack(req, res) {
         res.status(500).json(error.message)
     }
 }
+async function getAllTracks(req,res){
+    try {
+    const tracks = await AudioFile.findAll()
+    console.log(tracks)
+    res.status(200).json(tracks)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json(error)
+    }
 
+}
 module.exports = {
     upload,
     getTrack,
@@ -499,5 +510,6 @@ module.exports = {
     getUserTrackRating,
     getAudioFile,
     getComentarios,
-    addComentario
+    addComentario,
+    getAllTracks
 }

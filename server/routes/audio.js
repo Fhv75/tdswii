@@ -15,7 +15,8 @@ const {
     getComentarios,
     addComentario,
     getAdminTracks,
-    getTrack
+    getTrack,
+    getAllTracks
  } = require('../controllers/audioController')
 const { searchTracks } = require('../controllers/searchController')
 const { searchTags } = require('../controllers/searchController')
@@ -44,7 +45,7 @@ router.post('/getTrack', getTrack)
 router.get('/file/:trackID', getAudioFile)
 router.get('/getAdminTracks', getAdminTracks)
 router.get('/addReproduccion/:trackID', addReproduccion)
-
+router.get('/getAllTracks',getAllTracks)
 //para comentarios
 router.post('/getComentarios', getComentarios)
 router.post('/addComentario', addComentario)
