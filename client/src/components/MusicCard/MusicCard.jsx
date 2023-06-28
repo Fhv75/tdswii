@@ -39,6 +39,7 @@ function MusicCard ({track}) {
     const [purchaseSuccess, setPurchaseSuccess] = useState(false); 
     const [isPurchased, setIsPurchased] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     //------------------------------------
 
@@ -208,7 +209,21 @@ function MusicCard ({track}) {
                 );
                 console.log(response.data);
 
-                // Realizar cualquier lógica adicional necesaria después de la compra (por ejemplo, mostrar un mensaje de éxito)
+                // Validar el número de tarjeta
+
+                // Validar el número de tarjeta
+                if (cardNumber.length !== 16) {
+                setErrorMessage('El número de tarjeta debe tener 16 dígitos');
+                setShowErrorMessage(true);
+                return;
+                }
+
+                // Validar el CVV
+                if (cvv.length !== 3) {
+                setErrorMessage('El CVV debe tener 3 dígitos');
+                setShowErrorMessage(true);
+                return;
+                }
 
                 setShowErrorMessage(false);
 
@@ -227,7 +242,7 @@ function MusicCard ({track}) {
         getStatistics();
         getTrackTags();
         getUserRating();
-       // getComentarios(); 
+        //getComentarios(); 
         addComentario();
     // eslint-disable-next-line
     }, [track.id]);
@@ -410,6 +425,14 @@ function MusicCard ({track}) {
                 </Form>
                     </Modal.Body>
                     <Modal.Footer>
+
+                             {/* Mensaje de error */}
+                        {showErrorMessage && (
+                        <Alert variant="danger">
+                            <p>Error: {errorMessage}</p>
+                        </Alert>
+                        )}
+
                         <Button variant="secondary" onClick={() => setShowModal(false)}>
                              Cancelar
                         </Button>

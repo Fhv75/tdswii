@@ -313,7 +313,8 @@ async function getAudioFile(req, res) {
   // ...----------------------------------------------------------
 
 // Variable para almacenar el estado de compra de las pistas (en memoria)
-const purchasedTracks = {};
+
+const purchasedTracks = {}; //lleva registro de pistas compradas por los usuarios
 
 // Controlador para comprar una pista musical
 async function purchaseTrack(req, res) {
@@ -321,18 +322,19 @@ async function purchaseTrack(req, res) {
   const userID = req.user ? req.user.id : null; // Obtener el ID del usuario (si está autenticado)
 
   try {
-    // Verificar si la pista ya ha sido comprada por el usuario y obtener la cantidad de compras
-    const purchaseCount = purchasedTracks[trackID] && purchasedTracks[trackID][userID]
-      ? purchasedTracks[trackID][userID]
-      : 0;
+    // Verificar si la pista ya ha sido comprada por el usuario
+    const isPurchased = purchasedTracks[trackID] && purchasedTracks[trackID][userID];
 
-    // Realizar cualquier lógica adicional para validar la compra (por ejemplo, verificar saldo, disponibilidad, etc.)
+    // Validar si la pista ya ha sido comprada
+    if (isPurchased) {
+      return res.json({ message: 'La pista ya ha sido comprada anteriormente.' });
+    }
 
-    // Incrementar la cantidad de compras del usuario para la pista
+    // Marcar la pista como comprada por el usuario
     if (!purchasedTracks[trackID]) {
       purchasedTracks[trackID] = {};
     }
-    purchasedTracks[trackID][userID] = purchaseCount + 1;
+    purchasedTracks[trackID][userID] = true;
 
     // Responder con un mensaje de éxito
     res.json({ message: 'Pista comprada exitosamente.' });
@@ -341,7 +343,6 @@ async function purchaseTrack(req, res) {
     res.status(500).json({ error: 'Error al procesar la compra.' });
   }
 }
- 
 
 //----------------------------------------------------------------------------
 
