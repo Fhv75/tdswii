@@ -71,7 +71,7 @@ function EditUserProfile() {
     }
 
     return (
-        <div className="bg-white my-5 px-5 py-4 mx-auto rounded shadow-sm" style={{maxWidth: "calc(100hv - 30rem)"}}>
+        <div className="bg-white my-5 px-5 py-4 mx-auto rounded shadow-sm" style={{maxWidth: "800px"}}>
             <h2 className="pt-3">Editar Perfil</h2>
             <hr />
             <Form onSubmit={profileSubmitHandler}>
